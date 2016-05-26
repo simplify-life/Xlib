@@ -92,16 +92,6 @@ void XTime::doPertime(int count,time_t interval, const std::function<void ()>& c
         mTimer->start();
     }
     mTimer->addTask(timerData(count,interval,call));
-//    if(call&&count)
-//    {
-//        while (!mtx_time.try_lock_for(seconds(interval)))
-//        {
-//            call();
-//            if(count>0) count--;
-//        }
-//        mtx_time.unlock();
-//    }
-
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -113,7 +103,7 @@ XTimer::XTimer():tThread(),tTask()
 
 XTimer::~XTimer()
 {
-    
+
 }
 
 XTimer* XTimer::getInstance()
@@ -126,7 +116,7 @@ void XTimer::start()
 {
     tThread=thread(std::bind(&XTimer::threadLoop,this));
     tThread.detach();
-    //mainLoop();
+//    thread(std::bind(&XTimer::threadLoop,this)).detach();
 }
 
 void XTimer::mainLoop()
@@ -145,19 +135,17 @@ void XTimer::mainLoop()
 
 void XTimer::threadLoop()
 {
-    
-    auto sTime = XTime::getInstance();
-    steady_point p = sTime->getTimePoint_steady();
     while (true)
     {
-        auto interval = sTime->getTimeInterval_steady(p, sTime->getTimePoint_steady());
-        p=sTime->getTimePoint_steady();
-        this_thread::sleep_for(milliseconds(50));
+        this_thread::sleep_for(milliseconds(10));
         lock_guard<mutex> lck(tTaskMutex);
         for(auto itr=tTask.begin();itr!=tTask.end();itr++)
         {
-            if(interval>itr->t_interval&&itr->t_call&&itr->t_count)
+            auto tNow = steady_clock::now();
+            auto interval = XTime::getTimeInterval_steady(itr->t_point, tNow);
+            if(interval>=itr->t_interval&&itr->t_call&&itr->t_count)
             {
+                itr->t_point = tNow;
                 itr->t_handler = true;
                 itr->t_count--;
             }
