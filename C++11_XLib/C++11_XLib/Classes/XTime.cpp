@@ -103,7 +103,7 @@ XTimer::XTimer():tThread(),tTask()
 
 XTimer::~XTimer()
 {
-    
+
 }
 
 XTimer* XTimer::getInstance()
@@ -116,7 +116,7 @@ void XTimer::start()
 {
     tThread=thread(std::bind(&XTimer::threadLoop,this));
     tThread.detach();
-    //mainLoop();
+//    thread(std::bind(&XTimer::threadLoop,this)).detach();
 }
 
 void XTimer::mainLoop()
@@ -142,7 +142,7 @@ void XTimer::threadLoop()
         for(auto itr=tTask.begin();itr!=tTask.end();itr++)
         {
             auto tNow = steady_clock::now();
-            auto interval = XTime::getInstance()->getTimeInterval_steady(itr->t_point, tNow);
+            auto interval = XTime::getTimeInterval_steady(itr->t_point, tNow);
             if(interval>=itr->t_interval&&itr->t_call&&itr->t_count)
             {
                 itr->t_point = tNow;

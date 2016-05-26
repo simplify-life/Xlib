@@ -31,7 +31,7 @@ struct timerData
         t_handler = false;
         t_count = count;
         t_interval = interval;
-        t_call = call;
+        t_call = std::move(call);
         t_point = std::chrono::steady_clock::now();
     };
 };
@@ -45,24 +45,24 @@ public:
     /**
      @brief     get time point
      */
-    steady_point getTimePoint_steady();
-    system_point getTimePoint_system();
+    static steady_point getTimePoint_steady();
+    static system_point getTimePoint_system();
     /**
      @brief     get time interval
      */
-    std::time_t getTimeInterval_steady(steady_point p0,steady_point p1);
-    std::time_t getTimeInterval_system(system_point p0,system_point p1);
+    static std::time_t getTimeInterval_steady(steady_point p0,steady_point p1);
+    static std::time_t getTimeInterval_system(system_point p0,system_point p1);
     /**
      @brief     get timestamp
      */
-    std::time_t getTimestamp_milliseconds();
-    std::time_t getTimestamp_seconds();
+    static std::time_t getTimestamp_milliseconds();
+    static std::time_t getTimestamp_seconds();
     /**
      @param t       timestamp
      @param timeInterval        time zone diff
      */
-    std::tm* getTimeFromTimestamp_milliseconds(std::time_t t,int timeInterval=0);
-    std::tm* getTimeFromTimestamp_seconds(std::time_t t,int timeInterval=0);
+    static std::tm* getTimeFromTimestamp_milliseconds(std::time_t t,int timeInterval=0);
+    static std::tm* getTimeFromTimestamp_seconds(std::time_t t,int timeInterval=0);
     
     /**
      @brief     this thread timer
