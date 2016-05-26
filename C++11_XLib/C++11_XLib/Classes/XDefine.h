@@ -147,7 +147,7 @@ using uint32=uint32_t;
 using uint64=uint64_t;
 #endif
 
-//log
+//log base define
 #define XLLOG(log_level,fmt,...) \
 do \
 { \
@@ -164,8 +164,15 @@ XUtil::setLevel(LOG_LEVEL::L_INFO);  \
 XUtil::log(fmt,##__VA_ARGS__); \
 }while(0)
 
+/////////////////////////////logs define////////////////////////
+#define LOG_I(fmt,...) XLLOG(LOG_LEVEL::L_INFO,fmt,##__VA_ARGS__)
+#define LOG_D(fmt,...) XLLOG(LOG_LEVEL::L_DEBUG,fmt,##__VA_ARGS__)
+#define LOG_W(fmt,...) XLLOG(LOG_LEVEL::L_WARN,fmt,##__VA_ARGS__)
+#define LOG_E(fmt,...) XLLOG(LOG_LEVEL::L_ERROR,fmt,##__VA_ARGS__)
+#define LOG_A(fmt,...) XLLOG(LOG_LEVEL::L_ALL,fmt,##__VA_ARGS__)
+#define LOG_F(fmt,...) XLLOG(LOG_LEVEL::L_FATAL,fmt,##__VA_ARGS__)
+
+
 #define XSTRING(fmt,...) XString::format(fmt,##__VA_ARGS__)
-
-
 
 #endif /* XDefine_h */
