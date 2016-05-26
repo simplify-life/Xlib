@@ -18,11 +18,13 @@
 
 using steady_point = std::chrono::steady_clock::time_point;
 using system_point = std::chrono::system_clock::time_point;
+
 struct timerData
 {
     bool t_handler;
     int t_count;
     std::time_t t_interval;
+    steady_point t_point;
     std::function<void()> t_call;
     timerData(int count,std::time_t interval,const std::function<void()>& call)
     {
@@ -30,6 +32,7 @@ struct timerData
         t_count = count;
         t_interval = interval;
         t_call = call;
+        t_point = std::chrono::steady_clock::now();
     };
 };
 
