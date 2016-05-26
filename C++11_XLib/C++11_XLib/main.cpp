@@ -12,8 +12,7 @@ int main(int argc, const char * argv[]) {
     XTime::getInstance()->doPertime(10, 1,[]
     {
         auto t = XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(),8);
-        //XLLOG(LOG_LEVEL::L_OFF,"");
-        XLOG("%02d:%02d:%02d",t->tm_hour,t->tm_min,t->tm_sec);
+        LOG_D("%02d:%02d:%02d",t->tm_hour,t->tm_min,t->tm_sec);
     } );
     while (true)
     {
