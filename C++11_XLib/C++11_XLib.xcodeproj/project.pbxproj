@@ -11,6 +11,7 @@
 		F4F0792F1CF6996D00153CA4 /* XTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4F0792D1CF6996D00153CA4 /* XTime.cpp */; };
 		F4F079D41CF6C5BB00153CA4 /* XString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4F079D31CF6C5BB00153CA4 /* XString.cpp */; };
 		F4F079D71CF6CC8300153CA4 /* XUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4F079D61CF6CC8300153CA4 /* XUtil.cpp */; };
+		F4F079DB1CF6F83900153CA4 /* XThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4F079DA1CF6F83900153CA4 /* XThread.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +36,8 @@
 		F4F079D51CF6CC5A00153CA4 /* XUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XUtil.h; sourceTree = "<group>"; };
 		F4F079D61CF6CC8300153CA4 /* XUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XUtil.cpp; sourceTree = "<group>"; };
 		F4F079D81CF6D47000153CA4 /* XDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XDefine.h; sourceTree = "<group>"; };
+		F4F079D91CF6F82700153CA4 /* XThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XThread.h; sourceTree = "<group>"; };
+		F4F079DA1CF6F83900153CA4 /* XThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XThread.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +86,8 @@
 				F4F079D51CF6CC5A00153CA4 /* XUtil.h */,
 				F4F079D61CF6CC8300153CA4 /* XUtil.cpp */,
 				F4F079D81CF6D47000153CA4 /* XDefine.h */,
+				F4F079D91CF6F82700153CA4 /* XThread.h */,
+				F4F079DA1CF6F83900153CA4 /* XThread.cpp */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -145,6 +150,7 @@
 			files = (
 				F4F079D71CF6CC8300153CA4 /* XUtil.cpp in Sources */,
 				F4F079D41CF6C5BB00153CA4 /* XString.cpp in Sources */,
+				F4F079DB1CF6F83900153CA4 /* XThread.cpp in Sources */,
 				F4F079261CF698D800153CA4 /* main.cpp in Sources */,
 				F4F0792F1CF6996D00153CA4 /* XTime.cpp in Sources */,
 			);
