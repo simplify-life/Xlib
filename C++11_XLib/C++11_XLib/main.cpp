@@ -6,14 +6,14 @@
 //  Copyright © 2016年 ximena. All rights reserved.
 //
 #include <iomanip>
-#include "Classes/XTime.h"
+#include "Classes/XDefine.h"
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+    
     XTime::getInstance()->doPertime(10, 1,[]
     {
         auto t = XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(),8);
-        std::cout<<std::setw(2)<<std::setfill('0')<<t->tm_hour<<":"<<std::setw(2)<<std::setfill('0')<<t->tm_min<<":"<<std::setw(2)<<std::setfill('0')<<t->tm_sec<<std::endl;
+        //XLLOG(LOG_LEVEL::L_OFF,"");
+        XLOG("%02d:%02d:%02d",t->tm_hour,t->tm_min,t->tm_sec);
     } );
     while (true)
     {

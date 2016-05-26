@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		F4F079261CF698D800153CA4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4F079251CF698D800153CA4 /* main.cpp */; };
 		F4F0792F1CF6996D00153CA4 /* XTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4F0792D1CF6996D00153CA4 /* XTime.cpp */; };
+		F4F079D41CF6C5BB00153CA4 /* XString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4F079D31CF6C5BB00153CA4 /* XString.cpp */; };
+		F4F079D71CF6CC8300153CA4 /* XUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4F079D61CF6CC8300153CA4 /* XUtil.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +30,11 @@
 		F4F079251CF698D800153CA4 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		F4F0792D1CF6996D00153CA4 /* XTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XTime.cpp; sourceTree = "<group>"; };
 		F4F0792E1CF6996D00153CA4 /* XTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XTime.h; sourceTree = "<group>"; };
+		F4F079D21CF6C5A200153CA4 /* XString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XString.h; sourceTree = "<group>"; };
+		F4F079D31CF6C5BB00153CA4 /* XString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XString.cpp; sourceTree = "<group>"; };
+		F4F079D51CF6CC5A00153CA4 /* XUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XUtil.h; sourceTree = "<group>"; };
+		F4F079D61CF6CC8300153CA4 /* XUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XUtil.cpp; sourceTree = "<group>"; };
+		F4F079D81CF6D47000153CA4 /* XDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XDefine.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +78,11 @@
 			children = (
 				F4F0792D1CF6996D00153CA4 /* XTime.cpp */,
 				F4F0792E1CF6996D00153CA4 /* XTime.h */,
+				F4F079D21CF6C5A200153CA4 /* XString.h */,
+				F4F079D31CF6C5BB00153CA4 /* XString.cpp */,
+				F4F079D51CF6CC5A00153CA4 /* XUtil.h */,
+				F4F079D61CF6CC8300153CA4 /* XUtil.cpp */,
+				F4F079D81CF6D47000153CA4 /* XDefine.h */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -131,6 +143,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4F079D71CF6CC8300153CA4 /* XUtil.cpp in Sources */,
+				F4F079D41CF6C5BB00153CA4 /* XString.cpp in Sources */,
 				F4F079261CF698D800153CA4 /* main.cpp in Sources */,
 				F4F0792F1CF6996D00153CA4 /* XTime.cpp in Sources */,
 			);
@@ -253,6 +267,7 @@
 				F4F0792B1CF698D800153CA4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
