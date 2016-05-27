@@ -68,6 +68,23 @@ time_t XTime::getTimestamp_seconds()
     return  std::chrono::system_clock::to_time_t(tp);
 }
 
+time_t XTime::getTimestamp_steady_mills()
+{
+    time_point<steady_clock,milliseconds> tp = time_point_cast<milliseconds>(steady_clock::now());
+    auto tmp=duration_cast<milliseconds>(tp.time_since_epoch());
+    std::time_t timestamp = tmp.count();
+    return timestamp;
+}
+
+time_t XTime::getTimestamp_steady_seconds()
+{
+    time_point<steady_clock,seconds> tp = time_point_cast<seconds>(steady_clock::now());
+    auto tmp=duration_cast<seconds>(tp.time_since_epoch());
+    std::time_t timestamp = tmp.count();
+    return timestamp;
+}
+
+
 tm* XTime::getTimeFromTimestamp_milliseconds(time_t t,int timeInterval)
 {
     time_t t_t = t + (time_t)timeInterval*60*60*1000;
@@ -77,6 +94,7 @@ tm* XTime::getTimeFromTimestamp_milliseconds(time_t t,int timeInterval)
     return std::gmtime(&tt);
 }
 
+
 tm* XTime::getTimeFromTimestamp_seconds(time_t t,int timeInterval)
 {
     time_t tt = t + (time_t)timeInterval*60*60;
@@ -84,7 +102,7 @@ tm* XTime::getTimeFromTimestamp_seconds(time_t t,int timeInterval)
 }
 
 
-void XTime::doPertime(int count,time_t interval, const std::function<void ()>& call)
+void XTime::doPertime(int count,float interval, const std::function<void ()>& call)
 {
     if(!mTimer)
     {
@@ -137,13 +155,13 @@ void XTimer::threadLoop()
 {
     while (true)
     {
-        this_thread::sleep_for(milliseconds(10));
+        this_thread::sleep_for(milliseconds(1));
         lock_guard<mutex> lck(tTaskMutex);
         for(auto itr=tTask.begin();itr!=tTask.end();itr++)
         {
-            auto tNow = steady_clock::now();
-            auto interval = XTime::getTimeInterval_steady(itr->t_point, tNow);
-            if(interval>=itr->t_interval&&itr->t_call&&itr->t_count)
+            auto tNow = time_point_cast<milliseconds>(steady_clock::now()).time_since_epoch().count();
+            auto interval = tNow-itr->t_point;
+            if(interval>=itr->t_interval*1000&&itr->t_call&&itr->t_count)
             {
                 itr->t_point = tNow;
                 itr->t_handler = true;

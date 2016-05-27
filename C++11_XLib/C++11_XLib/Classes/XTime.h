@@ -23,16 +23,16 @@ struct timerData
 {
     bool t_handler;
     int t_count;
-    std::time_t t_interval;
-    steady_point t_point;
+    float t_interval;
+    std::time_t t_point;
     std::function<void()> t_call;
-    timerData(int count,std::time_t interval,const std::function<void()>& call)
+    timerData(int count,float interval,const std::function<void()>& call)
     {
         t_handler = false;
         t_count = count;
         t_interval = interval;
         t_call = std::move(call);
-        t_point = std::chrono::steady_clock::now();
+        t_point = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()).time_since_epoch().count();
     };
 };
 
@@ -57,6 +57,8 @@ public:
      */
     static std::time_t getTimestamp_milliseconds();
     static std::time_t getTimestamp_seconds();
+    static std::time_t getTimestamp_steady_mills();
+    static std::time_t getTimestamp_steady_seconds();
     /**
      @param t       timestamp
      @param timeInterval        time zone diff
@@ -67,7 +69,7 @@ public:
     /**
      @brief     this thread timer
      */
-    void doPertime(int count,std::time_t interval,const std::function<void()>& call);
+    void doPertime(int count,float interval,const std::function<void()>& call);
     
     XTime();
     virtual ~XTime();
