@@ -9,6 +9,7 @@
 //----------------------------------------------//
 
 #include "XUtil.h"
+#include <string.h>
 
 using namespace std;
 LOG_LEVEL XUtil::mLog_level = LOG_LEVEL::L_ALL;

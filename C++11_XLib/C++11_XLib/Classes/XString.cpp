@@ -8,7 +8,8 @@
 //  Contact Email: xiaominghe2014@gmail.com
 //----------------------------------------------//
 #include "XString.h"
-#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
 using namespace std;
 
 string XString::format(const char * fmt, ...)
