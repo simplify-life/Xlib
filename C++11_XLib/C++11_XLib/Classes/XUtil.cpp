@@ -9,14 +9,17 @@
 //----------------------------------------------//
 
 #include "XUtil.h"
-#include <iostream>
 
 using namespace std;
-LOG_LEVEL XUtil::mLog_level = LOG_LEVEL::L_INFO;
-void XUtil::log(const char * fmt, ...)
+LOG_LEVEL XUtil::mLog_level = LOG_LEVEL::L_ALL;
+
+
+
+void XUtil::log(LOG_LEVEL level, const char * fmt, ...)
 {
+    if(level<mLog_level) return;
     
-    switch (mLog_level)
+    switch (level)
     {
         case LOG_LEVEL::L_INFO:
             cout<<"log info:    ";
@@ -41,6 +44,15 @@ void XUtil::log(const char * fmt, ...)
         default:
             break;
     }
+    va_list args;
+    va_start(args, fmt);
+    _log(fmt, args);
+    va_end(args);
+}
+
+void XUtil::log(const char * fmt, ...)
+{
+    
 #define X_MAX_LOG_LENGTH 1024*16
     va_list ap;
     va_start(ap, fmt);
@@ -54,6 +66,37 @@ void XUtil::log(const char * fmt, ...)
     va_end(ap);
     cout<<endl;
 }
+
+
+void XUtil::_log(const char *format, va_list args)
+{
+    int bufferSize = X_MAX_LOG_LENGTH;
+    char* buf = nullptr;
+    
+    do
+    {
+        buf = new (std::nothrow) char[bufferSize];
+        if (buf == nullptr)
+            return; // not enough memory
+        
+        int ret = vsnprintf(buf, bufferSize - 3, format, args);
+        if (ret < 0)
+        {
+            bufferSize *= 2;
+            
+            delete [] buf;
+        }
+        else
+            break;
+        
+    } while (true);
+    
+    strcat(buf, "\n");
+    fprintf(stdout, "%s", buf);
+    fflush(stdout);
+    delete [] buf;
+}
+
 
 void XUtil::setLevel(LOG_LEVEL level)
 {
