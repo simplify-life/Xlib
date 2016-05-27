@@ -10,7 +10,7 @@
 #include "Classes/XThread.h"
 int main(int argc, const char * argv[]) {
     
-    LOG_SET(LOG_LEVEL::L_INFO);
+    //LOG_SET(LOG_LEVEL::L_INFO);
     auto fun = []
     {
         std::this_thread::sleep_for(std::chrono::seconds(rand()%50));
@@ -25,7 +25,7 @@ int main(int argc, const char * argv[]) {
     pool->addTask(fun);
     pool->addTask(fun);
     
-    XTime::getInstance()->doPertime(-1, 1,[]
+    XTime::getInstance()->doPertime(-1, 0.5,[]
     {
         auto t = XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(),8);
         LOG_D("%02d:%02d:%02d",t->tm_hour,t->tm_min,t->tm_sec);

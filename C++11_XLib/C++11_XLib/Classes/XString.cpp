@@ -10,6 +10,7 @@
 #include "XString.h"
 #include <string.h>
 #include <stdarg.h>
+#include <stdlib.h>
 using namespace std;
 
 string XString::format(const char * fmt, ...)
