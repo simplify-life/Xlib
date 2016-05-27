@@ -14,113 +14,6 @@
 #include "XString.h"
 #include "XTime.h"
 
-// define supported target platform .
-#define X_P_UNKNOWN            0
-#define X_P_IOS                1
-#define X_P_ANDROID            2
-#define X_P_WIN32              3
-#define X_P_MARMALADE          4
-#define X_P_LINUX              5
-#define X_P_BADA               6
-#define X_P_BLACKBERRY         7
-#define X_P_MAC                8
-#define X_P_NACL               9
-#define X_P_EMSCRIPTEN        10
-#define X_P_TIZEN             11
-#define X_P_QT5               12
-#define X_P_WINRT             13
-
-// Determine current platform by compile environment macro.
-#define X_PLATFORM             X_P_UNKNOWN
-
-// mac
-#if defined(__APPLE__)
-#undef  X_PLATFORM
-#define X_PLATFORM         X_P_MAC
-#endif
-
-// iphone
-#if defined(CC_TARGET_OS_IPHONE)
-#undef  X_PLATFORM
-#define X_PLATFORM         X_P_IOS
-#endif
-
-// android
-#if defined(ANDROID)
-#undef  X_PLATFORM
-#define X_PLATFORM         X_P_ANDROID
-#endif
-
-// win32
-#if defined(_WIN32) && defined(_WINDOWS)
-#undef  X_PLATFORM
-#define X_PLATFORM         X_P_WIN32
-#endif
-
-// linux
-#if defined(LINUX) && !defined(__APPLE__)
-#undef  X_PLATFORM
-#define X_PLATFORM         X_P_LINUX
-#endif
-
-// marmalade
-#if defined(MARMALADE)
-#undef  X_PLATFORM
-#define X_PLATFORM         X_P_MARMALADE
-#endif
-
-// bada
-#if defined(SHP)
-#undef  X_PLATFORM
-#define X_PLATFORM         X_P_BADA
-#endif
-
-// qnx
-#if defined(__QNX__)
-#undef  X_PLATFORM
-#define X_PLATFORM     X_P_BLACKBERRY
-#endif
-
-// native client
-#if defined(__native_client__)
-#undef  X_PLATFORM
-#define X_PLATFORM     X_P_NACL
-#endif
-
-// Emscripten
-#if defined(EMSCRIPTEN)
-#undef  X_PLATFORM
-#define X_PLATFORM     X_P_EMSCRIPTEN
-#endif
-
-// tizen
-#if defined(TIZEN)
-#undef  X_PLATFORM
-#define X_PLATFORM     X_P_TIZEN
-#endif
-
-// qt5
-#if defined(CC_TARGET_QT5)
-#undef  X_PLATFORM
-#define X_PLATFORM     X_P_QT5
-#endif
-
-// WinRT (Windows 8.1 Store/Phone App)
-#if defined(WINRT)
-#undef  X_PLATFORM
-#define X_PLATFORM          X_P_WINRT
-#endif
-
-//////////////////////////////////////////////////////////////////////////
-// post configure
-//////////////////////////////////////////////////////////////////////////
-
-// check user set platform
-#if ! X_PLATFORM
-#error  "Cannot recognize the target platform; are you targeting an unsupported platform?"
-#endif
-
-
 
 //define cross-platform base data
 using uint=unsigned int;
@@ -153,18 +46,14 @@ do \
 { \
 if(LOG_LEVEL::L_ERROR==log_level||LOG_LEVEL::L_ALL==log_level||LOG_LEVEL::L_FATAL==log_level) \
 std::cout<<"("<<__FILE__ <<":"<<__FUNCTION__<<":"<<__LINE__<<")";\
-XUtil::setLevel(log_level);  \
-XUtil::log(fmt,##__VA_ARGS__); \
+XUtil::log(log_level,fmt,##__VA_ARGS__); \
 }while(0)
 
-#define XLOG(fmt,...) \
-do \
-{ \
-XUtil::setLevel(LOG_LEVEL::L_INFO);  \
-XUtil::log(fmt,##__VA_ARGS__); \
-}while(0)
+#define XLOG(fmt,...) XUtil::log(LOG_LEVEL,fmt,##__VA_ARGS__)
 
 /////////////////////////////logs define////////////////////////
+#define LOG_SET(log_level) XUtil::setLevel(log_level)
+
 #define LOG_I(fmt,...) XLLOG(LOG_LEVEL::L_INFO,fmt,##__VA_ARGS__)
 #define LOG_D(fmt,...) XLLOG(LOG_LEVEL::L_DEBUG,fmt,##__VA_ARGS__)
 #define LOG_W(fmt,...) XLLOG(LOG_LEVEL::L_WARN,fmt,##__VA_ARGS__)
