@@ -11,7 +11,7 @@
 #ifndef XUtil_h
 #define XUtil_h
 #include <iostream>
-
+#include <stdarg.h>
 // The max length of log message.
 static const int X_MAX_LOG_LENGTH = 16*1024;
 enum class LOG_LEVEL
