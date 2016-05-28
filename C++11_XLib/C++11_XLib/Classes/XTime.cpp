@@ -58,21 +58,21 @@ time_t XTime::getTimestamp_milliseconds()
 {
     time_point<system_clock,milliseconds> tp = time_point_cast<milliseconds>(system_clock::now());
     auto tmp=duration_cast<milliseconds>(tp.time_since_epoch());
-    std::time_t timestamp = tmp.count();
+    time_t timestamp = tmp.count();
     return timestamp;
 }
 
 time_t XTime::getTimestamp_seconds()
 {
     time_point<system_clock,seconds> tp = time_point_cast<seconds>(system_clock::now());
-    return  std::chrono::system_clock::to_time_t(tp);
+    return  system_clock::to_time_t(tp);
 }
 
 time_t XTime::getTimestamp_steady_mills()
 {
     time_point<steady_clock,milliseconds> tp = time_point_cast<milliseconds>(steady_clock::now());
     auto tmp=duration_cast<milliseconds>(tp.time_since_epoch());
-    std::time_t timestamp = tmp.count();
+    time_t timestamp = tmp.count();
     return timestamp;
 }
 
@@ -80,7 +80,7 @@ time_t XTime::getTimestamp_steady_seconds()
 {
     time_point<steady_clock,seconds> tp = time_point_cast<seconds>(steady_clock::now());
     auto tmp=duration_cast<seconds>(tp.time_since_epoch());
-    std::time_t timestamp = tmp.count();
+    time_t timestamp = tmp.count();
     return timestamp;
 }
 
@@ -90,15 +90,15 @@ tm* XTime::getTimeFromTimestamp_milliseconds(time_t t,int timeInterval)
     time_t t_t = t + (time_t)timeInterval*60*60*1000;
     auto mTime = milliseconds(t_t);
     auto tp=time_point<system_clock,milliseconds>(mTime);
-    auto tt=std::chrono::system_clock::to_time_t(tp);
-    return std::gmtime(&tt);
+    auto tt=system_clock::to_time_t(tp);
+    return gmtime(&tt);
 }
 
 
 tm* XTime::getTimeFromTimestamp_seconds(time_t t,int timeInterval)
 {
     time_t tt = t + (time_t)timeInterval*60*60;
-    return std::gmtime(&tt);
+    return gmtime(&tt);
 }
 
 

@@ -49,7 +49,7 @@ std::cout<<"("<<__FILE__ <<":"<<__FUNCTION__<<":"<<__LINE__<<")";\
 XUtil::log(log_level,fmt,##__VA_ARGS__); \
 }while(0)
 
-#define XLOG(fmt,...) XUtil::log(LOG_LEVEL,fmt,##__VA_ARGS__)
+#define XLOG(fmt,...) XUtil::log(fmt,##__VA_ARGS__)
 
 /////////////////////////////logs define////////////////////////
 #define LOG_SET(log_level) XUtil::setLevel(log_level)
