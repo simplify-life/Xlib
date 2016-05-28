@@ -53,8 +53,6 @@ void XUtil::log(LOG_LEVEL level, const char * fmt, ...)
 
 void XUtil::log(const char * fmt, ...)
 {
-    
-#define X_MAX_LOG_LENGTH 1024*16
     va_list ap;
     va_start(ap, fmt);
     char* buf = (char*)malloc(X_MAX_LOG_LENGTH);
