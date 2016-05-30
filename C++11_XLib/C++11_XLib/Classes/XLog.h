@@ -1,5 +1,5 @@
 //----------------------------------------------//
-//  XUtil.h
+//  XLog.h
 //  C++11_XLib
 //
 //  Copyright (c) __DATA__  Ximena.
@@ -8,8 +8,8 @@
 //  Contact Email: xiaominghe2014@gmail.com
 //----------------------------------------------//
 
-#ifndef XUtil_h
-#define XUtil_h
+#ifndef XLog_h
+#define XLog_h
 #include <iostream>
 #include <stdarg.h>
 // The max length of log message.
@@ -25,7 +25,7 @@ enum class LOG_LEVEL
    
     L_OFF
 };
-class XUtil
+class XLog
 {
 public:
     static void log(LOG_LEVEL,const char*,...);
@@ -39,4 +39,4 @@ private:
 
 
 
-#endif /* XUtil_h */
+#endif /* XLog_h */

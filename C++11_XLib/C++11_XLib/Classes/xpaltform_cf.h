@@ -49,7 +49,7 @@
 #endif
 
 // win32
-#if defined(_WIN32) && defined(_WINDOWS)
+#if defined(_WIN32) || defined(_WINDOWS)
 #undef  X_PLATFORM
 #define X_PLATFORM         X_P_WIN32
 #endif
