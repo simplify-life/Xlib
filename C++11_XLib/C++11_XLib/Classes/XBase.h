@@ -39,7 +39,19 @@ using uint32=uint32_t;
 using uint64=uint64_t;
 #endif
 
+//about array
 
+#define arraysize(array) (int)(sizeof(array)/sizeof((array)[0]))
+template<class T,int N>
+static int getValueIndex(T value,const T (&arr)[N])
+{
+    for (int i=0; i<arraysize(arr); i++)
+    {
+        if(value==arr[i]) return i;
+    }
+    return -1;
+}
+template<>
 //defined flags
 #define DEFINE_flag(type, name, deflt, desc) \
 namespace xlib { type FLAGS_##name = deflt; }
@@ -60,7 +72,13 @@ namespace xlib { extern type FLAGS_##name; }
 TypeName(const TypeName&)=delete;                 \
 TypeName& operator=(const TypeName&)=delete;
 
-#define arraysize(array) (int)(sizeof(array)/sizeof((array)[0]))
+
+//define namespace
+
+#define XLIB_BEGAIN namespace xlib{
+#define XLIB_END }
+#define US_NS_X using namespace xlib
+
 
 
 #endif /* XBase_h */

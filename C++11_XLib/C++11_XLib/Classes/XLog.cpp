@@ -12,6 +12,7 @@
 #include <string.h>
 
 using namespace std;
+XLIB_BEGAIN
 LOG_LEVEL XLog::mLog_level = LOG_LEVEL::L_ALL;
 
 
@@ -101,3 +102,5 @@ void XLog::setLevel(LOG_LEVEL level)
 {
     mLog_level = level;
 }
+
+XLIB_END

@@ -10,8 +10,11 @@
 
 #ifndef XString_h
 #define XString_h
+#include "XBase.h"
 #include <string>
 #include <vector>
+
+XLIB_BEGAIN
 class XString
 {
 public:
@@ -24,5 +27,5 @@ public:
     static bool isInt(const std::string&,bool ignoreSymbols=true);
     
 };
-
+XLIB_END
 #endif /* XString_h */

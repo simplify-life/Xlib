@@ -11,6 +11,7 @@
 #ifndef XThread_h
 #define XThread_h
 
+#include "XBase.h"
 #include <thread>
 #include <atomic>
 #include <list>
@@ -21,6 +22,7 @@
 #include <vector>
 #include <map>
 
+XLIB_BEGAIN
 //////TaskQueue class
 template <class T>
 class XTaskQueue : private std::mutex
@@ -37,9 +39,7 @@ public:
     void exit();
     inline bool isExited(){return exit_;};
 private:
-    XTaskQueue(const XTaskQueue&)=delete;
-    XTaskQueue& operator=(const XTaskQueue&)=delete;
-    
+    DISALLOW_COPY_AND_ASSIGN(XTaskQueue)
     void waitReady(std::unique_lock<std::mutex>&,int);
 private:
     std::atomic<bool> exit_;
@@ -56,10 +56,9 @@ extern template class XTaskQueue<Task_void>;
 class XThreadPool
 {
 private:
-    XThreadPool(const XThreadPool&)=delete;
-    XThreadPool& operator=(const XThreadPool&)=delete;
+    DISALLOW_COPY_AND_ASSIGN(XThreadPool)
 public:
-    XThreadPool(int threads,int taskCapacity=0,bool start=true);
+    explicit XThreadPool(int threads,int taskCapacity=0,bool start=true);
     ~XThreadPool();
     XThreadPool& exit(){mTaskQueue.exit(); return *this;};
     void start();
@@ -136,5 +135,5 @@ T XTaskQueue<T>::popWait(int waitTime)
     return t;
 }
 
-
+XLIB_END
 #endif /* XThread_h */
