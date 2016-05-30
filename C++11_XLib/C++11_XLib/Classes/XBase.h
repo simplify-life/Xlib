@@ -52,6 +52,13 @@ static int getValueIndex(T value,const T (&arr)[N])
     return -1;
 }
 //template<>
+
+//define namespace
+
+#define XLIB_BEGAIN namespace xlib{
+#define XLIB_END }
+#define US_NS_X using namespace xlib
+
 //defined flags
 #define DEFINE_flag(type, name, deflt, desc) \
 namespace xlib { type FLAGS_##name = deflt; }
@@ -68,17 +75,20 @@ namespace xlib { extern type FLAGS_##name; }
 #define DECLARE_string(name) DECLARE_flag(string, name)
 
 
+/** @def CC_DISALLOW_COPY_AND_ASSIGN(TypeName)
+ * A macro to disallow the copy constructor and operator= functions.
+ * This should be used in the private: declarations for a class
+ */
+#if defined(__GNUC__) && ((__GNUC__ >= 5) || ((__GNUG__ == 4) && (__GNUC_MINOR__ >= 4))) \
+|| (defined(__clang__) && (__clang_major__ >= 3)) || (_MSC_VER >= 1800)
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
-TypeName(const TypeName&)=delete;                 \
-TypeName& operator=(const TypeName&)=delete;
-
-
-//define namespace
-
-#define XLIB_BEGAIN namespace xlib{
-#define XLIB_END }
-#define US_NS_X using namespace xlib
-
+TypeName(const TypeName &) = delete; \
+TypeName &operator =(const TypeName &) = delete;
+#else
+#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
+TypeName(const TypeName &); \
+TypeName &operator =(const TypeName &);
+#endif
 
 
 #endif /* XBase_h */
