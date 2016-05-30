@@ -8,15 +8,15 @@
 //  Contact Email: xiaominghe2014@gmail.com
 //----------------------------------------------//
 
-#include "XUtil.h"
+#include "XLog.h"
 #include <string.h>
 
 using namespace std;
-LOG_LEVEL XUtil::mLog_level = LOG_LEVEL::L_ALL;
+LOG_LEVEL XLog::mLog_level = LOG_LEVEL::L_ALL;
 
 
 
-void XUtil::log(LOG_LEVEL level, const char * fmt, ...)
+void XLog::log(LOG_LEVEL level, const char * fmt, ...)
 {
     if(level<mLog_level) return;
     
@@ -51,7 +51,7 @@ void XUtil::log(LOG_LEVEL level, const char * fmt, ...)
     va_end(args);
 }
 
-void XUtil::log(const char * fmt, ...)
+void XLog::log(const char * fmt, ...)
 {
     va_list ap;
     va_start(ap, fmt);
@@ -67,7 +67,7 @@ void XUtil::log(const char * fmt, ...)
 }
 
 
-void XUtil::_log(const char *format, va_list args)
+void XLog::_log(const char *format, va_list args)
 {
     int bufferSize = X_MAX_LOG_LENGTH;
     char* buf = nullptr;
@@ -97,7 +97,7 @@ void XUtil::_log(const char *format, va_list args)
 }
 
 
-void XUtil::setLevel(LOG_LEVEL level)
+void XLog::setLevel(LOG_LEVEL level)
 {
     mLog_level = level;
 }

@@ -19,7 +19,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <vector>
-
+#include <map>
 
 //////TaskQueue class
 template <class T>
@@ -49,6 +49,7 @@ private:
 };
 
 //////////XThreadPool class
+//using Task_void = std::map<std::function<void()>,bool>;
 using Task_void = std::function<void()>;
 extern template class XTaskQueue<Task_void>;
 

@@ -9,6 +9,7 @@
 
 #ifndef XTime_h
 #define XTime_h
+#include "XBase.h"
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -93,8 +94,7 @@ public:
 protected:
     void threadLoop();
 private:
-    XTimer(const XTimer& timer) = delete;
-    XTimer& operator=(XTimer& timer) = delete;
+    DISALLOW_COPY_AND_ASSIGN(XTimer)
 private:
     static XTimer* tSelf;
     std::thread tThread;
