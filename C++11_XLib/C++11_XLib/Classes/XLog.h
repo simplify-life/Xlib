@@ -10,8 +10,12 @@
 
 #ifndef XLog_h
 #define XLog_h
+
+#include "XBase.h"
 #include <iostream>
 #include <stdarg.h>
+
+XLIB_BEGAIN
 // The max length of log message.
 static const int X_MAX_LOG_LENGTH = 16*1024;
 enum class LOG_LEVEL
@@ -37,6 +41,6 @@ private:
     static LOG_LEVEL mLog_level;
 };
 
-
+XLIB_END
 
 #endif /* XLog_h */

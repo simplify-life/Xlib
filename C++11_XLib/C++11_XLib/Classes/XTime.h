@@ -17,6 +17,8 @@
 #include <mutex>
 #include <functional>
 
+XLIB_BEGAIN
+
 using steady_point = std::chrono::steady_clock::time_point;
 using system_point = std::chrono::system_clock::time_point;
 
@@ -102,4 +104,5 @@ private:
     std::mutex tTaskMutex;
 };
 
+XLIB_END
 #endif /* XTime_h */

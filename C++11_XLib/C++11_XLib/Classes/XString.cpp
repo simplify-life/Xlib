@@ -14,6 +14,8 @@
 #include <algorithm>
 using namespace std;
 
+XLIB_BEGAIN
+
 string XString::format(const char * fmt, ...)
 {
 #define X_MAX_STRING_LENGTH (1024*100)
@@ -111,3 +113,5 @@ bool XString::isInt(const std::string &str,bool ignoreSymbols)
     }
     return false;
 }
+
+XLIB_END

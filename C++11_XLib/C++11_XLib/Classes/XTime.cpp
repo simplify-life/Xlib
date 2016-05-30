@@ -12,7 +12,7 @@ using namespace std;
 using namespace std::chrono;
 
 //std::timed_mutex mtx_time;
-
+XLIB_BEGAIN
 XTime* XTime::mTime=nullptr;
 XTimer* XTimer::tSelf=nullptr;
 XTime::XTime():mTimer()
@@ -184,3 +184,5 @@ void XTimer::addTask(const timerData &data)
     lock_guard<mutex> lck(tTaskMutex);
     tTask.emplace_back(data);
 }
+
+XLIB_END

@@ -14,6 +14,8 @@
 #include "XDefine.h"
 using namespace std;
 
+XLIB_BEGAIN
+
 template class XTaskQueue<Task_void>;
 
 XThreadPool::XThreadPool(int threads,int maxWaiting,bool start):
@@ -69,3 +71,5 @@ bool XThreadPool::addTask(Task_void && task)
 {
     return mTaskQueue.push(move(task));
 }
+
+XLIB_END

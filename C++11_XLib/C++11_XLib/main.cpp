@@ -9,7 +9,7 @@
 #include "Classes/XDefine.h"
 #include "Classes/XThread.h"
 int main(int argc, const char * argv[]) {
-    
+    US_NS_X;
     LOG_SET(LOG_LEVEL::L_INFO);
     auto fun = []
     {
