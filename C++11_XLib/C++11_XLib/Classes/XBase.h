@@ -51,7 +51,7 @@ static int getValueIndex(T value,const T (&arr)[N])
     }
     return -1;
 }
-template<>
+//template<>
 //defined flags
 #define DEFINE_flag(type, name, deflt, desc) \
 namespace xlib { type FLAGS_##name = deflt; }
