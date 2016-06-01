@@ -57,7 +57,7 @@ string XString::trim(const char key,const string& str)
     return ret;
 }
 
-vector<string> XString::split(const std::string& key, const std::string &str)
+vector<string> XString::split(const string& key, const string &str)
 {
     vector<string> ret;
     string::size_type start=0,end=0,increment=key.size();
@@ -73,7 +73,7 @@ vector<string> XString::split(const std::string& key, const std::string &str)
     return ret;
 }
 
-int XString::count(const std::string & key, const std::string &str)
+int XString::count(const string & key, const string &str)
 {
    
     if(key.empty()||str.empty()) return 0;
@@ -87,7 +87,7 @@ int XString::count(const std::string & key, const std::string &str)
     return t;
 }
 
-bool XString::isInt(const std::string &str,bool ignoreSymbols)
+bool XString::isInt(const string &str,bool ignoreSymbols)
 {
     if(!str.empty())
     {

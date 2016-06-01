@@ -10,7 +10,8 @@
 #include "Classes/XThread.h"
 int main(int argc, const char * argv[]) {
     US_NS_X;
-    LOG_SET(LOG_LEVEL::L_INFO);
+    LOG_SET(LOG_LEVEL::L_ALL);
+    
     auto fun = []
     {
         std::this_thread::sleep_for(std::chrono::seconds(rand()%50));

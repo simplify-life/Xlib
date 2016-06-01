@@ -90,5 +90,8 @@ TypeName(const TypeName &); \
 TypeName &operator =(const TypeName &);
 #endif
 
+#define X_VECTOR(T,NAME,...) \
+std::vector<T> NAME{__VAR_ARGS__}
+
 
 #endif /* XBase_h */
