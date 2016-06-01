@@ -1,5 +1,5 @@
 //----------------------------------------------//
-//  xpaltform_cf.h
+//  xpaltform.h
 //  C++11_XLib
 //
 //  Copyright (c) __DATA__  Ximena.
@@ -8,8 +8,8 @@
 //  Contact Email: xiaominghe2014@gmail.com
 //----------------------------------------------//
 
-#ifndef xpaltform_cf_h
-#define xpaltform_cf_h
+#ifndef xpaltform_h
+#define xpaltform_h
 
 // define supported target platform .
 #define X_P_UNKNOWN            0
@@ -117,4 +117,11 @@
 #error  "Cannot recognize the target platform; are you targeting an unsupported platform?"
 #endif
 
-#endif /* xpaltform_cf_h */
+/** 判断平台是否为小端字节序 */
+inline bool isPlatformLittleEndian()
+{
+    int n = 1;
+    return *((char*)&n) ? true : false;
+}
+
+#endif /* xpaltform_h */
