@@ -114,4 +114,23 @@ bool XString::isInt(const string &str,bool ignoreSymbols)
     return false;
 }
 
+int XString::compareVersion(const string& sv1, const string& sv2, const string& key)
+{
+	if (sv1.empty() || sv2.empty() || key.empty()) return 3;
+	auto v1 = split(key, sv1);
+	auto v2 = split(key, sv2);
+	string::size_type count = v1.size() > v2.size() ? v2.size() : v1.size();
+	for (string::size_type i = 0; i < count;i++)
+	{
+		if (!isInt(v1.at(i)) || !isInt(v2.at(i))) return 3;
+		int v1_int = atoi(v1.at(i).c_str());
+		int v2_int = atoi(v2.at(i).c_str());
+		if (v1_int > v2_int) return 1;
+		if (v1_int < v2_int) return -1;
+	}
+	if (v1.size() > v2.size()) return 1;
+	if (v1.size() < v2.size()) return -1;
+	return 0;
+}
+
 XLIB_END
