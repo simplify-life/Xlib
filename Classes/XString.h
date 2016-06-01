@@ -25,7 +25,8 @@ public:
     static std::vector<std::string> split(const std::string&,const std::string&);
     static int count(const std::string&,const std::string&);
     static bool isInt(const std::string&,bool ignoreSymbols=true);
-    
+    static int compareVersion(const std::string&,const std::string&,const std::string& key=".");
+
 };
 XLIB_END
 #endif /* XString_h */
