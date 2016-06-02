@@ -9,7 +9,7 @@
 //----------------------------------------------//
 
 #include "XRegex.h"
-fdef __clang__
+#ifdef __clang__
 #include <regex>
 #else
     #if defined(__GNUC__) && defined(__GNUC_MINOR__ )
