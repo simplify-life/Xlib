@@ -9,14 +9,26 @@
 //----------------------------------------------//
 
 #include "XRegex.h"
-//#include <regex>
-#ifdef __GNUC__
-#include <tr1/regex>
-using namespace std::tr1;
-#else
+fdef __clang__
 #include <regex>
+#else
+    #if defined(__GNUC__) && defined(__GNUC_MINOR__ )
+        #if(__GNUC__>4)||(__GNUC__==4)&&(__GNUC_MINOR__>=9)
+            #include <regex>
+            #else
+            #include <tr1::regex>
+            using namespace std::tr1;
+        #endif
+    #endif
+    #ifdef _MSC_VER
+        #if _MSC_VER>=1800
+            #include <regex>
+            #else
+            #include <tr1::regex>
+            using namespace std::tr1;
+        #endif
+    #endif
 #endif
-
 XLIB_BEGAIN
 
 using namespace std;
