@@ -11,6 +11,9 @@
 #ifndef xplatform_h
 #define xplatform_h
 
+
+namespace xlib{
+    
 // define supported target platform .
 #define X_P_UNKNOWN            0
 #define X_P_IOS                1
@@ -124,4 +127,5 @@ inline bool isPlatformLittleEndian()
     return *((char*)&n) ? true : false;
 }
 
+}//end xlib
 #endif /* xplatform_h */

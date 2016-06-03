@@ -12,10 +12,21 @@
 #define XBase_h
 
 #include <stdint.h>
+#include <cstdint>  //using eg.std::int8_t
 
+
+#if __cplusplus < 201103L
+//#error "should use c++11 implementation"//delete this error,  most compiler has not full support for C++11 
+#endif // __cplusplus
+
+
+//namespace xlib {
+
+    
+    
 //define cross-platform base data
 using uint=unsigned int;
-
+using byte=std::uint8_t;
 #ifdef _MSC_VER
 using int8=__int8;
 using int16=__int16;
@@ -107,6 +118,11 @@ TypeName &operator =(const TypeName &);
 
 #define X_VECTOR(T,NAME,...) \
 std::vector<T> NAME{__VAR_ARGS__}
+    
+    
+    
+
+//} //end namespace xlib
 
 
 #endif /* XBase_h */

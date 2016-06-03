@@ -21,8 +21,8 @@ static const int X_MAX_LOG_LENGTH = 16*1024;
 enum class LOG_LEVEL
 {
     L_ALL = 0,
-    L_DEBUG,
     L_INFO,
+    L_DEBUG,
     L_WARN,
     L_ERROR,
     L_FATAL,
@@ -36,12 +36,16 @@ public:
     static void log(const char*,...);
     static void setLevel(LOG_LEVEL);
     inline static void setTimeZone(int timeZone){ mTimeZone = timeZone;};
+    inline static void setWrite(bool isWrite,const std::string& fullLogfile){ mWrite = isWrite; logFile = fullLogfile;};
 private:
-    static void _log(const char*,va_list);
-    static void logTime();
+    static std::string _log(const char*,va_list);
+    static std::string logTime();
+    static void writeLog(const std::string& logmsg);
 private:
     static LOG_LEVEL mLog_level;
     static int mTimeZone;
+    static bool mWrite;
+    static std::string logFile;
 };
 
 XLIB_END
