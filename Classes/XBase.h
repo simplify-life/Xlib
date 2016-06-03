@@ -75,7 +75,7 @@ namespace xlib { extern type FLAGS_##name; }
 #define DECLARE_string(name) DECLARE_flag(string, name)
 
 
-/** @def CC_DISALLOW_COPY_AND_ASSIGN(TypeName)
+/** @def DISALLOW_COPY_AND_ASSIGN(TypeName)
  * A macro to disallow the copy constructor and operator= functions.
  * This should be used in the private: declarations for a class
  */
@@ -89,6 +89,21 @@ TypeName &operator =(const TypeName &) = delete;
 TypeName(const TypeName &); \
 TypeName &operator =(const TypeName &);
 #endif
+
+#if defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1)))
+#define DEPRECATED_ATTRIBUTE __attribute__((deprecated))
+#elif _MSC_VER >= 1400 //vs 2005 or higher
+#define DEPRECATED_ATTRIBUTE __declspec(deprecated)
+#else
+#define DEPRECATED_ATTRIBUTE
+#endif
+
+/** @def DEPRECATED(...)
+ * Macro to mark things deprecated as of a particular version
+ * can be used with arbitrary parameters which are thrown away.
+ * e.g. DEPRECATED(4.0) or DEPRECATED(4.0, "not going to need this anymore") etc.
+ */
+#define DEPRECATED(...) DEPRECATED_ATTRIBUTE
 
 #define X_VECTOR(T,NAME,...) \
 std::vector<T> NAME{__VAR_ARGS__}

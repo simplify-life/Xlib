@@ -9,18 +9,20 @@
 //----------------------------------------------//
 
 #include "XLog.h"
+#include "XString.h"
+#include "XTime.h"
 #include <string.h>
 
 using namespace std;
 XLIB_BEGAIN
 LOG_LEVEL XLog::mLog_level = LOG_LEVEL::L_ALL;
 
-
+int XLog::mTimeZone = 8;//默认东八区,default GMT+8 Time Zone
 
 void XLog::log(LOG_LEVEL level, const char * fmt, ...)
 {
-    if(level<mLog_level) return;
-    
+    if(level<mLog_level||level==LOG_LEVEL::L_OFF) return;
+    logTime();
     switch (level)
     {
         case LOG_LEVEL::L_INFO:
@@ -41,8 +43,6 @@ void XLog::log(LOG_LEVEL level, const char * fmt, ...)
         case LOG_LEVEL::L_FATAL:
             cout<<"log fatal:   ";
             break;
-        case LOG_LEVEL::L_OFF:
-            return;
         default:
             break;
     }
@@ -101,6 +101,11 @@ void XLog::_log(const char *format, va_list args)
 void XLog::setLevel(LOG_LEVEL level)
 {
     mLog_level = level;
+}
+
+void XLog::logTime()
+{
+    cout<<"["<<XString::formatTime(XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(),mTimeZone), xlib::TIME_F::LOG_TIME)<<"] ";
 }
 
 XLIB_END
