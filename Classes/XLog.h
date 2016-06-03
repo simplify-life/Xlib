@@ -35,10 +35,13 @@ public:
     static void log(LOG_LEVEL,const char*,...);
     static void log(const char*,...);
     static void setLevel(LOG_LEVEL);
+    inline static void setTimeZone(int timeZone){ mTimeZone = timeZone;};
 private:
     static void _log(const char*,va_list);
+    static void logTime();
 private:
     static LOG_LEVEL mLog_level;
+    static int mTimeZone;
 };
 
 XLIB_END

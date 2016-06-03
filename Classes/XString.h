@@ -13,12 +13,22 @@
 #include "XBase.h"
 #include <string>
 #include <vector>
-
+#include <ctime>
 XLIB_BEGAIN
+enum class TIME_F : unsigned char
+{
+    H12_M_S,    //12 hour:minute:seconds
+    H24_M_S,    //24 hour:minute:seconds
+    Y_M_D,      //year-month-day
+    W_D,        //weekday
+    LOG_TIME,
+    T_DEFAULT,  //default format
+};
 class XString
 {
 public:
     static std::string format(const char*,...);
+    static std::string formatTime(const std::tm*,const TIME_F&);
     static std::string toUpper(const std::string&);
     static std::string toLower(const std::string&);
     static std::string trim(const char,const std::string&);

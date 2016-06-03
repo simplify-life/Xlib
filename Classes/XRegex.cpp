@@ -16,8 +16,9 @@
         #if(__GNUC__>4)||(__GNUC__==4)&&(__GNUC_MINOR__>=9)
             #include <regex>
             #else
-            #include <tr1::regex>
-            using namespace std::tr1;
+            //#include <tr1::regex>
+            //using namespace std::tr1;
+            #define NO_USE_REGEX
         #endif
     #endif
     #ifdef _MSC_VER
@@ -36,17 +37,21 @@ using namespace std;
 vector<string> XRegex::getMatch(const string &src, const string &pattern)
 {
     vector<string> result;
-//    const sregex_token_iterator end;
-//    for (sregex_token_iterator i(src.begin(),src.end(),regex(pattern.c_str())); i!=end;i++)
-//    {
-//        result.emplace_back(*i);
-//    }
+#ifndef NO_USE_REGEX
+    const sregex_token_iterator end;
+    for (sregex_token_iterator i(src.begin(),src.end(),regex(pattern.c_str())); i!=end;i++)
+    {
+        result.emplace_back(*i);
+    }
+#endif
     return result;
 }
 
 string XRegex::replace(const string &src, const string &pattern, const string &replace_str)
 {
-    //return regex_replace(src,regex(pattern),replace_str);
+#ifndef NO_USE_REGEX
+    return regex_replace(src,regex(pattern),replace_str);
+#endif
     return "";
 }
 

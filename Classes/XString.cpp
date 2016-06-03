@@ -133,4 +133,36 @@ int XString::compareVersion(const string& sv1, const string& sv2, const string& 
 	return 0;
 }
 
+string XString::formatTime(const tm * ttime, const xlib::TIME_F &fmt)
+{
+#define TIME_STR_SIZE 80
+    char t[TIME_STR_SIZE];
+    string sfmt = "";
+    switch (fmt)
+    {
+        case xlib::TIME_F::H12_M_S:
+            sfmt = "%I:%M:%S";
+            break;
+        case xlib::TIME_F::H24_M_S:
+            sfmt = "%H:%M:%S";
+            break;
+        case xlib::TIME_F::Y_M_D:
+            sfmt = "%Y-%m-%d";
+            break;
+        case xlib::TIME_F::W_D:
+            sfmt = "%A";
+            break;
+        case xlib::TIME_F::LOG_TIME:
+            sfmt = "%Y-%m-%d %H:%M:%S";
+            break;
+        case xlib::TIME_F::T_DEFAULT:
+            sfmt = "%Y-%m-%d %A %H:%M:%S";
+        default:
+            break;
+    }
+    strftime(t,TIME_STR_SIZE, sfmt.c_str(), ttime);
+    return string(t);
+}
+
+
 XLIB_END
