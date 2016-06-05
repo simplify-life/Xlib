@@ -14,28 +14,32 @@
 #include "XString.h"
 #include "XTime.h"
 
+
+#define XSTRING(fmt,...) xlib::XString::format(fmt,##__VA_ARGS__)
+
 //log base define
 #define XLLOG(log_level,fmt,...) \
 do \
 { \
-if(LOG_LEVEL::L_ERROR==log_level||LOG_LEVEL::L_ALL==log_level||LOG_LEVEL::L_FATAL==log_level) \
-std::cout<<"("<<__FILE__ <<":"<<__FUNCTION__<<":"<<__LINE__<<")";\
-XLog::log(log_level,fmt,##__VA_ARGS__); \
+if (xlib::LOG_LEVEL::L_INFO < log_level || xlib::LOG_LEVEL::L_ALL == log_level)\
+	{ \
+		std::string lfmt = XSTRING("In %s ->%s->%d:\t,%s", __FILE__, __FUNCTION__, __LINE__, fmt);	\
+		xlib::XLog::log(log_level, lfmt.c_str(), ##__VA_ARGS__); \
+	} \
+else \
+xlib::XLog::log(log_level,fmt,##__VA_ARGS__); \
 }while(0)
 
-#define XLOG(fmt,...) XLog::log(fmt,##__VA_ARGS__)
+#define XLOG(fmt,...) xlib::XLog::log(fmt,##__VA_ARGS__)
 
 /////////////////////////////logs define////////////////////////
-#define LOG_SET(log_level) XLog::setLevel(log_level)
+#define LOG_SET(log_level) xlib::XLog::setLevel(log_level)
 
-#define LOG_I(fmt,...) XLLOG(LOG_LEVEL::L_INFO,fmt,##__VA_ARGS__)
-#define LOG_D(fmt,...) XLLOG(LOG_LEVEL::L_DEBUG,fmt,##__VA_ARGS__)
-#define LOG_W(fmt,...) XLLOG(LOG_LEVEL::L_WARN,fmt,##__VA_ARGS__)
-#define LOG_E(fmt,...) XLLOG(LOG_LEVEL::L_ERROR,fmt,##__VA_ARGS__)
-#define LOG_A(fmt,...) XLLOG(LOG_LEVEL::L_ALL,fmt,##__VA_ARGS__)
-#define LOG_F(fmt,...) XLLOG(LOG_LEVEL::L_FATAL,fmt,##__VA_ARGS__)
-
-
-#define XSTRING(fmt,...) XString::format(fmt,##__VA_ARGS__)
+#define LOG_I(fmt,...) XLLOG(xlib::LOG_LEVEL::L_INFO,fmt,##__VA_ARGS__)
+#define LOG_D(fmt,...) XLLOG(xlib::LOG_LEVEL::L_DEBUG,fmt,##__VA_ARGS__)
+#define LOG_W(fmt,...) XLLOG(xlib::LOG_LEVEL::L_WARN,fmt,##__VA_ARGS__)
+#define LOG_E(fmt,...) XLLOG(xlib::LOG_LEVEL::L_ERROR,fmt,##__VA_ARGS__)
+#define LOG_A(fmt,...) XLLOG(xlib::LOG_LEVEL::L_ALL,fmt,##__VA_ARGS__)
+#define LOG_F(fmt,...) XLLOG(xlib::LOG_LEVEL::L_FATAL,fmt,##__VA_ARGS__)
 
 #endif /* XDefine_h */

@@ -21,8 +21,8 @@ static const int X_MAX_LOG_LENGTH = 16*1024;
 enum class LOG_LEVEL
 {
     L_ALL = 0,
-    L_DEBUG,
     L_INFO,
+    L_DEBUG,
     L_WARN,
     L_ERROR,
     L_FATAL,
