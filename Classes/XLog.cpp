@@ -11,6 +11,7 @@
 #include "XLog.h"
 #include "XString.h"
 #include "XTime.h"
+#include "XFileUtil.h"
 #include <string.h>
 
 using namespace std;
@@ -19,33 +20,42 @@ LOG_LEVEL XLog::mLog_level = LOG_LEVEL::L_ALL;
 
 int XLog::mTimeZone = 8;//默认东八区,default GMT+8 Time Zone
 
+bool XLog::mWrite = false;
+
+std::string XLog::logFile = "";
+
 void XLog::log(LOG_LEVEL level, const char * fmt, ...)
 {
     if(level<mLog_level||level==LOG_LEVEL::L_OFF) return;
-    logTime();
+    string attr = logTime();
     switch (level)
     {
         case LOG_LEVEL::L_INFO:
-            cout<<"log info:    ";
+	    attr += "info:    ";
             break;
         case LOG_LEVEL::L_DEBUG:
-            cout<<"log debug:   ";
+            attr += "debug:   ";
             break;
         case LOG_LEVEL::L_WARN:
-            cout<<"log warn:    ";
+            attr += "warn:    ";
             break;
         case LOG_LEVEL::L_ERROR:
-            cout<<"log error:   ";
+            attr += "error:   ";
             break;
         case LOG_LEVEL::L_ALL:
-            cout<<"log all:   ";
+            attr += "all:   ";
             break;
         case LOG_LEVEL::L_FATAL:
-            cout<<"log fatal:   ";
+            attr += "fatal:   ";
             break;
         default:
             break;
     }
+	cout << attr;
+	if (mWrite)
+	{
+	   writeLog(XString::format("%s%s", attr.c_str(), fmt));
+	}
     va_list args;
     va_start(args, fmt);
     _log(fmt, args);
@@ -103,9 +113,17 @@ void XLog::setLevel(LOG_LEVEL level)
     mLog_level = level;
 }
 
-void XLog::logTime()
+string XLog::logTime()
 {
-    cout<<"["<<XString::formatTime(XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(),mTimeZone), xlib::TIME_F::LOG_TIME)<<"] ";
+	string timelog = XString::formatTime(XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(), mTimeZone), xlib::TIME_F::LOG_TIME);
+ 	cout<<"["<<timelog<<"] ";
+	return "[" + timelog + "]";
+}
+
+void XLog::writeLog(const string& logmsg)
+{
+	if(logFile.empty()||logFile=="") return;
+	XFileUtil::getInstance()->writeTxtLineToFile(logmsg, logFile);
 }
 
 XLIB_END

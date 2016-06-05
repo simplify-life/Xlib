@@ -23,7 +23,7 @@ do \
 { \
 if (xlib::LOG_LEVEL::L_INFO < log_level || xlib::LOG_LEVEL::L_ALL == log_level)\
 	{ \
-		std::string lfmt = XSTRING("In %s ->%s->%d:\t,%s", __FILE__, __FUNCTION__, __LINE__, fmt);	\
+		std::string lfmt = XSTRING("In %s ->%s->%d:\t %s", __FILE__, __FUNCTION__, __LINE__, fmt);	\
 		xlib::XLog::log(log_level, lfmt.c_str(), ##__VA_ARGS__); \
 	} \
 else \

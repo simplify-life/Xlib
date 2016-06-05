@@ -36,12 +36,16 @@ public:
     static void log(const char*,...);
     static void setLevel(LOG_LEVEL);
     inline static void setTimeZone(int timeZone){ mTimeZone = timeZone;};
+    inline static void setWrite(bool isWrite,const std::string& fullLogfile){ mWrite = isWrite; logFile = fullLogfile;};
 private:
     static void _log(const char*,va_list);
-    static void logTime();
+    static std::string logTime();
+    static void writeLog(const std::string& logmsg);
 private:
     static LOG_LEVEL mLog_level;
     static int mTimeZone;
+    static bool mWrite;
+    static std::string logFile;
 };
 
 XLIB_END
