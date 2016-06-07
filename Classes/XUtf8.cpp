@@ -23,9 +23,9 @@ XUtf8* XUtf8::getInstance()
 }
 
 
-int XUtf8::getlen(const char* unicode)
+unsigned int XUtf8::getlen(const char* unicode)
 {
-    int c=0,len = 0;
+    unsigned int c=0,len = 0;
     while(unicode[c])
     {
         if((unicode[c]&0xc0)!=0x80) len++;
@@ -34,16 +34,16 @@ int XUtf8::getlen(const char* unicode)
         return len;
 }
 
-int XUtf8::getlen(const string & s_utf8)
+unsigned int XUtf8::getlen(const string & s_utf8)
 {
     return getlen(s_utf8.c_str());
 }
 
 
-string XUtf8::getWord(int idx, const string &src)
+string XUtf8::getWord(unsigned int idx, const string &src)
 {
     const char* src_ = src.c_str();
-    int c=0,len = 0 ;
+    unsigned int c=0,len = 0 ;
     string::size_type start=string::npos,end = string::npos;
     while (src_[c])
     {
@@ -66,16 +66,16 @@ string XUtf8::getWord(int idx, const string &src)
     return src.substr(start,end-start);
 }
 
-unordered_map<int,int> XUtf8::getMsg(const string &src)
+unordered_map<unsigned int,unsigned int> XUtf8::getMsg(const string &src)
 {
-    unordered_map<int,int> map_msg;
+    unordered_map<unsigned int,unsigned int> map_msg;
     const char* src_ = src.c_str();
-    int c=0,len =0;
+    unsigned int c=0,len =0;
     while (src_[c])
     {
         if((src_[c]&0xc0)!=0x80)
         {
-            map_msg.insert(unordered_map<int, int>::value_type(len,0));
+            map_msg.insert(unordered_map<unsigned int, unsigned int>::value_type(len,0));
             len++;
         }
         map_msg.find(len-1)->second++;

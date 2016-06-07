@@ -24,17 +24,17 @@ class XUtf8
 public:
     static XUtf8* getInstance();
 public:
-    int getlen(const char*);
-    int getlen(const std::string&);
+    unsigned int getlen(const char*);
+    unsigned int getlen(const std::string&);
     /**
      get the idx words in utf8 string,not char!
      */
-    std::string getWord(int idx,const std::string& src);
+    std::string getWord(unsigned int idx,const std::string& src);
     
     /**
      get unicode message ,key is (words) idx,value is (words) length.
      */
-    std::unordered_map<int,int> getMsg(const std::string&);
+    std::unordered_map<unsigned int,unsigned int> getMsg(const std::string&);
 private:
     static XUtf8* mUtf8_;
 };
