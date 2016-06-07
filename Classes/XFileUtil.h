@@ -34,12 +34,17 @@ public:
     static XFileUtil* getInstance();
 public:
     bool isFileExist(const std::string& fileName);
+    /**
+     get current path
+     */
+    std::string getCurrentPath();
+    std::string getParentPath(const std::string& path);
     //now temporarily invalid
     DEPRECATED_ATTRIBUTE bool isPathExist(const std::string& path);
     std::string getFileNameWithOutPath(const std::string& fileName);
     std::string getFileExt(const std::string& fileName);
 public:
-    //now temporarily invalid
+    //now temporarily invalid MAC is OK
     DEPRECATED_ATTRIBUTE bool createDirectory(const std::string& path);
     /**
         write
