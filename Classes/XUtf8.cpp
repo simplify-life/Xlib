@@ -9,7 +9,7 @@
 //----------------------------------------------//
 
 #include "XUtf8.h"
-
+//#include <cassert>
 XLIB_BEGAIN
 
 using namespace std;
@@ -75,13 +75,33 @@ unordered_map<unsigned int,unsigned int> XUtf8::getMsg(const string &src)
     {
         if((src_[c]&0xc0)!=0x80)
         {
-            map_msg.insert(unordered_map<unsigned int, unsigned int>::value_type(len,0));
+            map_msg.emplace(len,0);
             len++;
         }
         map_msg.find(len-1)->second++;
         c++;
     }
     return map_msg;
+}
+
+string XUtf8::substr(const string &src, unsigned int startPos, unsigned int len)
+{
+    auto msg = getMsg(src);
+    if(startPos+len<=msg.size())
+    {
+        string::size_type start=0,end = 0;
+        for(auto e:msg)
+        {
+            if(e.first<startPos) start+=e.second;
+            else if(e.first<startPos+len)
+            {
+                end+=e.second;
+            }
+        }
+        return src.substr(start,end);
+    }
+    //assert(0&&"out of range");
+    return ""; //out of range
 }
 
 XLIB_END
