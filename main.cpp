@@ -21,7 +21,7 @@ int main()
         auto t = XString::formatTime(XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(),8),TIME_F::T_DEFAULT);
         LOG_I("thread_id=%d,%s",tid,t.c_str());
     };
-    auto pool = new XThreadPool(5,5,true);
+    auto pool = std::shared_ptr<XThreadPool>(new XThreadPool(5,5,true));
     
     pool->addTask(fun);
     pool->addTask(fun);
