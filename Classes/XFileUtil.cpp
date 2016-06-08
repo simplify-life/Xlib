@@ -72,6 +72,12 @@ string XFileUtil::getCurrentPath()
     return string(buf);
 }
 
+string XFileUtil::getCurrentPathWithPrefix()
+{
+    string path = getCurrentPath();
+    return path.append(pathPrefix);
+}
+
 string XFileUtil::getFileNameWithOutPath(const string &fileName)
 {
     string::size_type pos;

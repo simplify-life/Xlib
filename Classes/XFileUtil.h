@@ -38,6 +38,7 @@ public:
      get current path
      */
     std::string getCurrentPath();
+    std::string getCurrentPathWithPrefix();
     std::string getParentPath(const std::string& path);
     //now temporarily invalid
     DEPRECATED_ATTRIBUTE bool isPathExist(const std::string& path);

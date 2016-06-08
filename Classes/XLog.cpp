@@ -27,6 +27,7 @@ std::string XLog::logFile = "";
 void XLog::log(LOG_LEVEL level, const char * fmt, ...)
 {
     if(level<mLog_level||level==LOG_LEVEL::L_OFF) return;
+    string logstr = "";
     string attr = logTime();
     switch (level)
     {
@@ -51,15 +52,16 @@ void XLog::log(LOG_LEVEL level, const char * fmt, ...)
         default:
             break;
     }
-	cout << attr;
-	if (mWrite)
-	{
-	   writeLog(XString::format("%s%s", attr.c_str(), fmt));
-	}
+    cout<<attr;
     va_list args;
     va_start(args, fmt);
-    _log(fmt, args);
+    logstr.append(_log(fmt, args));
     va_end(args);
+    
+    if (mWrite)
+    {
+        writeLog(XString::format("%s%s", attr.c_str(), logstr.c_str()));
+    }
 }
 
 void XLog::log(const char * fmt, ...)
@@ -78,8 +80,9 @@ void XLog::log(const char * fmt, ...)
 }
 
 
-void XLog::_log(const char *format, va_list args)
+string XLog::_log(const char *format, va_list args)
 {
+    string str = "";
     int bufferSize = X_MAX_LOG_LENGTH;
     char* buf = nullptr;
     
@@ -87,7 +90,7 @@ void XLog::_log(const char *format, va_list args)
     {
         buf = new (std::nothrow) char[bufferSize];
         if (buf == nullptr)
-            return; // not enough memory
+            return str; // not enough memory
         
         int ret = vsnprintf(buf, bufferSize - 3, format, args);
         if (ret < 0)
@@ -104,7 +107,9 @@ void XLog::_log(const char *format, va_list args)
     strcat(buf, "\n");
     fprintf(stdout, "%s", buf);
     fflush(stdout);
+    str = buf;
     delete [] buf;
+    return str;
 }
 
 
@@ -116,7 +121,6 @@ void XLog::setLevel(LOG_LEVEL level)
 string XLog::logTime()
 {
 	string timelog = XString::formatTime(XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(), mTimeZone), xlib::TIME_F::LOG_TIME);
- 	cout<<"["<<timelog<<"] ";
 	return "[" + timelog + "]";
 }
 

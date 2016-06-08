@@ -29,6 +29,7 @@ mTaskQueue(maxWaiting),mThreads(threads)
 
 XThreadPool::~XThreadPool()
 {
+    mTaskQueue.exit();
     assert(mTaskQueue.isExited());
     if(mTaskQueue.capacity())
     {

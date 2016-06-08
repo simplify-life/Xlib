@@ -38,7 +38,7 @@ public:
     inline static void setTimeZone(int timeZone){ mTimeZone = timeZone;};
     inline static void setWrite(bool isWrite,const std::string& fullLogfile){ mWrite = isWrite; logFile = fullLogfile;};
 private:
-    static void _log(const char*,va_list);
+    static std::string _log(const char*,va_list);
     static std::string logTime();
     static void writeLog(const std::string& logmsg);
 private:
