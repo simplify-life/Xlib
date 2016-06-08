@@ -14,10 +14,29 @@
 #include "XString.h"
 #include "XTime.h"
 
+namespace xlib {
+    
 
+#define X_DEBUG
+
+
+//assert macro definitions
+#ifdef X_DEBUG
+#define X_ASSERT(x,msg) static_assert(x,msg)
+#else
+#define X_ASSERT(x,msg) (void(0))
+#endif
+
+//make info
+#define MAKE_PAIR(text) std::pair<std::string, decltype(text)>{#text, text}
+
+#define META(...)
+    
+
+// string format macro
 #define XSTRING(fmt,...) xlib::XString::format(fmt,##__VA_ARGS__)
 
-//log base define
+//log base macro definitions
 #define XLLOG(log_level,fmt,...) \
 do \
 { \
@@ -32,7 +51,7 @@ xlib::XLog::log(log_level,fmt,##__VA_ARGS__); \
 
 #define XLOG(fmt,...) xlib::XLog::log(fmt,##__VA_ARGS__)
 
-/////////////////////////////logs define////////////////////////
+/////////////////////////////logs macro definitions////////////////////////
 #define LOG_SET(log_level) xlib::XLog::setLevel(log_level)
 
 #define LOG_I(fmt,...) XLLOG(xlib::LOG_LEVEL::L_INFO,fmt,##__VA_ARGS__)
@@ -41,5 +60,8 @@ xlib::XLog::log(log_level,fmt,##__VA_ARGS__); \
 #define LOG_E(fmt,...) XLLOG(xlib::LOG_LEVEL::L_ERROR,fmt,##__VA_ARGS__)
 #define LOG_A(fmt,...) XLLOG(xlib::LOG_LEVEL::L_ALL,fmt,##__VA_ARGS__)
 #define LOG_F(fmt,...) XLLOG(xlib::LOG_LEVEL::L_FATAL,fmt,##__VA_ARGS__)
+
+    
+} //end xlib
 
 #endif /* XDefine_h */
