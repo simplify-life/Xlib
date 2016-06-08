@@ -13,16 +13,7 @@ int main()
     
     US_NS_X;
     LOG_SET(LOG_LEVEL::L_ALL);
-    
-    //NOTE: you'd better set the fileFullName in a full path for easy to find it
-    const std::string fileFullName = "xlib_testtxt";
-    XFileUtil::getInstance()->writeTxtLineToFile("this is a test--------1", fileFullName);
-    XFileUtil::getInstance()->writeTxtLineToFile("this is a test-------2", fileFullName);
-    auto exist = XFileUtil::getInstance()->readStringByLine(fileFullName);
-    for(auto e:exist)
-    {
-        LOG_I("%s",e.c_str());
-    }
+    XLog::setWrite(true, XFileUtil::getInstance()->getCurrentPathWithPrefix().append("xliblog"));
     auto fun = []
     {
         std::this_thread::sleep_for(std::chrono::seconds(rand()%50));
