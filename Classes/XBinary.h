@@ -3,20 +3,34 @@ fndef XBinary_H
 #include "XBase.h"
 #include <cstdint>
 #include <string>
+#include <cmath>
+#include <algorithm>
+
 XLIB_BEGAIN
 
 using b_value = int64;
 using b_type = std::string;
 
-b_type getType(b_value intValue)
+b_type getBType(b_value intValue)
 {
-	std::string s = " ";
-	for (int64 a = intValue; a; a = a / 2)
+	std::string s = "";
+	for (b_value a = intValue; a; a = a / 2)
 	{
 		s = s + (a % 2 ? '1' : '0');
 	}
 	std::reverse(s.begin(), s.end());
 	return s;
+}
+
+b_value getBValue(const b_type& type)
+{
+	b_value value = 0;
+	uint len = type.length();
+	for (uint i=len;i>0;i--)
+	{
+		value += std::pow(2, i-1)*(type[len - i] == '1' ? 1 : 0);
+	}
+	return value;
 }
 
 template<char..._0_1_series>
@@ -75,12 +89,17 @@ public:
 	binary_impl(b_value v)
 	{
 		value = v;
-		type = getType(v);
+		type = getBType(v);
+	}
+	binary_impl(b_type b)
+	{
+		type = b;
+		value = getBValue(b);
 	}
 };
 
 template <char ..._0_1_series>
-constexpr binary_impl<_0_1_series...> operator ""_b()
+constexpr binary_impl<_0_1_series...> operator "" _b()
 {
 	return binary_impl<_0_1_series...>();
 }

@@ -9,6 +9,14 @@
 //----------------------------------------------//
 
 #include "XUtf8.h"
+#include "XBinary.h"
+#include <queue>
+#include <stdio.h>
+
+
+
+
+
 //#include <cassert>
 XLIB_BEGAIN
 
@@ -20,6 +28,78 @@ XUtf8* XUtf8::getInstance()
 {
     if(!mUtf8_) mUtf8_ = new XUtf8;
     return mUtf8_;
+}
+
+
+
+string XUtf8::utf8ToUnicode(const string& src)
+{
+	queue<string> q;
+	for (string::size_type sss = 0; sss < src.length(); sss++)
+	q.emplace(binary_impl<>(static_cast<uint8_t>(src[sss])).type);
+
+	string s,st;
+	bool firstElement = true;
+	while (!q.empty())
+	{
+		auto tmp = q.front();
+		if (tmp.length() != 8)
+		{
+			int i = 8 - tmp.length();
+			if(i<0)
+			break;
+			else
+			{
+				string ttt = "";
+				while (i)
+				{
+					ttt.append("0");
+					i--;
+				}
+				tmp = ttt.append(tmp);
+			}
+		}			
+		if (tmp[0] == '0')
+		{
+			char buf[32];
+			snprintf(buf, sizeof buf, "\\u%04x", static_cast<uint>(binary_impl<>(tmp).value));
+			s.append(buf);
+			firstElement = true;
+		}
+		else
+		{
+				if (tmp[1] == '1')
+				{
+					if (st != "")
+					{
+						char buf[32];
+						snprintf(buf, sizeof buf, "\\u%04x", static_cast<uint>(binary_impl<>(st).value));
+						s.append(buf);
+					}
+					st = "";
+					firstElement = false;
+					int c1 = 2;
+					while (c1<6)
+					{
+						if (tmp[c1] == '0') c1++;
+						else break;
+					}
+					st = tmp.substr(c1+1);
+				}
+				else
+				{
+					st.append(tmp.substr(2));
+				}
+		}
+		q.pop();
+	}
+	if (st != "")
+	{
+		char buf[32];
+		snprintf(buf, sizeof buf, "\\u%04x",  static_cast<uint>(binary_impl<>(st).value));
+		s.append(buf);
+	}
+	return s;
 }
 
 

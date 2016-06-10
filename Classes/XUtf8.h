@@ -24,6 +24,14 @@ class XUtf8
 public:
     static XUtf8* getInstance();
 public:
+    
+
+    /**
+     * 	code the utf8 string  to unicode .
+     * 	for eg. utf8ToUnicode("这是一个字符串") = "\u8fd9\u662f\u4e00\u4e2a\u5b57\u7b26\u4e32";
+    */
+    std::string utf8ToUnicode(const std::string& src);
+
     unsigned int getlen(const char*);
     /**
      get utf8 string's words count
