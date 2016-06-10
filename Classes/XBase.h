@@ -16,7 +16,7 @@
 
 
 #if __cplusplus < 201103L
-#error "should use c++11 implementation"
+//#error "should use c++11 implementation"//delete this error,  most compiler has not full support for C++11 
 #endif // __cplusplus
 
 

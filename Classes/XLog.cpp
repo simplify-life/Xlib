@@ -103,10 +103,8 @@ string XLog::_log(const char *format, va_list args)
             break;
         
     } while (true);
-    
-    strcat(buf, "\n");
-    fprintf(stdout, "%s", buf);
-    fflush(stdout);
+   
+    cout<<buf<<endl; 
     str = buf;
     delete [] buf;
     return str;

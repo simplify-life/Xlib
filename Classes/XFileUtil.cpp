@@ -90,7 +90,7 @@ string XFileUtil::getFileNameWithOutPath(const string &fileName)
 string XFileUtil::getFileExt(const string &fileName)
 {
     string ext = getFileNameWithOutPath(fileName);
-    string::size_type pos = ext.find_first_of(".");
+    string::size_type pos = ext.find_last_of(".");
     if(pos!=string::npos)
     ext = ext.substr(pos+1);
     else ext="";
