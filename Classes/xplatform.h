@@ -120,6 +120,23 @@ namespace xlib{
 #error  "Cannot recognize the target platform; are you targeting an unsupported platform?"
 #endif
 
+//////////////////////
+#define T_UNKNOWN       X_PLATFORM==X_P_UNKNOWN
+#define T_IOS           X_PLATFORM==X_P_IOS
+#define T_ANDROID       X_PLATFORM==X_P_ANDROID
+#define T_WIN32         X_PLATFORM==X_P_WIN32
+#define T_MARMALADE     X_PLATFORM==X_P_MARMALADE
+#define T_LINUX         X_PLATFORM==X_P_LINUX
+#define T_BADA          X_PLATFORM==X_P_BADA
+#define T_BLACKBERRY    X_PLATFORM==X_P_BLACKBERRY
+#define T_MAC           X_PLATFORM==X_P_MAC
+#define T_NACL          X_PLATFORM==X_P_NACL
+#define T_EMSCRIPTEN    X_PLATFORM==X_P_EMSCRIPTEN
+#define T_TIZEN         X_PLATFORM==X_P_TIZEN
+#define T_QT5           X_PLATFORM==X_P_QT5
+#define T_WINRT         X_PLATFORM==X_P_WINRT
+    
+    
 /** 判断平台是否为小端字节序 */
 inline bool isPlatformLittleEndian()
 {

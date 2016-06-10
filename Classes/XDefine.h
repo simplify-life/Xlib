@@ -13,18 +13,37 @@
 #include "XLog.h"
 #include "XString.h"
 #include "XTime.h"
-
+#include "xplatform.h"
 namespace xlib {
     
 
+#ifdef _MSC_VER
+    #define X_ASSERT(f) //\
+//    do \
+//    { \
+//        if (!(f) && AfxAssertFailedLine(THIS_FILE, __LINE__)) \
+//        AfxDebugBreak(); \
+//    } while (0) \
+//    #define _X_ASSERT(expr) \
+//    do { if (!(expr) && \
+//        (1 == _CrtDbgReport(_CRT_ASSERT, __FILE__, __LINE__, NULL, NULL))) \
+//        _CrtDbgBreak(); } while (0)
+#else
+    #define X_ASSERT(x) //((x) || (dbg_printf("assertion failed ("__FILE__":%d): \"%s\"\n",__LINE__,#x), break_point(), FALSE))
+#endif
+    
+    
+    
+    
+    
 #define X_DEBUG
 
 
 //assert macro definitions
 #ifdef X_DEBUG
-#define X_ASSERT(x,msg) static_assert(x,msg)
+#define ASSERT(x) X_ASSERT(x)
 #else
-#define X_ASSERT(x,msg) (void(0))
+#define ASSERT(x) (void(0))
 #endif
 
 //make info
@@ -37,13 +56,19 @@ namespace xlib {
 #define XSTRING(fmt,...) xlib::XString::format(fmt,##__VA_ARGS__)
 
 //log base macro definitions
+#if X_PLATFORM==X_P_ANDROID
+#define XLIB_LOG(log_level,lfmt,...) xlib::XLog::androidLog(log_level, lfmt.c_str(), ##__VA_ARGS__);
+#else
+#define XLIB_LOG(log_level,lfmt,...) xlib::XLog::log(log_level, lfmt.c_str(), ##__VA_ARGS__);
+#endif
+    
 #define XLLOG(log_level,fmt,...) \
 do \
 { \
 if (xlib::LOG_LEVEL::L_INFO < log_level || xlib::LOG_LEVEL::L_ALL == log_level)\
 	{ \
 		std::string lfmt = XSTRING("In %s ->%s->%d:\t %s", __FILE__, __FUNCTION__, __LINE__, fmt);	\
-		xlib::XLog::log(log_level, lfmt.c_str(), ##__VA_ARGS__); \
+		XLIB_LOG(log_level,lfmt,##__VA_ARGS__); \
 	} \
 else \
 xlib::XLog::log(log_level,fmt,##__VA_ARGS__); \

@@ -1,15 +1,23 @@
-fndef XBinary_H
+#ifndef XBinary_H
 #define XBinary_H
+
 #include "XBase.h"
 #include <cstdint>
 #include <string>
-#include <cmath>
+//#include <cmath>
 #include <algorithm>
 
 XLIB_BEGAIN
 
 using b_value = int64;
 using b_type = std::string;
+
+b_value xpow(uint  num, uint n)
+{
+	b_value powint = 1;
+	for (uint i = 1; i <= n; i++) powint *= num;
+	return powint;
+}
 
 b_type getBType(b_value intValue)
 {
@@ -28,7 +36,7 @@ b_value getBValue(const b_type& type)
 	uint len = type.length();
 	for (uint i=len;i>0;i--)
 	{
-		value += std::pow(2, i-1)*(type[len - i] == '1' ? 1 : 0);
+		value += xpow(2, i-1)*(type[len - i] == '1' ? 1 : 0);
 	}
 	return value;
 }

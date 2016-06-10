@@ -33,6 +33,7 @@ class XLog
 {
 public:
     static void log(LOG_LEVEL,const char*,...);
+    static void androidLog(LOG_LEVEL,const char*,...);
     static void log(const char*,...);
     static void setLevel(LOG_LEVEL);
     inline static void setTimeZone(int timeZone){ mTimeZone = timeZone;};

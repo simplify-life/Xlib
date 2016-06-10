@@ -8,12 +8,15 @@
 #include "Classes/XDefine.h"
 #include "Classes/XThread.h"
 #include "Classes/XFileUtil.h"
+#include "Classes/XUtf8.h"
 int main()
 {
     
     US_NS_X;
     LOG_SET(LOG_LEVEL::L_ALL);
     XLog::setWrite(true, XFileUtil::getInstance()->getCurrentPathWithPrefix().append("xliblog"));
+    auto s = XUtf8::getInstance()->utf8ToUnicode("这是一个字符串");
+    LOG_I(s.c_str());
     auto fun = []
     {
         std::this_thread::sleep_for(std::chrono::seconds(rand()%50));

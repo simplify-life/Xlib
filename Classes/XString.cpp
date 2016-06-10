@@ -12,6 +12,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <algorithm>
+#include <sstream>
 using namespace std;
 
 XLIB_BEGAIN
@@ -50,11 +51,9 @@ string XString::toLower(const string &str)
     return ret;
 }
 
-string XString::trim(const char key,const string& str)
+string XString::trim(const string& key,const string& str)
 {
-    string ret = str;
-    ret.erase(remove(ret.begin(),ret.end(),key),ret.end());
-    return ret;
+    return replace(str,key,"");
 }
 
 vector<string> XString::split(const string& key, const string &str)
@@ -72,6 +71,29 @@ vector<string> XString::split(const string& key, const string &str)
     }
     return ret;
 }
+
+std::string XString::replace(const std::string& src,const std::string& sfind,const std::string& sreplace)
+{
+    ostringstream os;
+    string::size_type cursor=0;
+    string::size_type len = src.length();
+    string::size_type flen = sfind.length();
+    while(cursor<len)
+    {
+        auto pos = src.find(sfind,cursor);
+        if(string::npos!=pos)
+        {
+            os<<src.substr(cursor,pos-cursor);
+            cursor = pos;
+            os<<sreplace;
+            cursor+=flen;
+        }
+        else break;
+    }
+    return os.str();
+}
+
+
 
 int XString::count(const string & key, const string &str)
 {

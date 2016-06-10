@@ -12,8 +12,11 @@
 #include "XString.h"
 #include "XTime.h"
 #include "XFileUtil.h"
+#include "xplatform.h"
 #include <string.h>
-
+#if X_PLATFORM==X_P_ANDROID
+#include <android/log.h>
+#endif 
 using namespace std;
 XLIB_BEGAIN
 LOG_LEVEL XLog::mLog_level = LOG_LEVEL::L_ALL;
@@ -63,6 +66,62 @@ void XLog::log(LOG_LEVEL level, const char * fmt, ...)
         writeLog(XString::format("%s%s", attr.c_str(), logstr.c_str()));
     }
 }
+
+
+void XLog::androidLog(LOG_LEVEL level, const char * fmt, ...)
+{
+    if(level<mLog_level||level==LOG_LEVEL::L_OFF) return;
+    string logstr = "";
+    string attr = logTime();
+    
+#if X_PLATFORM==X_P_ANDROID
+    int priority = 0;
+    switch (level)
+    {
+        case LOG_LEVEL::L_INFO:
+            priority = ANDROID_LOG_INFO;
+            break;
+        case LOG_LEVEL::L_DEBUG:
+            priority = ANDROID_LOG_DEBUG;
+            break;
+        case LOG_LEVEL::L_WARN:
+            priority = ANDROID_LOG_WARN;
+            break;
+        case LOG_LEVEL::L_ERROR:
+            priority = ANDROID_LOG_ERROR;
+            break;
+        case LOG_LEVEL::L_ALL:
+            priority = ANDROID_LOG_VERBOSE;
+            break;
+        case LOG_LEVEL::L_FATAL:
+            priority = ANDROID_LOG_FATAL;
+            break;
+        default:
+            break;
+    }
+    cout<<attr;
+    va_list args;
+    va_start(args, fmt);
+    char* buf = (char*)malloc(X_MAX_LOG_LENGTH);
+    if (buf != nullptr)
+    {
+        vsnprintf(buf, X_MAX_LOG_LENGTH, fmt, args);
+        logstr.append(buf);
+        free(buf);
+    }
+    va_end(args);
+    
+    __android_log_print(priority, "Xlib", "%s", logstr.c_str());
+    
+    if (mWrite)
+    {
+        writeLog(XString::format("%s%s", attr.c_str(), logstr.c_str()));
+    }
+#endif
+}
+
+
+
 
 void XLog::log(const char * fmt, ...)
 {

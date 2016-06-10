@@ -17,7 +17,7 @@
 XLIB_BEGAIN
 
 /***************************************************/
-// Class XUtf8 handler std::string which is unicode
+// Class XUtf8 handler std::string which is utf8 code
 /***************************************************/
 class XUtf8
 {
@@ -45,7 +45,8 @@ public:
     std::string getWord(unsigned int posIdx,const std::string& src);
     
     /**
-     get unicode message ,key is (word's) idx,value is (word's) length.
+     @brief. get unicode message ,key is (word's) idx,value is (word's) length.
+     @eg. getMsg("I'm中国人") = {(0,1),(1,1),(2,1),(3,3),(4,3),(5,3)}
      */
     std::unordered_map<unsigned int,unsigned int> getMsg(const std::string&);
     /**
