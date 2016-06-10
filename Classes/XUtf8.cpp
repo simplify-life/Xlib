@@ -39,7 +39,6 @@ string XUtf8::utf8ToUnicode(const string& src)
 	q.emplace(binary_impl<>(static_cast<uint8_t>(src[sss])).type);
 
 	string s,st;
-	bool firstElement = true;
 	while (!q.empty())
 	{
 		auto tmp = q.front();
@@ -64,7 +63,6 @@ string XUtf8::utf8ToUnicode(const string& src)
 			char buf[32];
 			snprintf(buf, sizeof buf, "\\u%04x", static_cast<uint>(binary_impl<>(tmp).value));
 			s.append(buf);
-			firstElement = true;
 		}
 		else
 		{
@@ -77,7 +75,6 @@ string XUtf8::utf8ToUnicode(const string& src)
 						s.append(buf);
 					}
 					st = "";
-					firstElement = false;
 					int c1 = 2;
 					while (c1<6)
 					{
