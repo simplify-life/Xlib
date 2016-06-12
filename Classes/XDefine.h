@@ -17,14 +17,33 @@
 namespace xlib {
     
 
+#ifdef _MSC_VER
+    #define X_ASSERT(f) //\
+//    do \
+//    { \
+//        if (!(f) && AfxAssertFailedLine(THIS_FILE, __LINE__)) \
+//        AfxDebugBreak(); \
+//    } while (0) \
+//    #define _X_ASSERT(expr) \
+//    do { if (!(expr) && \
+//        (1 == _CrtDbgReport(_CRT_ASSERT, __FILE__, __LINE__, NULL, NULL))) \
+//        _CrtDbgBreak(); } while (0)
+#else
+    #define X_ASSERT(x) //((x) || (dbg_printf("assertion failed ("__FILE__":%d): \"%s\"\n",__LINE__,#x), break_point(), FALSE))
+#endif
+    
+    
+    
+    
+    
 #define X_DEBUG
 
 
 //assert macro definitions
 #ifdef X_DEBUG
-#define X_ASSERT(x,msg) static_assert(x,msg)
+#define ASSERT(x) X_ASSERT(x)
 #else
-#define X_ASSERT(x,msg) (void(0))
+#define ASSERT(x) (void(0))
 #endif
 
 //make info

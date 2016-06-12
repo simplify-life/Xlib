@@ -31,8 +31,19 @@ public:
     static std::string formatTime(const std::tm*,const TIME_F&);
     static std::string toUpper(const std::string&);
     static std::string toLower(const std::string&);
-    static std::string trim(const char,const std::string&);
+    /**
+     @eg.   trim(",,","Hello,,my name,,is")="Hellomy nameis"
+     */
+    static std::string trim(const std::string&,const std::string&);
+    /**
+     @eg.   split(",,","this,,is,,my,,name")=vector<std::string>{"this","is","my","name"}
+     */
     static std::vector<std::string> split(const std::string&,const std::string&);
+    /**
+     @eg.   replace("this,,is,,my,,name,,",",,","||")="this||is||my||name||"
+     */
+    static std::string replace(const std::string& src,const std::string& sfind,const std::string& sreplace);
+    
     static int count(const std::string&,const std::string&);
     static bool isInt(const std::string&,bool ignoreSymbols=true);
     static int compareVersion(const std::string&,const std::string&,const std::string& key=".");

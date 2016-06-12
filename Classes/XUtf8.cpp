@@ -44,7 +44,7 @@ string XUtf8::utf8ToUnicode(const string& src)
 		auto tmp = q.front();
 		if (tmp.length() != 8)
 		{
-			int i = 8 - tmp.length();
+			int i = 8 - (int)tmp.length();
 			if(i<0)
 			break;
 			else
@@ -100,12 +100,12 @@ string XUtf8::utf8ToUnicode(const string& src)
 }
 
 
-unsigned int XUtf8::getlen(const char* unicode)
+unsigned int XUtf8::getlen(const char* utf8)
 {
     unsigned int c=0,len = 0;
-    while(unicode[c])
+    while(utf8[c])
     {
-        if((unicode[c]&0xc0)!=0x80) len++;
+        if((utf8[c]&0xc0)!=0x80) len++;
         c++;
     }
         return len;
