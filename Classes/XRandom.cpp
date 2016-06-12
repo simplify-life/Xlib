@@ -9,7 +9,8 @@
 //----------------------------------------------//
 #include "XRandom.h"
 #include "XTime.h"
-#include<random>
+#include <random>
+#include <algorithm>
 
 XLIB_BEGAIN
 
