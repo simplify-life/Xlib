@@ -5,10 +5,10 @@
 //  Created by ximena on 16/5/26.
 //  Copyright © 2016年 ximena. All rights reserved.
 //
-#include "Classes/XDefine.h"
-#include "Classes/XThread.h"
-#include "Classes/XFileUtil.h"
-#include "Classes/XUtf8.h"
+#include "src/XDefine.h"
+#include "src/XThread.h"
+#include "src/XFileUtil.h"
+#include "src/XUtf8.h"
 int main()
 {
     
