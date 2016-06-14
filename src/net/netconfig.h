@@ -28,6 +28,8 @@
 #include    <io.h>
 #include    <WS2tcpip.h>
 #include    <Winsock2.h>
+#include	<winsock.h>
+#pragma comment(lib, "wsock32")
 #ifndef __SSIZE_T
 #define __SSIZE_T
 typedef SSIZE_T ssize_t;
@@ -37,16 +39,16 @@ typedef SSIZE_T ssize_t;
 #else
 
 #include	<errno.h>
-#include    <netdb.h>
-#include    <unistd.h>
+#include	<netdb.h>
+#include	<unistd.h>
 #include	<poll.h>
-#include    <arpa/inet.h>
-#include    <netinet/in.h>
+#include	<arpa/inet.h>
+#include	<netinet/in.h>
 #include	<sys/types.h>
-#include    <sys/select.h>
-#include    <sys/socket.h>
-#include    <sys/un.h>
-#include    <sys/ioctl.h>
+#include	<sys/select.h>
+#include	<sys/socket.h>
+#include	<sys/un.h>
+#include	<sys/ioctl.h>
 #include	<sys/time.h>
 #include	<sys/stat.h>
 #include	<sys/uio.h>

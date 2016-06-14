@@ -11,30 +11,32 @@
 
 XLIB_BEGAIN
 namespace net {
+
 #ifndef socklen_t
 #define socklen_t uint32
 #endif
-    XSocket::XSocket()
+
+    XSocketTCP::XSocketTCP()
     {
         
     }
     
-    XSocket::~XSocket()
+    XSocketTCP::~XSocketTCP()
     {
         stop();
     }
     
-    void XSocket::stop()
+    void XSocketTCP::stop()
     {
         
     }
     
-    bool XSocket::startClient()
+    bool XSocketTCP::startClient()
     {
         return false;
     }
     
-    bool XSocket::startServer()
+    bool XSocketTCP::startServer()
     {
         return false;
     }

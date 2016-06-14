@@ -15,20 +15,22 @@
 
 XLIB_BEGAIN
 namespace net{
-    
 
-    class XSocket
+	using ipV4 = sockaddr_in;
+  	using ipV6 = sockaddr_in6;
+
+    class XSocketTCP
     {
     public:
-        XSocket();
-        virtual ~XSocket();
+        XSocketTCP();
+        virtual ~XSocketTCP();
         
         bool startClient();
         bool startServer();
         
         void stop();
     private:
-        DISALLOW_COPY_AND_ASSIGN(XSocket);
+        DISALLOW_COPY_AND_ASSIGN(XSocketTCP);
         bool _running;
     };
     
