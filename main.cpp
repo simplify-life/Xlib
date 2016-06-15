@@ -9,12 +9,18 @@
 #include "src/XThread.h"
 #include "src/XFileUtil.h"
 #include "src/XUtf8.h"
+#include "src/net/XSocket.h"
 int main()
 {
     
     US_NS_X;
     LOG_SET(LOG_LEVEL::L_ALL);
     XLog::setWrite(true, XFileUtil::getInstance()->getCurrentPathWithPrefix().append("xliblog"));
+    
+    auto tcp = std::shared_ptr<net::XSocketTCP>(new net::XSocketTCP);
+    tcp->startClient(net::_server(2347,"120.27.94.221"),true);
+    //auto receive = tcp->Receive();
+    //LOG_I(receive.c_str());
     auto s = XUtf8::getInstance()->utf8ToUnicode("这是一个字符串");
     LOG_I(s.c_str());
     auto fun = []
