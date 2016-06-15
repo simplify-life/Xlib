@@ -30,13 +30,28 @@
 #include    <Winsock2.h>
 #include	<winsock.h>
 #pragma comment(lib, "wsock32")
+
 #ifndef __SSIZE_T
 #define __SSIZE_T
-typedef SSIZE_T ssize_t;
 #define	bzero(ptr,n)		memset(ptr, 0, n)
+
+
+#define close(s)        closesocket(s);
+#define clean()         WSACleanup();
+
+using ssize_t = SSIZE_T;
+using socklen_t = int;
 #endif // __SSIZE_T
 
 #else
+
+/**
+ define socket describe code
+ */
+using SOCKET = int;
+constexpr SOCKET INVALID_SOCKET=-1;
+constexpr int SOCKET_ERROR=-1;
+#define clean()         0
 
 #include	<errno.h>
 #include	<netdb.h>
@@ -61,5 +76,13 @@ typedef SSIZE_T ssize_t;
 #define	recv(a,b,c,d)	recvfrom(a,b,c,d,0,0)
 #define	send(a,b,c,d)	sendto(a,b,c,d,0,0)
 #endif
+
+#ifndef FD_ZERO
+#define FD_ZERO(set) (((fd_set FAR *)(set))->fd_count=0)
+#endif
+
+using ipv4 = sockaddr_in;
+using ipv6 = sockaddr_in6;
+
 
 #endif /* netconfig_h */
