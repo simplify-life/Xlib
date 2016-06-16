@@ -113,6 +113,7 @@ void XTimer::start()
 {
     if(!isStart)
     {
+        isStart = true;
         tThread=thread(std::bind(&XTimer::threadLoop,this));
         tThread.detach();
     }
