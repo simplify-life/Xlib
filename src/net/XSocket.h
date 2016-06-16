@@ -82,6 +82,9 @@ namespace net{
         SOCKET Socket(const _socket& aSocket);
         
         int32 Connect(SOCKET sd,const struct sockaddr* addr,int32 addrLen);
+        
+        virtual int32 Listen(int port)=0;
+        
         int32 Close();
         int32 Clean();
         
@@ -106,13 +109,13 @@ namespace net{
     public:
         XSocketTCP();
         virtual ~XSocketTCP();
-        
+    
         bool startClient(const _server& aServer,bool isSync=false);
-        bool startServer();
+        bool startServer(int port);
         std::string Receive();
         
         void handlerMessage() override;
-        
+        int32 Listen(int port) override;
         template <class T> ssize_t Send(const T*, size_t);
         template <class T> ssize_t Receive(T*, size_t);
         
@@ -122,6 +125,7 @@ namespace net{
         void stop();
     private:
         DISALLOW_COPY_AND_ASSIGN(XSocketTCP);
+        ipv4 _serverAddr;
         
         
     };

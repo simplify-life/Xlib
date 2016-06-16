@@ -21,16 +21,6 @@
 XLIB_BEGAIN
 
 using namespace std;
-XUtf8* XUtf8::mUtf8_ = nullptr;
-
-
-XUtf8* XUtf8::getInstance()
-{
-    if(!mUtf8_) mUtf8_ = new XUtf8;
-    return mUtf8_;
-}
-
-
 
 string XUtf8::utf8ToUnicode(const string& src)
 {

@@ -86,6 +86,7 @@ namespace net {
         return code;
     }
     
+    
     int32 XSocket::Close()
     {
         return close(mSocket);
@@ -135,16 +136,29 @@ namespace net {
         IPV4((ipv4 *)&addr, AF_INET, aServer.port, std::string(aServer.ip));
         Connect(mSocket, (sockaddr*)&addr, sizeof(addr));
         _running = true;
-        if(isSync)
+        isBlock = !isSync;
+        if(!isBlock)
         {
             _thread = std::thread( std::bind( &XSocketTCP::loop, this) );
         }
         return true;
     }
     
-    bool XSocketTCP::startServer()
+    bool XSocketTCP::startServer(int port)
     {
-        return false;
+        Listen(port);
+        while(1)
+        {
+            struct sockaddr_in clientAddr;
+            SOCKET client = accept(mSocket, (struct sockaddr*)&clientAddr, (socklen_t*)sizeof(clientAddr));
+            mSocket = client;
+            if(mSocket>=0)
+            {
+                _thread = std::thread( std::bind( &XSocketTCP::loop, this) );
+            }
+            Close();
+        }
+        return true;
     }
     void XSocketTCP::loop()
     {
@@ -253,5 +267,29 @@ namespace net {
     }
     
     
+    
+    int32 XSocketTCP::Listen(int port)
+    {
+        _socket tcpSocket;
+        tcpSocket.protocolFamily = AF_INET;
+        tcpSocket.socketType = SOCK_STREAM;
+        tcpSocket.protocol = IPPROTO_TCP;
+        mSocket = Socket(tcpSocket);
+        IPV4(&_serverAddr, AF_INET, port, "0.0.0.0");
+        int32 ret = 0;
+        if((ret=bind(mSocket, (struct sockaddr*)&_serverAddr,sizeof(struct sockaddr)))==-1)
+        {
+              if(errno == EINTR) return Listen(port);
+              throw SocketException("");
+        }
+        else if(ret==0) throw SocketException("the socket is closed!");
+        if(listen(mSocket, 5)!=0)
+        {
+            std::stringstream error;
+            error << "[listen_on_port] with [port=" << port << "] [listeners=" << 5 << "] Cannot bind socket";
+            throw SocketException(error.str());
+        }
+        return ret;
+    }
 }
 XLIB_END

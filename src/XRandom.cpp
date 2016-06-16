@@ -15,7 +15,7 @@
 XLIB_BEGAIN
 
 using namespace std;
-
+namespace rand{
 vector<uint> getRandomV(uint size)
 {
     vector<uint> v;
@@ -42,5 +42,6 @@ std::string getRandomString(uint length)
     return s;
 }
 
+}
 
 XLIB_END

@@ -29,24 +29,6 @@
 XLIB_BEGAIN
 
 using namespace std;
-XFileUtil* XFileUtil::instance_ = nullptr;
-
-
-XFileUtil::XFileUtil()
-{
-    pathType_=X_PLATFORM==X_P_WIN32?PATH_TYPE::WIN:PATH_TYPE::POSIX;
-}
-
-XFileUtil::~XFileUtil()
-{
-    
-}
-
-XFileUtil* XFileUtil::getInstance()
-{
-    if(nullptr==instance_) instance_ = new XFileUtil;
-    return instance_;
-}
 
 bool XFileUtil::isFileExist(const string &fileName)
 {

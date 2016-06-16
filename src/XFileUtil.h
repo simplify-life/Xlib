@@ -18,21 +18,10 @@
 
 XLIB_BEGAIN
 
-enum class PATH_TYPE
-{
-    WIN = 0,
-    POSIX = 1
-};
 static const int64 MAX_READ_STRING_SIZE = 1024*16;
 static const int64 MAX_LINE_STRING_SIZE = 1024*2;
-class XFileUtil
+namespace XFileUtil
 {
-public:
-    //constructors
-    XFileUtil();
-    ~XFileUtil();
-    static XFileUtil* getInstance();
-public:
     bool isFileExist(const std::string& fileName);
     /**
      get current path
@@ -44,7 +33,6 @@ public:
     DEPRECATED_ATTRIBUTE bool isPathExist(const std::string& path);
     std::string getFileNameWithOutPath(const std::string& fileName);
     std::string getFileExt(const std::string& fileName);
-public:
     //now temporarily invalid MAC is OK
     DEPRECATED_ATTRIBUTE bool createDirectory(const std::string& path);
     /**
@@ -61,9 +49,6 @@ public:
      */
     std::string readStringFromFile(const std::string& fileFullName);
     std::vector<std::string> readStringByLine(const std::string& fileFullName);
-private:
-    static XFileUtil* instance_;
-    PATH_TYPE pathType_;
 };
 
 
