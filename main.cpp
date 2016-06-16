@@ -19,10 +19,10 @@ int main()
     
     auto tcp = std::shared_ptr<net::XSocketTCP>(new net::XSocketTCP);
     tcp->startClient(net::_server(2347,"120.27.94.221"),true);
-    //auto receive = tcp->Receive();
-    //LOG_I(receive.c_str());
-    auto s = XUtf8::getInstance()->utf8ToUnicode("这是一个字符串");
+    std::string chutf8 = "这是一个字符串";
+    auto s = XUtf8::getInstance()->utf8ToUnicode(chutf8);
     LOG_I(s.c_str());
+    tcp->Send(chutf8.c_str(), sizeof(chutf8.c_str()));
     auto fun = []
     {
         std::this_thread::sleep_for(std::chrono::seconds(rand()%50));
