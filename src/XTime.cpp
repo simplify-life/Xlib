@@ -13,26 +13,8 @@ using namespace std::chrono;
 
 //std::timed_mutex mtx_time;
 XLIB_BEGAIN
-XTime* XTime::mTime=nullptr;
+
 XTimer* XTimer::tSelf=nullptr;
-XTime::XTime():mTimer()
-{
-}
-
-XTime::~XTime()
-{
-//    if(mTimer)
-//    {
-//        delete mTimer;
-//        mTimer = 0;
-//    }
-}
-
-XTime* XTime::getInstance()
-{
-    if(!mTime) mTime = new XTime;
-    return mTime;
-}
 
 steady_point XTime::getTimePoint_steady()
 {
@@ -104,24 +86,21 @@ tm* XTime::getTimeFromTimestamp_seconds(time_t t,int timeInterval)
 
 void XTime::doPertime(int count,float interval, const std::function<void ()>& call)
 {
-    if(!mTimer)
-    {
-        mTimer = XTimer::getInstance();
-        mTimer->start();
-    }
+    auto mTimer = XTimer::getInstance();
+    mTimer->start();
     mTimer->addTask(timerData(count,interval,call));
 }
 
 ////////////////////////////////////////////////////////////////////////
 
-XTimer::XTimer():tThread(),tTask()
+XTimer::XTimer():tThread(),tTask(),isStart(false)
 {
 
 }
 
 XTimer::~XTimer()
 {
-
+    if(tThread.joinable()) tThread.join();
 }
 
 XTimer* XTimer::getInstance()
@@ -132,9 +111,11 @@ XTimer* XTimer::getInstance()
 
 void XTimer::start()
 {
-    tThread=thread(std::bind(&XTimer::threadLoop,this));
-    tThread.detach();
-//    thread(std::bind(&XTimer::threadLoop,this)).detach();
+    if(!isStart)
+    {
+        tThread=thread(std::bind(&XTimer::threadLoop,this));
+        tThread.detach();
+    }
 }
 
 void XTimer::mainLoop()

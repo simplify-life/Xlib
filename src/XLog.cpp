@@ -184,7 +184,7 @@ string XLog::logTime()
 void XLog::writeLog(const string& logmsg)
 {
 	if(logFile.empty()||logFile=="") return;
-	XFileUtil::getInstance()->writeTxtLineToFile(logmsg, logFile);
+	XFileUtil::writeTxtLineToFile(logmsg, logFile);
 }
 
 XLIB_END

@@ -40,45 +40,36 @@ struct timerData
 };
 
 class XTimer;
-class XTime
+namespace XTime
 {
-public:
-    static XTime* getInstance();
-    
     /**
      @brief     get time point
      */
-    static steady_point getTimePoint_steady();
-    static system_point getTimePoint_system();
+    steady_point getTimePoint_steady();
+    system_point getTimePoint_system();
     /**
      @brief     get time interval
      */
-    static std::time_t getTimeInterval_steady(steady_point p0,steady_point p1);
-    static std::time_t getTimeInterval_system(system_point p0,system_point p1);
+    std::time_t getTimeInterval_steady(steady_point p0,steady_point p1);
+    std::time_t getTimeInterval_system(system_point p0,system_point p1);
     /**
      @brief     get timestamp
      */
-    static std::time_t getTimestamp_milliseconds();
-    static std::time_t getTimestamp_seconds();
-    static std::time_t getTimestamp_steady_mills();
-    static std::time_t getTimestamp_steady_seconds();
+    std::time_t getTimestamp_milliseconds();
+    std::time_t getTimestamp_seconds();
+    std::time_t getTimestamp_steady_mills();
+    std::time_t getTimestamp_steady_seconds();
     /**
      @param t       timestamp
      @param timeInterval        time zone diff
      */
-    static std::tm* getTimeFromTimestamp_milliseconds(std::time_t t,int timeInterval=0);
-    static std::tm* getTimeFromTimestamp_seconds(std::time_t t,int timeInterval=0);
+    std::tm* getTimeFromTimestamp_milliseconds(std::time_t t,int timeInterval=0);
+    std::tm* getTimeFromTimestamp_seconds(std::time_t t,int timeInterval=0);
     
     /**
      @brief     this thread timer
      */
     void doPertime(int count,float interval,const std::function<void()>& call);
-    
-    XTime();
-    virtual ~XTime();
-private:
-    static XTime* mTime;
-    XTimer* mTimer;
 };
 
 class XTimer
@@ -98,6 +89,7 @@ protected:
 private:
     DISALLOW_COPY_AND_ASSIGN(XTimer)
 private:
+    bool isStart;
     static XTimer* tSelf;
     std::thread tThread;
     std::vector<timerData> tTask;

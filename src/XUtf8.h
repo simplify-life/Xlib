@@ -17,15 +17,10 @@
 XLIB_BEGAIN
 
 /***************************************************/
-// Class XUtf8 handler std::string which is utf8 code
+//    XUtf8 handler std::string which is utf8 code
 /***************************************************/
-class XUtf8
+namespace XUtf8
 {
-public:
-    static XUtf8* getInstance();
-public:
-    
-
     /**
      * 	code the utf8 string  to unicode .
      * 	for eg. utf8ToUnicode("这是一个字符串") = "\u8fd9\u662f\u4e00\u4e2a\u5b57\u7b26\u4e32";
@@ -55,8 +50,6 @@ public:
      @param len  eg. in MacOS platform  auto str = substr("I'm中国人",4,2) ,the str is "国人"
      */
     std::string substr(const std::string& src,unsigned int startPos,unsigned int len);
-private:
-    static XUtf8* mUtf8_;
 };
 
 XLIB_END

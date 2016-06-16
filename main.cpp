@@ -15,14 +15,14 @@ int main()
     
     US_NS_X;
     LOG_SET(LOG_LEVEL::L_ALL);
-    XLog::setWrite(true, XFileUtil::getInstance()->getCurrentPathWithPrefix().append("xliblog"));
+    XLog::setWrite(true, XFileUtil::getCurrentPathWithPrefix().append("xliblog"));
     
     auto tcp = std::shared_ptr<net::XSocketTCP>(new net::XSocketTCP);
     tcp->startClient(net::_server(2347,"120.27.94.221"),true);
     std::string chutf8 = "这是一个字符串";
-    auto s = XUtf8::getInstance()->utf8ToUnicode(chutf8);
+    auto s = XUtf8::utf8ToUnicode(chutf8);
     LOG_I(s.c_str());
-    tcp->Send(chutf8.c_str(), sizeof(chutf8.c_str()));
+    tcp->Send(chutf8.c_str(), sizeof(chutf8));
     auto fun = []
     {
         std::this_thread::sleep_for(std::chrono::seconds(rand()%50));
@@ -37,7 +37,7 @@ int main()
     pool->addTask(fun);
     pool->addTask(fun);
     
-    XTime::getInstance()->doPertime(-1, 0.5,[]
+    XTime::doPertime(-1, 0.5,[]
     {
         LOG_D("this is a timer,1 second 2 times");
     } );

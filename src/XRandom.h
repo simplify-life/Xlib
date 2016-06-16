@@ -15,7 +15,8 @@
 #include <string>
 XLIB_BEGAIN
 
-
+namespace rand
+{
 /**
  @eg.  maybe  getRandomVector(9)={4,7,3,6,8,0,2,5,1}
  */
@@ -25,6 +26,7 @@ std::vector<uint> getRandomV(uint size);
  */
 std::string getRandomString(uint length);
 
+};
 XLIB_END
 
 #endif /* XRandom_h */

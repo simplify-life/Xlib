@@ -16,9 +16,8 @@
 
 XLIB_BEGAIN
 
-class XRegex
+namespace XRegex
 {
-public:
     std::vector<std::string> getMatch(const std::string& src,const std::string& pattern);
     std::string replace(const std::string& src,const std::string& pattern,const std::string& replace_str);
 };
