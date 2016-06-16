@@ -7,12 +7,13 @@
 //    Copyright © 2016年 ximena. All rights reserved.
 //  Contact Email: xiaominghe2014@gmail.com
 //----------------------------------------------//
+
 #include "XSocket.h"
 
 XLIB_BEGAIN
 namespace net {
 
-#define SOCKET_MAX_BUFFER_LEN 1024
+
     
     SocketException::SocketException(const std::string &message)
     {
@@ -85,85 +86,6 @@ namespace net {
         return code;
     }
     
-    
-    int32 XSocket::Send(const char* buffer, size_t len)
-    {
-        if(len>SOCKET_MAX_BUFFER_LEN)
-        {
-            throw SocketException("data length higher then max buffer len!");
-        }
-        ssize_t ret=0;
-        while (len>0)
-        {
-            if((ret=send(mSocket, buffer, len, 0))==-1)
-            {
-                if(errno == EINTR) continue;
-                throw SocketException("send failed!");
-            }
-            else if(ret==0) throw SocketException("the socket is closed!");
-            len-=ret;
-            buffer+=ret;
-        }
-        return (int32)ret;
-    }
-    
-    
-    std::string XSocket::Receive()
-    {
-        std::string ret="";
-        char buf[SOCKET_MAX_BUFFER_LEN];
-        while(ret.find("\n")==std::string::npos)
-        {
-            ssize_t s=0;
-            if((s=recv(mSocket, buf, 1024, 0))==-1)
-            {
-                if(errno == EINTR) continue;
-                throw SocketException("receive failed!");
-            }
-            else if(s==0) throw SocketException("the socket is closed!");
-            ret.append(buf,s);
-        }
-        return ret;
-    }
-    
-    void XSocket::loop()
-    {
-        fd_set _read_set;
-        struct timeval timeout;
-        FD_ZERO(&_read_set);
-        FD_SET(mSocket,&_read_set);
-        _running = true;
-        timeout.tv_sec = 0;
-        
-        /* 
-         if your engine is cocos2dx
-            0.016 seconds. Wake up once per frame at 60PFS.
-         else
-            And you can define your timeout depending on your needs  */
-        timeout.tv_usec = 16000;
-        
-        while (!_threadEnd)
-        {
-            int s=0;
-            if((s = select(0,&_read_set,NULL,NULL,&timeout))==-1)
-            {
-                /* error */
-                if(errno != EINTR)
-                    throw SocketException("Abnormal error in select()\n");
-                continue;
-            }
-            else if( s == 0 )
-            {
-                /* timeout. do something ? */
-            }
-            if(FD_ISSET(mSocket, &_read_set))
-            {
-                handlerMessage(Receive());
-            }
-        }
-    }
-    
-    
     int32 XSocket::Close()
     {
         return close(mSocket);
@@ -179,7 +101,10 @@ namespace net {
     ///////////////////////TCP//////////////////////
     XSocketTCP::XSocketTCP()
     {
-        
+        while (!_msgQueue.empty())
+        {
+            _msgQueue.pop();
+        }
     }
     
     XSocketTCP::~XSocketTCP()
@@ -221,13 +146,76 @@ namespace net {
     {
         return false;
     }
+    void XSocketTCP::loop()
+    {
+        fd_set _read_set;
+        struct timeval timeout;
+        FD_ZERO(&_read_set);
+        FD_SET(mSocket,&_read_set);
+        _running = true;
+        timeout.tv_sec = 0;
+        
+        /*
+         if your engine is cocos2dx
+         0.016 seconds. Wake up once per frame at 60PFS.
+         else
+         And you can define your timeout depending on your needs  */
+        timeout.tv_usec = 16000;
+        
+        while (!_threadEnd)
+        {
+            int s=0;
+            if((s = select(0,&_read_set,NULL,NULL,&timeout))==-1)
+            {
+                /* error */
+                if(errno != EINTR)
+                    throw SocketException("Abnormal error in select()\n");
+                continue;
+            }
+            else if( s == 0 )
+            {
+                /* timeout. do something ? */
+            }
+            if(FD_ISSET(mSocket, &_read_set))
+            {
+                _msg msg;
+                Receive(msg.str_msg,1024);
+                _msgQueue.emplace(msg);
+                handlerMessage();
+            }
+        }
+    }
+    
+
     
     
+    std::string XSocketTCP::Receive()
+    {
+        std::string ret="";
+        char buf[SOCKET_MAX_BUFFER_LEN];
+        while(ret.find("\n")==std::string::npos)
+        {
+            ssize_t s=0;
+            if((s=recv(mSocket, buf, 1024, 0))==-1)
+            {
+                if(errno == EINTR) continue;
+                throw SocketException("receive failed!");
+            }
+            else if(s==0) throw SocketException("the socket is closed!");
+            ret.append(buf,s);
+        }
+        return ret;
+    }
     
-    void XSocketTCP::handlerMessage(const std::string &message)
+    
+    void XSocketTCP::handlerMessage()
     {
         //add your handler code here
-        std::cout<<message;
+        while(!_msgQueue.empty())
+        {
+            std::cout<<_msgQueue.front().str_msg<<std::endl;
+            _msgQueue.pop();
+        }
     }
     
     bool XSocketTCP::checkHost(const std::string &host)

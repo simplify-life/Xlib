@@ -80,7 +80,7 @@ constexpr int SOCKET_ERROR=-1;
 #ifndef FD_ZERO
 #define FD_ZERO(set) (((fd_set FAR *)(set))->fd_count=0)
 #endif
-
+#define SOCKET_MAX_BUFFER_LEN 1024
 using ipv4 = sockaddr_in;
 using ipv6 = sockaddr_in6;
 
