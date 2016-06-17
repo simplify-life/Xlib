@@ -1,27 +1,106 @@
-# C-11-XLib
-this's a custom lib with C++11,it contains such as timer ,log ,thread pool
-
-1. 
-You can use timer like the code main.cpp.
-* ## step1: `XTime::getInstance()->doPertime(...)`
-* ## step2: add loop 
-`     while (true)`
-    `{`
-        `XTimer::getInstance()->mainLoop();`
-    `}`
-
-this my test result:
-
-![C++11 Timer test_result](https://github.com/xiaominghe2014/C-11-Timer/blob/master/img_test_result.png?raw=true)
-
-///////
-2. 
-## and now you can test just execute make command as which i do on CentOS.
-
-**## Test result on mac Xcode as follow:**
-![test on mac Xcode](https://github.com/xiaominghe2014/C-11-XLib/blob/master/res/img_test_on_mac.png?raw=true)
 
 
+![XLIB](http://tb.himg.baidu.com/sys/portrait/item/3adfe89c80e5b1b1e6b581e5aea2e505)
+#What is XLIB?
+    Xlib is a collection of c + + commonly used functions and basic components.
+    It is for the purpose of cross-platform and reuse. 
+    Including the logging system, thread pool, timer, TCP communications, and so on. 
+    You can easily use it in your program.
 
-**## Test result on CentOS as follow:**
-![test on CentOS](https://github.com/xiaominghe2014/C-11-XLib/blob/master/res/img_test_on_centos.png?raw=true)
+#Usage
+
+
+##1 [logging system](https://github.com/xiaominghe2014/C-11-XLib/blob/master/src/XLog.h) 
+
+```C
+    //set log level
+    LOG_SET(LOG_LEVEL::L_ALL); 
+    //you can set the specified log file to record
+    XLog::setWrite(true, XFileUtil::getCurrentPathWithPrefix().append("xliblog"));
+    /**usage example.
+        LOG_I------'I' means info. 
+        And by that analogy:
+        LOG_D------'D' means debug.
+        LOG_E------'E' means error.
+        ...
+    */
+    std::string s="this is a log test!";
+    LOG_I("%s",s.c_str());
+    
+```
+##2 [thread pool](https://github.com/xiaominghe2014/C-11-XLib/blob/master/src/XThread.h)
+
+```C
+    auto fun = []
+    {
+        std::this_thread::sleep_for(std::chrono::seconds(rand()%50));
+        std::thread::id tid = std::this_thread::get_id();
+        auto t = XString::formatTime(XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(),8),TIME_F::T_DEFAULT);
+        LOG_I("thread_id=%d,%s",tid,t.c_str());
+    };
+    /** XThreadPool's first constructor parameter means thread max number,
+        the second is task max number,
+        the last is Whether begin immediately.
+    */
+    auto pool = std::shared_ptr<XThreadPool>(new XThreadPool(5,5,true));
+    
+    pool->addTask(fun);
+    pool->addTask(fun);
+    pool->addTask(fun);
+    pool->addTask(fun);
+    pool->detach();
+```
+##3 [timer](https://github.com/xiaominghe2014/C-11-XLib/blob/master/src/XTime.h)
+
+```C
+    /**at first,you defined a timer's attributes:
+        1.repeate number
+        2.the number of seconds 
+        3.the callback
+    */
+    XTime::doPertime(-1, 0.5,[]
+    {
+        LOG_D("this is a timer,1 second 2 times");
+    } );
+    
+    //then ,you add a loop to do it.
+    auto loop = []
+    {
+        while (true)
+        {
+            XTimer::getInstance()->mainLoop();
+        }
+    };
+```
+
+##4 [Socket](https://github.com/xiaominghe2014/C-11-XLib/blob/master/src/net/XSocket.h)
+
+```C
+
+    /** Below is the tcp server test code*/
+     xlib::net::XSocketTCP server;
+     server.startServer(4435);
+     
+    //if you take client,you can do as follow
+    
+    auto tcp = std::shared_ptr<net::XSocketTCP>(new net::XSocketTCP);
+    tcp->startClient(net::_server(2347,"120.27.94.221"),true);
+    std::string chutf8 = "这是一个字符串";
+    auto s = XUtf8::utf8ToUnicode(chutf8);
+    LOG_I(s.c_str());
+    tcp->Send(chutf8.c_str(), sizeof(chutf8));
+```
+
+##Notes
+
+    Compile environment: need GCC 4.8 or above, more than clang3.1
+    Test: the whole project, on the MAC and centos test has no problem. Perform the make, then run the generated script.
+
+##Q&A
+
+You have any question, welcome to discuss. And I also hope that we can put forward valuable Suggestions and comments. You can contact me through the following :
+
+    *Email:xiaominghe2014@gmail.com
+    * QQ: 229827701
+
+
