@@ -20,7 +20,7 @@
 #include <queue>
 XLIB_BEGAIN
 namespace net{
-
+    
     
     /**
      @brief a socket describe struct
@@ -76,9 +76,11 @@ namespace net{
         XSocket();
         virtual ~XSocket();
         
+        pid_t Fork();
+        
         void IPV4(ipv4* addrV4,short protocolFamily,uint port,const std::string& addr);
         void IPV6(ipv6* addrV6,short protocolFamily,uint port,const in6_addr& addr);
-
+        
         SOCKET Socket(const _socket& aSocket);
         
         int32 Connect(SOCKET sd,const struct sockaddr* addr,int32 addrLen);
@@ -89,7 +91,7 @@ namespace net{
         int32 Clean();
         
         virtual void handlerMessage()=0;
-
+        
     protected:
         virtual void loop()=0;
     protected:
@@ -109,7 +111,7 @@ namespace net{
     public:
         XSocketTCP();
         virtual ~XSocketTCP();
-    
+        
         bool startClient(const _server& aServer,bool isSync=false);
         bool startServer(int port);
         std::string Receive();
@@ -123,10 +125,11 @@ namespace net{
         virtual void loop() override;
         bool checkHost(const std::string& host);
         void stop();
+        void CloseClient();
     private:
         DISALLOW_COPY_AND_ASSIGN(XSocketTCP);
         ipv4 _serverAddr;
-        
+        SOCKET _clientSocket;
         
     };
     
@@ -134,17 +137,17 @@ namespace net{
     ssize_t XSocketTCP::Send(const T* buffer, size_t len)
     {
         
-            len *= sizeof(T);
-            if (len > (SOCKET_MAX_BUFFER_LEN * sizeof(T)))
-            {
-                std::stringstream error;
-                error << "[send] [len=" << len << "] Data length higher then max buffer len (" << SOCKET_MAX_BUFFER_LEN << ")";
-                throw SocketException(error.str());
-            }
-            ssize_t ret;
-            if ((ret = send(mSocket, (const char*)buffer, len, 0)) == -1) throw SocketException("[send] Cannot send");
-            else if(ret==0) throw SocketException("the socket is closed!");
-            return ret;
+        len *= sizeof(T);
+        if (len > (SOCKET_MAX_BUFFER_LEN * sizeof(T)))
+        {
+            std::stringstream error;
+            error << "[send] [len=" << len << "] Data length higher then max buffer len (" << SOCKET_MAX_BUFFER_LEN << ")";
+            throw SocketException(error.str());
+        }
+        ssize_t ret;
+        if ((ret = send(mSocket, (const char*)buffer, len, 0)) == -1) throw SocketException("[send] Cannot send");
+        else if(ret==0) throw SocketException("the socket is closed!");
+        return ret;
     }
     
     
