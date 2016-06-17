@@ -12,8 +12,8 @@
 
 XLIB_BEGAIN
 namespace net {
-
-
+    
+    
     
     SocketException::SocketException(const std::string &message)
     {
@@ -45,6 +45,13 @@ namespace net {
     XSocket::~XSocket()
     {
         Clean();
+    }
+    
+    pid_t XSocket::Fork()
+    {
+        pid_t pid = fork();
+        if(pid<0) return -1;//throw SocketException("fork failed!");
+        return pid;
     }
     
     void XSocket::IPV4(ipv4* addrV4, short protocolFamily, uint port, const std::string &addr)
@@ -147,19 +154,34 @@ namespace net {
     bool XSocketTCP::startServer(int port)
     {
         Listen(port);
+        struct sockaddr_in clientAddr;
+        char buff[SOCKET_MAX_BUFFER_LEN];
+        // pid_t childPid;
         while(1)
         {
-            struct sockaddr_in clientAddr;
-            SOCKET client = accept(mSocket, (struct sockaddr*)&clientAddr, (socklen_t*)sizeof(clientAddr));
-            mSocket = client;
-            if(mSocket>=0)
+            _clientSocket = accept(mSocket, (struct sockaddr*)&clientAddr, (socklen_t*)sizeof(clientAddr));
+            //   if((childPid=Fork())==0)
+            //   {
+            if(_clientSocket>=0)
             {
-                _thread = std::thread( std::bind( &XSocketTCP::loop, this) );
+                printf("connect from %s,port %d\n",inet_ntop(AF_INET, &clientAddr.sin_addr, buff, sizeof(buff)),ntohs(clientAddr.sin_port));
+                //_thread = std::thread( std::bind( &XSocketTCP::loop, this) );
+                loop();
             }
-            Close();
+            //      exit(0);
+            //   }
+            
+            else
+                CloseClient();
         }
         return true;
     }
+    
+    void XSocketTCP::CloseClient()
+    {
+        close(_clientSocket);
+    }
+    
     void XSocketTCP::loop()
     {
         fd_set _read_set;
@@ -200,7 +222,7 @@ namespace net {
         }
     }
     
-
+    
     
     
     std::string XSocketTCP::Receive()
@@ -277,12 +299,11 @@ namespace net {
         mSocket = Socket(tcpSocket);
         IPV4(&_serverAddr, AF_INET, port, "0.0.0.0");
         int32 ret = 0;
-        if((ret=bind(mSocket, (struct sockaddr*)&_serverAddr,sizeof(struct sockaddr)))==-1)
+        if((ret=bind(mSocket, (const struct sockaddr*)&_serverAddr,sizeof(struct sockaddr)))==-1)
         {
-              if(errno == EINTR) return Listen(port);
-              throw SocketException("");
+            if(errno == EINTR) return Listen(port);
+            throw SocketException("");
         }
-        else if(ret==0) throw SocketException("the socket is closed!");
         if(listen(mSocket, 5)!=0)
         {
             std::stringstream error;
