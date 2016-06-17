@@ -154,33 +154,69 @@ namespace net {
     bool XSocketTCP::startServer(int port)
     {
         Listen(port);
-        struct sockaddr_in clientAddr;
-        char buff[SOCKET_MAX_BUFFER_LEN];
-        // pid_t childPid;
         while(1)
         {
-            _clientSocket = accept(mSocket, (struct sockaddr*)&clientAddr, (socklen_t*)sizeof(clientAddr));
-            //   if((childPid=Fork())==0)
-            //   {
-            if(_clientSocket>=0)
+            SOCKET client = accept(mSocket, nullptr, nullptr);
+            if(client!=INVALID_SOCKET)
             {
-                printf("connect from %s,port %d\n",inet_ntop(AF_INET, &clientAddr.sin_addr, buff, sizeof(buff)),ntohs(clientAddr.sin_port));
-                //_thread = std::thread( std::bind( &XSocketTCP::loop, this) );
-                loop();
+                //_clients.emplace_back(client);
+                //if(Fork()==0)
+                handlerClient(client);
+                
             }
-            //      exit(0);
-            //   }
-            
             else
-                CloseClient();
+                CloseClient(client);
         }
         return true;
     }
     
-    void XSocketTCP::CloseClient()
+    void XSocketTCP::CloseClient(const SOCKET s)
     {
-        close(_clientSocket);
+        close(s);
     }
+    
+    void XSocketTCP::handlerClient(const SOCKET client)
+    {
+        if(client==INVALID_SOCKET) return;
+        fd_set _read_set;
+        struct timeval timeout;
+        FD_ZERO(&_read_set);
+        FD_SET(client,&_read_set);
+        _running = true;
+        timeout.tv_sec = 0;
+        timeout.tv_usec = 1000;
+        
+        while (1)
+        {
+            int s=0;
+            if((s = select(0,&_read_set,NULL,NULL,&timeout))==-1)
+            {
+                /* error */
+                if(errno != EINTR)
+                    throw SocketException("Abnormal error in select()\n");
+                continue;
+            }
+            else if( s == 0 )
+            {
+                /* timeout. do something ? */
+                //break;
+            }
+            if(FD_ISSET(client, &_read_set))
+            {
+                _msg msg;
+                Receive(client,msg.str_msg,1024);
+                std::cout<<msg.str_msg<<std::endl;
+                std::string ss = "I received msg:";
+                ss.append(msg.str_msg);
+                Send(client,ss.c_str(),ss.length());
+            }
+        }
+        /**
+         You'd better add a heartbeat packets to determine whether to close the client.
+         */
+        CloseClient(client);
+    }
+    
     
     void XSocketTCP::loop()
     {

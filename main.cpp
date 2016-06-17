@@ -13,6 +13,10 @@
 int main()
 {
     
+    /** Below is the server test code*/
+     //xlib::net::XSocketTCP server;
+     //server.startServer(4435);
+    
     US_NS_X;
     LOG_SET(LOG_LEVEL::L_ALL);
     XLog::setWrite(true, XFileUtil::getCurrentPathWithPrefix().append("xliblog"));
