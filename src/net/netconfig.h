@@ -24,10 +24,10 @@
 #include <fcntl.h>
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
-#include    <BaseTsd.h>
-#include    <io.h>
-#include    <WS2tcpip.h>
-#include    <Winsock2.h>
+#include	<BaseTsd.h>
+#include	<io.h>
+#include	<WS2tcpip.h>
+#include	<Winsock2.h>
 #include	<winsock.h>
 #pragma comment(lib, "wsock32")
 
@@ -38,7 +38,12 @@
 
 #define close(s)        closesocket(s);
 #define clean()         WSACleanup();
+#define fork()			-1
+#define INIT_SOCKET() \
+		WSADATA wsaData; \
+WSAStartup(MAKEWORD(2, 2), &wsaData)
 
+using pid_t = int;
 using ssize_t = SSIZE_T;
 using socklen_t = int;
 #endif // __SSIZE_T
@@ -52,11 +57,13 @@ using SOCKET = int;
 constexpr SOCKET INVALID_SOCKET=-1;
 constexpr int SOCKET_ERROR=-1;
 #define clean()         0
+#define INIT_SOCKET()
 
 #include	<errno.h>
 #include	<netdb.h>
 #include	<unistd.h>
 #include	<poll.h>
+#include	<sys/epoll.h>
 #include	<arpa/inet.h>
 #include	<netinet/in.h>
 #include	<sys/types.h>

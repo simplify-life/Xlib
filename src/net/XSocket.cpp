@@ -138,6 +138,7 @@ namespace net {
         tcpSocket.protocolFamily = AF_INET;
         tcpSocket.socketType = SOCK_STREAM;
         tcpSocket.protocol = IPPROTO_TCP;
+	INIT_SOCKET();
         mSocket = Socket(tcpSocket);
         ipv4 addr;
         IPV4((ipv4 *)&addr, AF_INET, aServer.port, std::string(aServer.ip));
@@ -189,7 +190,7 @@ namespace net {
         while (1)
         {
             int s=0;
-            if((s = select(0,&_read_set,NULL,NULL,&timeout))==-1)
+            if((s = select(client+1,&_read_set,NULL,NULL,&timeout))==-1)
             {
                 /* error */
                 if(errno != EINTR)
@@ -237,7 +238,7 @@ namespace net {
         while (!_threadEnd)
         {
             int s=0;
-            if((s = select(0,&_read_set,NULL,NULL,&timeout))==-1)
+            if((s = select(mSocket+1,&_read_set,NULL,NULL,&timeout))==-1)
             {
                 /* error */
                 if(errno != EINTR)
