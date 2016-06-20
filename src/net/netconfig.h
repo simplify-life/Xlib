@@ -11,6 +11,11 @@
 #ifndef netconfig_h
 #define netconfig_h
 
+#include	"../xplatform.h"
+#define	EPOLL_SUPPORT	X_PLATFORM==X_P_LINUX
+#if	EPOLL_SUPPORT
+#include	<sys/epoll.h>
+#endif
 
 #include <thread>
 #include <algorithm>
@@ -63,7 +68,6 @@ constexpr int SOCKET_ERROR=-1;
 #include	<netdb.h>
 #include	<unistd.h>
 #include	<poll.h>
-#include	<sys/epoll.h>
 #include	<arpa/inet.h>
 #include	<netinet/in.h>
 #include	<sys/types.h>
@@ -90,6 +94,39 @@ constexpr int SOCKET_ERROR=-1;
 #define SOCKET_MAX_BUFFER_LEN 1024
 using ipv4 = sockaddr_in;
 using ipv6 = sockaddr_in6;
+
+namespace xlib{
+	namespace net{
+/**
+ *      @brief a socket describe struct
+ *      @param protocolFamily
+ *      	example:AF_INET/AF_INET6/AF_LOCAL(AF_UNIX)/AF_ROUTE
+ *      @param socketType
+ *     		example:TCP->SOCK_STREAM/UDP->SOCK_DGRAM/SOCK_RAW/SOCK_PACKET/SOCK_SEQPACKET
+ *      @param protocol
+ *      	example:IPPROTO_TCP/IPPROTO_UDP/IPPROTO_STCP/IPPROTO_TIPC
+ **/
+    		struct _socket
+    	       	{
+ 			int protocolFamily;
+ 		        int socketType;
+		        int protocol;
+		 };
+    
+  		 struct _server
+   		 {
+       			 int port;
+       			 const char* ip;
+       			 _server(int port,const std::string& ip)
+       			 {
+       			     this->port = port;
+       			     this->ip = ip.c_str();
+      			 }
+   		 };
+	}	
+}
+
+
 
 
 #endif /* netconfig_h */

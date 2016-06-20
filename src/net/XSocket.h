@@ -21,35 +21,6 @@
 XLIB_BEGAIN
 namespace net{
     
-    
-    /**
-     @brief a socket describe struct
-     @param protocolFamily
-     example:AF_INET/AF_INET6/AF_LOCAL(AF_UNIX)/AF_ROUTE
-     @param socketType
-     example:TCP->SOCK_STREAM/UDP->SOCK_DGRAM/SOCK_RAW/SOCK_PACKET/SOCK_SEQPACKET
-     @param protocol
-     example:IPPROTO_TCP/IPPROTO_UDP/IPPROTO_STCP/IPPROTO_TIPC
-     */
-    struct _socket
-    {
-        int protocolFamily;
-        int socketType;
-        int protocol;
-    };
-    
-    struct _server
-    {
-        int port;
-        const char* ip;
-        _server(int port,const std::string& ip)
-        {
-            this->port = port;
-            this->ip = ip.c_str();
-        }
-    };
-    
-    
     struct _msg
     {
         char str_msg[1024];
