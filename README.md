@@ -1,16 +1,23 @@
 
 
 ![XLIB](http://tb.himg.baidu.com/sys/portrait/item/3adfe89c80e5b1b1e6b581e5aea2e505)
-#What is XLIB?
-    Xlib is a collection of c + + commonly used functions and basic components.
-    It is for the purpose of cross-platform and reuse. 
-    Including the logging system, thread pool, timer, TCP communications, and so on. 
-    You can easily use it in your program.
+##What is XLIB?
 
-#Usage
+**Xlib is a collection of c + + commonly used functions and basic components.   
+It is for the purpose of cross-platform and reuse.   
+Including the logging system, thread pool, timer, TCP communications, and so on.  
+You can easily use it in your program.**
+
+---
+##Usage
 
 
-##1 [logging system](https://github.com/xiaominghe2014/C-11-XLib/blob/master/src/XLog.h) 
+###1. [log](#log)
+###2. [thread](#thread)
+###3. [timer](#timer)
+###4. [socket](#socket)
+
+<h3 id='log'>log </h3>
 
 ```C
     //set log level
@@ -28,7 +35,7 @@
     LOG_I("%s",s.c_str());
     
 ```
-##2 [thread pool](https://github.com/xiaominghe2014/C-11-XLib/blob/master/src/XThread.h)
+<h3 id='thread'> thread pool</h3>
 
 ```C
     auto fun = []
@@ -50,7 +57,7 @@
     pool->addTask(fun);
     pool->detach();
 ```
-##3 [timer](https://github.com/xiaominghe2014/C-11-XLib/blob/master/src/XTime.h)
+<h3 id='timer'>timer</h3>
 
 ```C
     /**at first,you defined a timer's attributes:
@@ -73,7 +80,7 @@
     };
 ```
 
-##4 [Socket](https://github.com/xiaominghe2014/C-11-XLib/blob/master/src/net/XSocket.h)
+<h3 id='socket'> Socket</h3>
 
 ```C
 
@@ -90,15 +97,17 @@
     LOG_I(s.c_str());
     tcp->Send(chutf8.c_str(), sizeof(chutf8));
 ```
-
+---
 ##Notes
 
-    Compile environment: need GCC 4.8 or above, more than clang3.1
-    Test: the whole project, on the MAC and centos test has no problem. Perform the make, then run the generated script.
+1. *Compile environment*: need GCC 4.8 or above, more than clang3.1.     
+2. *Test*: the whole project, on the MAC and centos test has no problem. Perform the make, then run the generated script.
 
+---
 ##Q&A
 
-You have any question, welcome to discuss. And I also hope that we can put forward valuable Suggestions and comments. You can contact me through the following :
+You have any question, welcome to discuss.  
+And I also hope that we can put forward valuable Suggestions and comments. You can contact me through the following :
 
     *Email:xiaominghe2014@gmail.com
     * QQ: 229827701
