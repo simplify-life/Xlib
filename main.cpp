@@ -10,13 +10,16 @@
 #include "src/XFileUtil.h"
 #include "src/XUtf8.h"
 #include "src/net/XSocket.h"
+#include "src/net/XEpoll.h"
 int main()
 {
     
     /** Below is the server test code*/
      //xlib::net::XSocketTCP server;
      //server.startServer(4435);
-    
+    xlib::net::epoll::Epoll server;    
+    server.startServer(4435);
+    //return 0;
     US_NS_X;
     LOG_SET(LOG_LEVEL::L_ALL);
     XLog::setWrite(true, XFileUtil::getCurrentPathWithPrefix().append("xliblog"));

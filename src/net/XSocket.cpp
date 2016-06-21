@@ -205,11 +205,11 @@ namespace net {
             if(FD_ISSET(client, &_read_set))
             {
                 _msg msg;
-                Receive(client,msg.str_msg,1024);
+                net::Receive(client,msg.str_msg,1024);
                 std::cout<<msg.str_msg<<std::endl;
                 std::string ss = "I received msg:";
                 ss.append(msg.str_msg);
-                Send(client,ss.c_str(),ss.length());
+                net::Send(client,ss.c_str(),ss.length());
             }
         }
         /**
@@ -238,7 +238,7 @@ namespace net {
         while (!_threadEnd)
         {
             int s=0;
-            if((s = select(mSocket+1,&_read_set,NULL,NULL,&timeout))==-1)
+            if((s = select(0,&_read_set,NULL,NULL,&timeout))==-1)
             {
                 /* error */
                 if(errno != EINTR)
@@ -252,7 +252,11 @@ namespace net {
             if(FD_ISSET(mSocket, &_read_set))
             {
                 _msg msg;
-                Receive(msg.str_msg,1024);
+		ssize_t n = net::Receive(mSocket,msg.str_msg,1024);
+                if(n==0)
+                {
+                    break;
+                }
                 _msgQueue.emplace(msg);
                 handlerMessage();
             }

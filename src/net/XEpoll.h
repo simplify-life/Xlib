@@ -37,11 +37,15 @@ namespace net{
 		public:	int startServer(int port);
 			Epoll();		
 			virtual ~Epoll();
+		protected:
+            		void init(int port);
+			int eventLoop(struct epoll_event&);
 		private:
 			DISALLOW_COPY_AND_ASSIGN(Epoll);
 			SOCKET mSocket;
 			int ep_fd;
 			ipv4 _serverAddr;
+			struct epoll_event ev,events[MAX_DEFAULT_FDS];
 		};
 	}
 
