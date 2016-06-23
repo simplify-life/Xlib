@@ -1,0 +1,19 @@
+language: cpp
+sudo: required
+install: make&& ./xlib
+compiler:
+- clang
+- g++
+os:
+- linux
+- osx
+branches:
+ only:
+ - master
+notifacations:
+ email: false
+ irc:
+ - "%{repository}/%{branch} (%{commit} - %{author}): %{build_url}: %{message}"
+env:
+ global:
+ - LANG="en_US.UTF-8"
