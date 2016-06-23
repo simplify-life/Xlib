@@ -14,7 +14,17 @@
 #include	"../xplatform.h"
 #define	EPOLL_SUPPORT	X_PLATFORM==X_P_LINUX
 #if	EPOLL_SUPPORT
-#include	<sys/epoll.h>
+	#include	<sys/epoll.h>
+#else 
+	namespace xlib{
+    		namespace net{
+        
+        		class XSocketTCP;
+        		namespace epoll{
+            			using Epoll = net::XSocketTCP;
+        		}
+    		}
+	}	
 #endif
 
 #include <iostream>
