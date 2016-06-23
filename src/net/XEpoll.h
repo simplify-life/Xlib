@@ -39,6 +39,7 @@ namespace net{
 			virtual ~Epoll();
 		protected:
             		void init(int port);
+			int eventLoop(struct epoll_event&);
 		private:
 			DISALLOW_COPY_AND_ASSIGN(Epoll);
 			SOCKET mSocket;
