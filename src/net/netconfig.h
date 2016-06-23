@@ -17,6 +17,7 @@
 #include	<sys/epoll.h>
 #endif
 
+#include <iostream>
 #include <thread>
 #include <algorithm>
 #include <functional>
@@ -123,7 +124,46 @@ namespace xlib{
        			     this->ip = ip.c_str();
       			 }
    		 };
-	}	
+		
+		        template <class T>
+        		ssize_t Send(SOCKET client,const T* buffer, size_t len)
+        		{
+            
+            			len *= sizeof(T);
+            			if (len > (SOCKET_MAX_BUFFER_LEN * sizeof(T)))
+            			{
+                			std::stringstream error;
+                			error << "[send] [len=" << len << "] Data length higher then max buffer len (" << SOCKET_MAX_BUFFER_LEN << ")";
+                			std::cout<<error.str()<<std::endl;
+
+            			}
+            			ssize_t ret;
+            			if ((ret = send(client, (const char*)buffer, len, 0)) == -1) std::cout<<"[send] Cannot send"<<std::endl;
+            			else if(ret==0) std::cout<<"the socket is closed!"<<std::endl;
+            			return ret;
+        		}
+        
+        
+        		template <class T>
+        		ssize_t Receive(SOCKET client,T* buffer, size_t len)
+        		{
+            
+            			len *= sizeof(T);
+            			if (len > (SOCKET_MAX_BUFFER_LEN * sizeof(T)))
+            			{
+                			std::stringstream error;
+                			error << "[receive] [len=" << len << "] Data length higher then max buffer len (" << SOCKET_MAX_BUFFER_LEN << ")";
+                			std::cout<<error.str()<<std::endl;
+            			}			
+            
+            			ssize_t ret;
+            			if ((ret = recv(client,(char*)buffer, len, 0)) == -1) std::cout<<"[send] Cannot receive"<<std::endl;
+            			else if(ret==0) std::cout<<"the socket is closed!"<<std::endl;
+            			return ret;
+        		}
+	
+	}
+	
 }
 
 

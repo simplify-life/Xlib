@@ -73,29 +73,37 @@ namespace net{
 		Epoll::~Epoll()
 		{
 			close(mSocket);
+			close(ep_fd);
 		}
+		
+	        void Epoll::init(int port )
+	        {
+        	    if(-1==ep_fd) ep_fd = epoll_Create();
+       		    if(-1==mSocket)
+        	    {
+                	_socket tcpSocket;
+                	tcpSocket.protocolFamily = AF_INET;
+                	tcpSocket.socketType = SOCK_STREAM;
+                	tcpSocket.protocol = IPPROTO_TCP;
+                
+                	mSocket = epoll_socket(tcpSocket);
+		    }
+            	    IPV4(&_serverAddr, AF_INET, port, "0.0.0.0");
+		    bzero(&ev,sizeof(ev));
+           	    ev.data.fd = mSocket;
+            	    ev.events = EPOLLIN | EPOLLET;
+            	    epoll_ctl(ep_fd, EPOLL_CTL_ADD,mSocket, &ev);
+            	    bind(mSocket, (struct sockaddr *)&_serverAddr, sizeof(_serverAddr));
+            	    listen(mSocket, port);
+        	}
+
 		
 		int Epoll::startServer(int port)
 		{
-			_socket tcpSocket;
-       			tcpSocket.protocolFamily = AF_INET;
-       			tcpSocket.socketType = SOCK_STREAM;
-       			tcpSocket.protocol = IPPROTO_TCP;
-		
-			mSocket = epoll_socket(tcpSocket);
-			IPV4(&_serverAddr, AF_INET, port, "0.0.0.0");
-		
-			ep_fd = epoll_Create();
-			struct epoll_event ev,events[MAX_DEFAULT_FDS];
-			ev.data.fd = mSocket;
-			ev.events = EPOLLIN | EPOLLET;
 			
-			epoll_ctl(ep_fd, EPOLL_CTL_ADD,mSocket, &ev);
-		
-			bind(mSocket, (struct sockaddr *)&_serverAddr, sizeof(_serverAddr));
+			init(port);
 
-			listen(mSocket, port);
-			struct sockaddr_in clientaddr;socklen_t clilen;
+			struct sockaddr_in clientaddr;socklen_t clilen = sizeof(clientaddr);
 			SOCKET client_fd=-1,socket_fd=-1;
 			int ndfs=-1;
 			ssize_t n=0;
@@ -125,7 +133,7 @@ namespace net{
 					else if(events[i].events&EPOLLIN)
 					{
 						if((socket_fd=events[i].data.fd)<0) continue;
-						if((n = read(socket_fd, line, 1024)) < 0)
+						if((n = net::Receive(socket_fd, line, 1024)) < 0)
 						{
 							if(errno == ECONNRESET)
 							{
@@ -151,8 +159,8 @@ namespace net{
 					else if(events[i].events & EPOLLOUT)
 		 			{
 						socket_fd = events[i].data.fd;
-						write(socket_fd, line, n);
 
+						net::Send(socket_fd,line,sizeof(line));
 						printf("written data: %s\n", line);
 
 						ev.data.fd = socket_fd;

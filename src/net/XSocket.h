@@ -90,8 +90,8 @@ namespace net{
         void handlerMessage() override;
         int32 Listen(int port) override;
         
-        template <class T> ssize_t Send(const T* t, size_t len){return Send(mSocket,t, len);};
-        template <class T> ssize_t Receive(T* t, size_t len){return Receive(mSocket,t, len);};
+        template <class T> ssize_t Send(const T* t, size_t len){return net::Send(mSocket,t, len);};
+        template <class T> ssize_t Receive(T* t, size_t len){return net::Receive(mSocket,t, len);};
         
     protected:
         
@@ -104,8 +104,7 @@ namespace net{
          */
         void CloseClient(const SOCKET s=-1);
         void handlerClient(const SOCKET client=-1);
-        template <class T> ssize_t Send(SOCKET client,const T*, size_t);
-        template <class T> ssize_t Receive(SOCKET client,T*, size_t);
+        
     private:
         DISALLOW_COPY_AND_ASSIGN(XSocketTCP);
         ipv4 _serverAddr;
@@ -113,42 +112,6 @@ namespace net{
         
     };
     
-    
-    template <class T>
-    ssize_t XSocketTCP::Send(SOCKET client,const T* buffer, size_t len)
-    {
-        
-        len *= sizeof(T);
-        if (len > (SOCKET_MAX_BUFFER_LEN * sizeof(T)))
-        {
-            std::stringstream error;
-            error << "[send] [len=" << len << "] Data length higher then max buffer len (" << SOCKET_MAX_BUFFER_LEN << ")";
-            throw SocketException(error.str());
-        }
-        ssize_t ret;
-        if ((ret = send(client, (const char*)buffer, len, 0)) == -1) throw SocketException("[send] Cannot send");
-        else if(ret==0) throw SocketException("the socket is closed!");
-        return ret;
-    }
-    
-    
-    template <class T>
-    ssize_t XSocketTCP::Receive(SOCKET client,T* buffer, size_t len)
-    {
-        
-        len *= sizeof(T);
-        if (len > (SOCKET_MAX_BUFFER_LEN * sizeof(T)))
-        {
-            std::stringstream error;
-            error << "[receive] [len=" << len << "] Data length higher then max buffer len (" << SOCKET_MAX_BUFFER_LEN << ")";
-            throw SocketException(error.str());
-        }
-        
-        ssize_t ret;
-        if ((ret = recv(client,(char*)buffer, len, 0)) == -1) throw SocketException("[send] Cannot receive");
-        else if(ret==0) throw SocketException("the socket is closed!");
-        return ret;
-    }
     
 }
 XLIB_END
