@@ -1,6 +1,5 @@
 
-
-![XLIB](http://tb.himg.baidu.com/sys/portrait/item/3adfe89c80e5b1b1e6b581e5aea2e505)
+[![XLIB](https://travis-ci.org/xiaominghe2014/C-11-XLib.svg)](#https://travis-ci.org/xiaominghe2014/C-11-XLib/jobs/139774823)
 ##What is XLIB?
 
 ---
