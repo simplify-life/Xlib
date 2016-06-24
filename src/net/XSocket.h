@@ -82,9 +82,14 @@ namespace net{
     public:
         XSocketTCP();
         virtual ~XSocketTCP();
+        /**
+         start service
+         */
+        bool startClient(const _server& aServer,const SOCKET_TYPE& type=SOCKET_TYPE::TCP, bool isSync=false);
+        bool startServer(int port,const SOCKET_TYPE& type=SOCKET_TYPE::TCP);
+        bool startHttpClient(const char* httpHost);
         
-        bool startClient(const _server& aServer,bool isSync=false);
-        bool startServer(int port);
+        
         std::string Receive();
         
         void handlerMessage() override;
@@ -108,6 +113,7 @@ namespace net{
     private:
         DISALLOW_COPY_AND_ASSIGN(XSocketTCP);
         ipv4 _serverAddr;
+        SOCKET_TYPE _type;
         std::vector<SOCKET> _clients;
         
     };
