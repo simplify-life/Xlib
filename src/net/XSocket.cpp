@@ -107,7 +107,7 @@ namespace net {
     }
     
     ///////////////////////TCP//////////////////////
-    XSocketTCP::XSocketTCP()
+    XSocketTCP::XSocketTCP():_type(SOCKET_TYPE::TCP)
     {
         while (!_msgQueue.empty())
         {
@@ -131,13 +131,19 @@ namespace net {
         }
     }
     
-    bool XSocketTCP::startClient(const _server& aServer,bool isSync)
+    bool XSocketTCP::startClient(const _server& aServer,const SOCKET_TYPE& type,bool isSync)
     {
+        _type = type;
         if(!checkHost(aServer.ip)) throw SocketException("error ip!");
         _socket tcpSocket;
         tcpSocket.protocolFamily = AF_INET;
         tcpSocket.socketType = SOCK_STREAM;
-        tcpSocket.protocol = IPPROTO_TCP;
+        if(_type == SOCKET_TYPE::TCP)
+            tcpSocket.protocol = IPPROTO_TCP;
+        else if(_type == SOCKET_TYPE::HTTP)
+            tcpSocket.protocol = 0;
+        else
+            tcpSocket.protocol = IPPROTO_TCP;
 	INIT_SOCKET();
         mSocket = Socket(tcpSocket);
         ipv4 addr;
@@ -152,7 +158,7 @@ namespace net {
         return true;
     }
     
-    bool XSocketTCP::startServer(int port)
+    bool XSocketTCP::startServer(int port,const SOCKET_TYPE& type)
     {
         Listen(port);
         while(1)
@@ -168,6 +174,29 @@ namespace net {
             else
                 CloseClient(client);
         }
+        return true;
+    }
+    
+    
+    bool XSocketTCP::startHttpClient(const char* httpHost)
+    {
+        struct hostent *hostinfo = nullptr;
+        hostinfo = gethostbyname(httpHost);
+        if(!hostinfo) return false;
+        _socket tcpSocket;
+        tcpSocket.protocolFamily = AF_INET;
+        tcpSocket.socketType = SOCK_STREAM;
+        tcpSocket.protocol = IPPROTO_TCP;
+
+        INIT_SOCKET();
+        mSocket = Socket(tcpSocket);
+        ipv4 addr;
+        addr.sin_addr = *(in_addr*) hostinfo->h_addr;
+        addr.sin_family = AF_INET;
+        addr.sin_port = htons(80);
+        Connect(mSocket, (sockaddr*)&addr, sizeof(addr));
+        _running = true;
+        _thread = std::thread( std::bind( &XSocketTCP::loop, this) );
         return true;
     }
     

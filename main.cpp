@@ -35,9 +35,13 @@ int main()
     /**
      2. tcp client test
      */
-    //auto tcp = std::unique_ptr<net::XSocketTCP>(new net::XSocketTCP);
+   // struct hostent *hostinfo = nullptr;
+   // hostinfo = gethostbyname("www.baidu.com");
+    auto tcp = std::unique_ptr<net::XSocketTCP>(new net::XSocketTCP);
+
     //tcp->startClient(net::_server(2347,"180.97.33.107"),true);
-    //tcp->Send("this is a tcp test", sizeof("this is a tcp test"));
+    tcp->startHttpClient("www.baidu.com");
+    tcp->Send(httpRequest.c_str(), httpRequest.size());
     
     /**
      3. Epoll tcp server test

@@ -108,6 +108,13 @@ using ipv6 = sockaddr_in6;
 
 namespace xlib{
 	namespace net{
+        enum class SOCKET_TYPE
+        {
+            TCP,
+            UDP,
+            HTTP,
+            WEB
+        };
 /**
  *      @brief a socket describe struct
  *      @param protocolFamily
