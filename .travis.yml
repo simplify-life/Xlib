@@ -15,7 +15,7 @@ compiler:
 - clang
 - g++
 os:
-- linux
+#- linux
 - osx
 branches:
  only:
