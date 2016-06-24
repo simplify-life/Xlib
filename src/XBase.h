@@ -50,6 +50,12 @@ using uint32=uint32_t;
 using uint64=uint64_t;
 #endif
 
+
+
+
+#define SAFE_DELETE(ptr) delete ptr;ptr=nullptr
+#define SAFE_DELET_ARR(arr_ptr) delete[] arr_ptr;arr_ptr=nullptr
+
 //about array
 
 #define arraysize(array) (int)(sizeof(array)/sizeof((array)[0]))
