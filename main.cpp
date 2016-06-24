@@ -5,31 +5,63 @@
 //  Created by ximena on 16/5/26.
 //  Copyright © 2016年 ximena. All rights reserved.
 //
+#include <memory>
 #include "src/XDefine.h"
 #include "src/XThread.h"
 #include "src/XFileUtil.h"
 #include "src/XUtf8.h"
 #include "src/net/XSocket.h"
-#include "src/net/XEpoll.h"
+//#include "src/net/XEpoll.h"
+#include "src/net/http.h"
 int main()
 {
+     US_NS_X;
     
-    /** Below is the server test code*/
+    /**
+     0. http test
+     */
+   
+    auto httpRequest = net::http::getRequest();
+    std::cout<<httpRequest<<std::endl;
+
+    /**
+     1. Below is tcp server test code
+     */
+    
      //xlib::net::XSocketTCP server;
      //server.startServer(4435);
-    xlib::net::epoll::Epoll server;    
-    server.startServer(4435);
-    //return 0;
-    US_NS_X;
+    
+    
+    /**
+     2. tcp client test
+     */
+    auto tcp = std::unique_ptr<net::XSocketTCP>(new net::XSocketTCP);
+    tcp->startClient(net::_server(2347,"180.97.33.107"),true);
+    tcp->Send("this is a tcp test", sizeof("this is a tcp test"));
+    
+    /**
+     3. Epoll tcp server test
+     */
+    //xlib::net::epoll::Epoll server;
+    //server.startServer(4435);
+    
+   
+    /**
+     4. LOG test
+     */
     LOG_SET(LOG_LEVEL::L_ALL);
     XLog::setWrite(true, XFileUtil::getCurrentPathWithPrefix().append("xliblog"));
     
-    auto tcp = std::shared_ptr<net::XSocketTCP>(new net::XSocketTCP);
-    tcp->startClient(net::_server(2347,"120.27.94.221"),true);
+    /**
+     5. utf8 test
+     */
     std::string chutf8 = "这是一个字符串";
     auto s = XUtf8::utf8ToUnicode(chutf8);
     LOG_I(s.c_str());
-    tcp->Send(chutf8.c_str(), sizeof(chutf8));
+
+    /**
+     6. thread pool test
+     */
     auto fun = []
     {
         std::this_thread::sleep_for(std::chrono::seconds(rand()%50));
@@ -44,6 +76,9 @@ int main()
     pool->addTask(fun);
     pool->addTask(fun);
     
+    /**
+     7. timer test
+     */
     XTime::doPertime(-1, 0.5,[]
     {
         LOG_D("this is a timer,1 second 2 times");

@@ -1,6 +1,16 @@
 language: cpp
 sudo: required
-install: make&& ./xlib
+
+#install:
+#    - ./xlib
+#before_script:
+#    - if [ "${CXX}" == "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+#    - if [ "${CXX}" == "clang++" ]; then export CXX="clang++-3.2" CC="clang-3.2"; fi
+#
+#    - if [ "${CXX}" == "clang++" ]; then sudo apt-get -qq install clang-3.2; fi
+#    - sudo apt-get install g++-4.8;
+script:
+    - make clean&&make&&./xlib
 compiler:
 - clang
 - g++
