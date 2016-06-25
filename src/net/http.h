@@ -60,7 +60,8 @@ namespace xlib{
                 Content_Length , Cookie , From , Host
             };
             /**
-             http message format = 1.request line + 2.header + 3. empty line + 4. request data :
+             request message:  
+	     1.request line + 2.header + 3. empty line + 4. request data :
              
              1.   [Method][blank]   [url][blank]  [Protoclo] CRLF
              2.   Accept-Charset: utf-8
@@ -127,18 +128,23 @@ namespace xlib{
             string getData(const char* type,T&& value)
             {
                 stringstream data;
+		if(type!=""&&value!="")
                 data<<type<<"="<<value;
+		else
+		data<<"";
                 return data.str();
             }
             
             /**
              request
              */
-            string getRequest(const Method& method=Method::GET,const char* url="https://www.baidu.com/link?",const char* type = "url",const char* value="cAnAhHuGIVCqSbINxTZtkkPLeX8Hxo5-ZM333jTzbXzk2PIjr195amiv"
-                      "ugOAK5TKNIRraccUshffdH74mdI3GK&wd=&eqid=d629e968000150d900000005576ce427")
+            string getRequest(const Method& method=Method::GET,const char* url="/History.html",const char* type = "",const char* value="")
             {
                 stringstream request;
-                request<<getLine(method,url,Protocol::HTTP_11)<<getHeader(Header::Accept,"*/*")<<getBlank()<<getData(type,value);
+                request<<getLine(method,url,Protocol::HTTP_11)
+		<<getHeader(Header::Accept,"*/*")
+		<<getHeader(Header::Host,"www.w3.org")	
+		<<getBlank()<<getData(type,value);
                 return request.str();
             }
             

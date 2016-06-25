@@ -40,7 +40,7 @@ int main()
     auto tcp = std::unique_ptr<net::XSocketTCP>(new net::XSocketTCP);
 
     //tcp->startClient(net::_server(2347,"180.97.33.107"),true);
-    tcp->startHttpClient("www.baidu.com");
+    tcp->startHttpClient("www.w3.org");
     tcp->Send(httpRequest.c_str(), httpRequest.size());
     
     /**
