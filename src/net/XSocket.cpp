@@ -404,13 +404,18 @@ namespace net {
             return false;
         }
         
+#ifndef SO_REUSEPORT
+#define SO_REUSEPORT SO_REUSEADDR
+        std::cout<<"start UDP server SO_REUSEPORT NOT defined!"<<std::endl;
+        return false;
+#endif
         int one = 1;
         if(setsockopt(sock,SOL_SOCKET, SO_REUSEPORT, &one, sizeof(one))==-1)
         {
             std::cout<<"start UDP server setsockopt error!"<<std::endl;
             return false;
         }
-        
+
         bzero(&server_socket, sizeof(server_socket));
         server_socket.sin_family = AF_INET;
         server_socket.sin_port = htons(port);
@@ -446,20 +451,20 @@ namespace net {
         SOCKET sock;
         struct sockaddr_in server_socket;
         struct sockaddr_in client_socket;
-        
+
         if((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
         {
             std::cout<<"create UDP client Socket error!"<<std::endl;
             return false;
         }
-        
+#ifdef SO_BROADCAST
         int one = 1;
-        if(setsockopt(sock,SOL_SOCKET, SO_REUSEPORT, &one, sizeof(one))==-1)
+        if(setsockopt(sock,SOL_SOCKET, SO_BROADCAST, &one, sizeof(one))==-1)
         {
             std::cout<<"start UDP client setsockopt error!"<<std::endl;
             return false;
         }
-        
+#endif
         bzero(&server_socket, sizeof(server_socket));
         server_socket.sin_family = AF_INET;
         server_socket.sin_port = htons(port);
