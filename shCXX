@@ -1,0 +1,22 @@
+#make
+
+UNAME_S:=$(shell uname -s)
+
+all:   install
+
+.PHONY install:
+install:
+
+ifeq ($(UNAME_S),Linux)
+	  sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+	  sudo add-apt-repository -y ppa:zoogie/sdl2-snapshots
+	  sudo apt-get update
+	  sudo apt-get install libsdl2-dev
+	  sudo apt-get install -y gcc-4.8
+	  sudo apt-get install -y g++-4.8
+	  sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
+	  sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
+else
+	@echo "is not linux sys opt"
+
+endif
