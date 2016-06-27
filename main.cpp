@@ -39,7 +39,7 @@ int main()
    // hostinfo = gethostbyname("www.baidu.com");
     auto tcp = std::unique_ptr<net::XSocketTCP>(new net::XSocketTCP);
 
-    //tcp->startClient(net::_server(2347,"180.97.33.107"),true);
+    //tcp->startClient(net::_server(2347,"180.97.33.107"));
     tcp->startHttpClient("www.w3.org");
     tcp->Send(httpRequest.c_str(), httpRequest.size());
     
@@ -73,9 +73,8 @@ int main()
         auto t = XString::formatTime(XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(),8),TIME_F::T_DEFAULT);
         LOG_I("thread_id=%d,%s",tid,t.c_str());
     };
-    auto pool = std::shared_ptr<XThreadPool>(new XThreadPool(5,5,true));
+    auto pool = std::shared_ptr<XThreadPool>(new XThreadPool(6,6,true));
     
-    pool->addTask(fun);
     pool->addTask(fun);
     pool->addTask(fun);
     pool->addTask(fun);
@@ -95,6 +94,24 @@ int main()
         }
     };
     pool->addTask(loop);
+    
+    /**
+     8. test udp
+     */
+    
+    auto udpServer = []
+    {
+        net::XSocketUDP server;
+        server.startServer(8888);
+    };
+    
+    pool->addTask(udpServer);
+    pool->addTask([]
+    {
+        net::XSocketUDP client;
+        client.startClient("127.0.0.1", 8888);
+    });
+    
     pool->detach();
     std::this_thread::sleep_for(std::chrono::seconds(60));
     return 0;

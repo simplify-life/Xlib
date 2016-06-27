@@ -99,7 +99,7 @@ tcp->Send(chutf8.c_str(), sizeof(chutf8));
 ##Notes
 ---
 1. *Compile environment*: need GCC 4.8 or above, more than clang3.1.     
-2. *Test*: the whole project, on the MAC and centos test has no problem. Perform the make, then run the generated script.
+2. *TDD*: the whole project, on the MAC and centos test has no problem. Perform the make, then run the generated script.And specific usage see main.cpp.
 
 ##Q&A
 ---
@@ -107,5 +107,5 @@ You have any question, welcome to discuss.
 And I also hope that we can put forward valuable Suggestions and comments. You can contact me through the following :
 
 *Email:xiaominghe2014@gmail.com
-* QQ: 229827701
+*QQ: 229827701
 

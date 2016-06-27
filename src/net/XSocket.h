@@ -41,6 +41,10 @@ namespace net{
     
     
     
+    //////////////XSocket-----socket wrapper//////////////////
+    
+    
+    
     class XSocket
     {
     public:
@@ -73,6 +77,8 @@ namespace net{
     };
     
     
+    
+    ///////////////////////////TCP//////////////////////
     
     class XSocketTCP:public XSocket
     {
@@ -117,6 +123,22 @@ namespace net{
         std::vector<SOCKET> _clients;
         
     };
+    
+    
+    ////////////////////////UDP/////////////////////////
+    
+    class XSocketUDP
+    {
+    public:
+        
+        XSocketUDP();
+        virtual ~XSocketUDP();
+    public:
+        
+        bool startServer(int port);
+        bool startClient(const char* ip,int port);
+    };
+    
     
     
 }
