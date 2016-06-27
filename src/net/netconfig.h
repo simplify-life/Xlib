@@ -124,22 +124,22 @@ namespace xlib{
  *      @param protocol
  *      	example:IPPROTO_TCP/IPPROTO_UDP/IPPROTO_STCP/IPPROTO_TIPC
  **/
-    		struct _socket
-    	       	{
+        struct _socket
+        {
  			int protocolFamily;
- 		        int socketType;
-		        int protocol;
+            int socketType;
+            int protocol;
 		 };
     
   		 struct _server
    		 {
-       			 int port;
-       			 const char* ip;
-       			 _server(int port,const std::string& ip)
-       			 {
-       			     this->port = port;
-       			     this->ip = ip.c_str();
-      			 }
+            int port;
+            const char* ip;
+            _server(int port,const std::string& ip)
+            {
+                this->port = port;
+                this->ip = ip.c_str();
+            }
    		 };
 		
 		        template <class T>

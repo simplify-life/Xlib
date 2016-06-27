@@ -382,5 +382,103 @@ namespace net {
         }
         return ret;
     }
+    
+    /**
+        UDP
+     */
+    XSocketUDP::XSocketUDP(){}
+    XSocketUDP::~XSocketUDP(){}
+    
+    bool XSocketUDP::startServer(int port)
+    {
+        
+        std::cout<<"start UDP server..."<<std::endl;
+        
+        SOCKET sock;
+        struct sockaddr_in server_socket;
+        struct sockaddr_in client_socket;
+        
+        if((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+        {
+            std::cout<<"create UDP server Socket error!"<<std::endl;
+            return false;
+        }
+        
+        int one = 1;
+        if(setsockopt(sock,SOL_SOCKET, SO_REUSEPORT, &one, sizeof(one))==-1)
+        {
+            std::cout<<"start UDP server setsockopt error!"<<std::endl;
+            return false;
+        }
+        
+        bzero(&server_socket, sizeof(server_socket));
+        server_socket.sin_family = AF_INET;
+        server_socket.sin_port = htons(port);
+        server_socket.sin_addr.s_addr=htonl(INADDR_ANY);
+        if (bind(sock, (struct sockaddr *) &server_socket, sizeof(server_socket)) < 0)
+        {
+            std::cout<<"start UDP server bind error!"<<std::endl;
+            return false;
+        }
+        
+        char buffer[1024];
+        ssize_t received;
+        while (1)
+        {
+            socklen_t client_len = sizeof(client_socket);
+            if ((received = recvfrom(sock, buffer, 1024, 0, (struct sockaddr *) &client_socket, &client_len)) < 0)
+            {
+                std::cout<<"start UDP server recvfrom error!"<<std::endl;
+                exit(0);
+            }
+            buffer[received] = '\0';
+            std::cout << "Client connected: "<< inet_ntoa(client_socket.sin_addr)<<"\t"<<ntohs(client_socket.sin_port)<<std::endl;
+            std::cout << buffer<<std::endl;
+        }
+        return true;
+    }
+    
+    bool XSocketUDP::startClient(const char* ip,int port)
+    {
+        std::cout<<"start UDP client..."<<std::endl;
+        
+        
+        SOCKET sock;
+        struct sockaddr_in server_socket;
+        struct sockaddr_in client_socket;
+        
+        if((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+        {
+            std::cout<<"create UDP client Socket error!"<<std::endl;
+            return false;
+        }
+        
+        int one = 1;
+        if(setsockopt(sock,SOL_SOCKET, SO_REUSEPORT, &one, sizeof(one))==-1)
+        {
+            std::cout<<"start UDP client setsockopt error!"<<std::endl;
+            return false;
+        }
+        
+        bzero(&server_socket, sizeof(server_socket));
+        server_socket.sin_family = AF_INET;
+        server_socket.sin_port = htons(port);
+        server_socket.sin_addr.s_addr= inet_addr(ip);
+        
+        char buffer[]="this is a UDP test message from client!";
+        
+        while(1)
+        {
+            if (sendto(sock, buffer, strlen(buffer), 0, (struct sockaddr *) &server_socket, sizeof(server_socket)) < 0)
+            {
+                std::cout<<"start UDP client sendto error!"<<std::endl;
+                exit(0);
+            }
+            break;
+        }
+        
+        return true;
+    }
+    
 }
 XLIB_END
