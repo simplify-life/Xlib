@@ -32,6 +32,13 @@
 #endif
 XLIB_BEGAIN
 
+/**
+ <regex> is not supported by some stl version,so what a pity，Only temporarily canceled
+ */
+#ifndef NO_USE_REGEX
+#define NO_USE_REGEX
+#endif
+
 using namespace std;
 
 vector<string> XRegex::getMatch(const string &src, const string &pattern)
