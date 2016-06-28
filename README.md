@@ -2,6 +2,8 @@
 [![XLIB](https://travis-ci.org/xiaominghe2014/C-11-XLib.svg)](https://travis-ci.org/xiaominghe2014/C-11-XLib)
 ##What is XLIB?
 
+[![Join the chat at https://gitter.im/xiaominghe2014/C-11-XLib](https://badges.gitter.im/xiaominghe2014/C-11-XLib.svg)](https://gitter.im/xiaominghe2014/C-11-XLib?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ---
 **Xlib is a collection of c + + commonly used functions and basic components.   
 It is for the purpose of cross-platform and reuse.   
