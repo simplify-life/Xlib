@@ -1,6 +1,6 @@
 
 [![XLIB](https://travis-ci.org/xiaominghe2014/C-11-XLib.svg)](https://travis-ci.org/xiaominghe2014/C-11-XLib)
-##What is XLIB?
+## What is XLIB?
 
 [![Join the chat at https://gitter.im/xiaominghe2014/C-11-XLib](https://badges.gitter.im/xiaominghe2014/C-11-XLib.svg)](https://gitter.im/xiaominghe2014/C-11-XLib?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -10,13 +10,13 @@ It is for the purpose of cross-platform and reuse.
 Including the logging system, thread pool, timer, TCP communications, and so on.  
 You can easily use it in your program.**
 
-##Usage
+## Usage
 ---
 
-###1. [log](#log)
-###2. [thread](#thread)
-###3. [timer](#timer)
-###4. [socket](#socket)
+### 1. [log](#log)
+### 2. [thread](#thread)
+### 3. [timer](#timer)
+### 4. [socket](#socket)
 
 <h4 id='log'>log </h4>
 
@@ -98,16 +98,17 @@ auto s = XUtf8::utf8ToUnicode(chutf8);
 LOG_I(s.c_str());
 tcp->Send(chutf8.c_str(), sizeof(chutf8));
 ```
-##Notes
+## Notes
 ---
 1. *Compile environment*: need GCC 4.8 or above, more than clang3.1.     
 2. *TDD*: the whole project, on the MAC and centos test has no problem. Perform the make, then run the generated script.And specific usage see main.cpp.
 
-##Q&A
+## Q&A
 ---
 You have any question, welcome to discuss.  
 And I also hope that we can put forward valuable Suggestions and comments. You can contact me through the following :
 
-*Email:xiaominghe2014@gmail.com
-*QQ: 229827701
+ *Email:xiaominghe2014@gmail.com  
+
+ *QQ: 229827701
 

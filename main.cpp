@@ -71,7 +71,7 @@ int main()
         std::this_thread::sleep_for(std::chrono::seconds(rand()%50));
         std::thread::id tid = std::this_thread::get_id();
         auto t = XString::formatTime(XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(),8),TIME_F::T_DEFAULT);
-        LOG_I("thread_id=%d,%s",tid,t.c_str());
+        LOG_I("thread_id=%s,%s",XString::convert<std::string>(tid).c_str(),t.c_str());
     };
     auto pool = std::shared_ptr<XThreadPool>(new XThreadPool(6,6,true));
     
