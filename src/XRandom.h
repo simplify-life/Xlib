@@ -15,7 +15,7 @@
 #include <string>
 XLIB_BEGAIN
 
-namespace rand
+namespace XRand
 {
 /**
  @eg.  maybe  getRandomVector(9)={4,7,3,6,8,0,2,5,1}
