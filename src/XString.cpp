@@ -12,7 +12,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <algorithm>
-#include <sstream>
+
 using namespace std;
 
 XLIB_BEGAIN

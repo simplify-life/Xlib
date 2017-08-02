@@ -14,6 +14,8 @@
 #include <string>
 #include <vector>
 #include <ctime>
+#include <sstream>
+
 XLIB_BEGAIN
 enum class TIME_F : unsigned char
 {
@@ -47,6 +49,17 @@ namespace XString
     bool isInt(const std::string&,bool ignoreSymbols=true);
     int compareVersion(const std::string&,const std::string&,const std::string& key=".");
 
+    template<class T_out,class T_in>
+    T_out convert(const T_in& in)
+    {
+        std::stringstream stream;
+        stream<<in;
+        T_out out;
+        stream>>out;
+        stream.clear();
+        return out;
+    }
+    
 };
 XLIB_END
 #endif /* XString_h */
