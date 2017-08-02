@@ -15,7 +15,7 @@
 XLIB_BEGAIN
 
 using namespace std;
-namespace rand{
+namespace XRand{
 vector<uint> getRandomV(uint size)
 {
     vector<uint> v;
@@ -30,8 +30,8 @@ vector<uint> getRandomV(uint size)
 
 std::string getRandomString(uint length)
 {
-    static const char * const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"; // 62 chars
-    static const uint size = 62; // = strlen(chars);
+    const char * const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"; // 62 chars
+    const uint size = 62; // = strlen(chars);
     uniform_int_distribution<uint> distribution(0, size - 1);
     auto engine = default_random_engine((uint)XTime::getTimestamp_milliseconds());
     string s(length, '\0');

@@ -13,6 +13,7 @@
 #include "src/net/XSocket.h"
 //#include "src/net/XEpoll.h"
 #include "src/net/http.h"
+#include "src/XRandom.h"
 int main()
 {
      US_NS_X;
@@ -37,11 +38,11 @@ int main()
      */
    // struct hostent *hostinfo = nullptr;
    // hostinfo = gethostbyname("www.baidu.com");
-    auto tcp = std::unique_ptr<net::XSocketTCP>(new net::XSocketTCP);
+//    auto tcp = std::unique_ptr<net::XSocketTCP>(new net::XSocketTCP);
 
     //tcp->startClient(net::_server(2347,"180.97.33.107"));
-    tcp->startHttpClient("www.w3.org");
-    tcp->Send(httpRequest.c_str(), httpRequest.size());
+//    tcp->startHttpClient("www.w3.org");
+//    tcp->Send(httpRequest.c_str(), httpRequest.size());
     
     /**
      3. Epoll tcp server test
@@ -66,53 +67,55 @@ int main()
     /**
      6. thread pool test
      */
-    auto fun = []
+    auto fun = [](int wTime)
     {
-        std::this_thread::sleep_for(std::chrono::seconds(rand()%50));
         std::thread::id tid = std::this_thread::get_id();
+        std::this_thread::sleep_for(std::chrono::seconds(wTime));
         auto t = XString::formatTime(XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(),8),TIME_F::T_DEFAULT);
-        LOG_I("thread_id=%s,%s",XString::convert<std::string>(tid).c_str(),t.c_str());
+        LOG_I("thread_id=%s,%s,%s",XString::convert<std::string>(tid).c_str(),t.c_str(),XRand::getRandomString(10).c_str());
     };
-    auto pool = std::shared_ptr<XThreadPool>(new XThreadPool(6,6,true));
-    
-    pool->addTask(fun);
-    pool->addTask(fun);
-    pool->addTask(fun);
+    fun(1);
+    fun(2);
+//    auto pool = std::unique_ptr<XThreadPool>(new XThreadPool(6,8,true));
+//    
+//    pool->addTask(fun);
+//    pool->addTask(fun);
+//    pool->addTask(fun);
     
     /**
      7. timer test
      */
-    XTime::doPertime(-1, 0.5,[]
-    {
-        LOG_D("this is a timer,1 second 2 times");
-    } );
-    auto loop = []
-    {
-        while (true)
-        {
-            XTimer::getInstance()->mainLoop();
-        }
-    };
-    pool->addTask(loop);
+//    XTime::doPertime(-1, 1,[]
+//    {
+//        LOG_D("this is a timer,1 second 1 times");
+//    } );
+//    auto loop = []
+//    {
+//        while (true)
+//        {
+//            XTimer::getInstance()->mainLoop();
+//        }
+//    };
+//    pool->addTask(loop);
     
     /**
      8. test udp
      */
     
-    auto udpServer = []
-    {
-        net::XSocketUDP server;
-        server.startServer(8888);
-    };
+//    auto udpServer = []
+//    {
+//        net::XSocketUDP server;
+//        server.startServer(8888);
+//    };
+//    
+//    pool->addTask(udpServer);
+//    pool->addTask([]
+//    {
+//        net::XSocketUDP client;
+//        client.startClient("127.0.0.1", 8888);
+//    });
     
-    pool->addTask(udpServer);
-    pool->addTask([]
-    {
-        net::XSocketUDP client;
-        client.startClient("127.0.0.1", 8888);
-    });
-    
-    pool->detach();
-    std::this_thread::sleep_for(std::chrono::seconds(60));
+//    pool->detach();
+//    std::this_thread::sleep_for(std::chrono::seconds(10));
     return 0;
 }
