@@ -27,6 +27,11 @@ namespace XUtf8
     */
     std::string utf8ToUnicode(const std::string& src);
 
+    /**
+     *  eg. unicodeToUtf8("0x8fd9") = "\350\377\231";
+     **/
+    std::string unicodeToUtf8(const char*);
+    
     unsigned int getlen(const char*);
     /**
      get utf8 string's words count
