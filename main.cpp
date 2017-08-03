@@ -117,5 +117,8 @@ int main()
     
 //    pool->detach();
 //    std::this_thread::sleep_for(std::chrono::seconds(10));
+    
+    std::string utf8 = XUtf8::unicodeToUtf8("0x8fd9");
+    LOG_I(utf8.c_str());
     return 0;
 }
