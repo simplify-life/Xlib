@@ -204,7 +204,7 @@ vector<string> XFileUtil::readStringByLine(const string &fileFullName)
     return result;
 }
 
-bool XFileUtil::copyFile(const std::string &from, const std::string to)
+bool XFileUtil::copyFile(const std::string &from, const std::string& to)
 {
     char ch = 0;
     std::ifstream in(from.c_str(), std::ios::binary);

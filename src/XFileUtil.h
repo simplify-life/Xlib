@@ -53,7 +53,7 @@ namespace XFileUtil
     /**
         copy
      */
-    bool copyFile(const std::string& from,const std::string to);
+    bool copyFile(const std::string& from,const std::string& to);
 };
 
 
