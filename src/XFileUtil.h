@@ -49,6 +49,11 @@ namespace XFileUtil
      */
     std::string readStringFromFile(const std::string& fileFullName);
     std::vector<std::string> readStringByLine(const std::string& fileFullName);
+    
+    /**
+        copy
+     */
+    bool copyFile(const std::string& from,const std::string to);
 };
 
 
