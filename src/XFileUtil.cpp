@@ -204,5 +204,26 @@ vector<string> XFileUtil::readStringByLine(const string &fileFullName)
     return result;
 }
 
+bool XFileUtil::copyFile(const std::string &from, const std::string to)
+{
+    char ch = 0;
+    std::ifstream in(from.c_str(), std::ios::binary);
+    std::ofstream out(to.c_str(), std::ios::binary);
+    while (true)
+    {
+        if (in.eof())
+            break;
+        in.read(&ch, 1);
+        out.write(&ch, 1);
+        if (std::ios_base::goodbit != out.rdstate()) {
+            out.close();
+            in.close();
+            return false;
+        }
+    }
+    out.close();
+    in.close();
+    return true;
+}
 
 XLIB_END
