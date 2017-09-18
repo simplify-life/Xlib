@@ -86,7 +86,10 @@ xlib::XLog::log(log_level,fmt,##__VA_ARGS__); \
 #define LOG_A(fmt,...) XLLOG(xlib::LOG_LEVEL::L_ALL,fmt,##__VA_ARGS__)
 #define LOG_F(fmt,...) XLLOG(xlib::LOG_LEVEL::L_FATAL,fmt,##__VA_ARGS__)
 
-    
+ 
+#define SWAPBYTE(x)\
+((x & 0xff00)>>8) |\
+((x & 0x00ff)<<8)
 } //end xlib
 
 #endif /* XDefine_h */

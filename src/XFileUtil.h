@@ -33,6 +33,8 @@ namespace XFileUtil
     DEPRECATED_ATTRIBUTE bool isPathExist(const std::string& path);
     std::string getFileNameWithOutPath(const std::string& fileName);
     std::string getFileExt(const std::string& fileName);
+    std::string getFileNameWithOutPathAndExt(const std::string& fileName);
+    int64 getLastModifiTime(const std::string& fileName);
     //now temporarily invalid MAC is OK
     DEPRECATED_ATTRIBUTE bool createDirectory(const std::string& path);
     /**
@@ -53,7 +55,7 @@ namespace XFileUtil
     /**
         copy
      */
-    bool copyFile(const std::string& from,const std::string to);
+    bool copyFile(const std::string& from,const std::string& to);
 };
 
 
