@@ -99,7 +99,7 @@ int64 XFileUtil::getLastModifiTime(const std::string& fileName)
     {
         stat(fileName.c_str(), &statBuf);
         file.close();
-#if(X_PLATFORM==X_P_WIN32)
+#if(X_PLATFORM!=X_P_MAC)
         return statBuf.st_mtime;
 #else
         return statBuf.st_mtimespec.tv_sec;
