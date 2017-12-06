@@ -33,7 +33,7 @@ b_type getBType(b_value intValue)
 b_value getBValue(const b_type& type)
 {
 	b_value value = 0;
-	uint len = type.length();
+	uint len = (uint)type.length();
 	for (uint i=len;i>0;i--)
 	{
 		value += xpow(2, i-1)*(type[len - i] == '1' ? 1 : 0);

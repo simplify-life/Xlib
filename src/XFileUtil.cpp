@@ -12,6 +12,7 @@
 #include "xplatform.h"
 #include <fstream>
 #include <iostream>
+#include <sys/stat.h>
 #if(X_PLATFORM==X_P_WIN32)
 #include<direct.h>
 #define getCWD(buf__,size__) _getcwd(buf__,size__)
@@ -19,7 +20,6 @@
 #define pathPrefix "/\\"
 #else
 #include <unistd.h>
-#include <sys/stat.h>
 #define getCWD(buf__,size__) getcwd(buf__,size__)
 #define mkDIR(dir) mkdir((dir),0755)
 #define pathPrefix "/"
@@ -77,6 +77,35 @@ string XFileUtil::getFileExt(const string &fileName)
     ext = ext.substr(pos+1);
     else ext="";
     return ext;
+}
+
+std::string XFileUtil::getFileNameWithOutPathAndExt(const std::string& fileName)
+{
+    string::size_type pos_pre;
+    pos_pre = fileName.find_last_of(pathPrefix);
+    string fName = getFileNameWithOutPath(fileName);
+    string::size_type pos = fName.find_last_of(".");
+    if(pos!=string::npos)
+    fName = fileName.substr(pos_pre+1,pos);
+    else fName="";
+    return fName;
+}
+
+int64 XFileUtil::getLastModifiTime(const std::string& fileName)
+{
+    struct stat statBuf;
+    ifstream file(fileName.c_str(),ios::in);
+    if(file.is_open())
+    {
+        stat(fileName.c_str(), &statBuf);
+        file.close();
+#if(X_PLATFORM==X_P_WIN32)
+        return statBuf.st_mtime;
+#else
+        return statBuf.st_mtimespec.tv_sec;
+#endif
+    }
+    return 0;
 }
 
 string XFileUtil::getParentPath(const string &path)
@@ -171,17 +200,18 @@ void XFileUtil::writeTxtLineToExistFile(const string &line, const string &fileFu
 string XFileUtil::readStringFromFile(const string &fileFullName)
 {
     ifstream inFile(fileFullName,ios::in);
+    string result = "";
     if(inFile.is_open())
     {
-        char tmp[MAX_READ_STRING_SIZE];
         while (!inFile.eof())
         {
+            char tmp[MAX_READ_STRING_SIZE];
             inFile>>tmp;
+            result.append(string(tmp));
         }
         inFile.close();
-        return string(tmp);
     }
-    return "";
+    return result;
 }
 
 vector<string> XFileUtil::readStringByLine(const string &fileFullName)

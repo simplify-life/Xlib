@@ -56,7 +56,7 @@ namespace net {
     
     void XSocket::IPV4(ipv4* addrV4, short protocolFamily, uint port, const std::string &addr)
     {
-        bzero(addrV4, sizeof(addrV4));
+        bzero(addrV4, sizeof(*addrV4));
         addrV4->sin_family = protocolFamily;
         addrV4->sin_port = htons(port);
         addrV4->sin_addr.s_addr=inet_addr(addr.c_str());
@@ -64,7 +64,7 @@ namespace net {
     
     void XSocket::IPV6(ipv6* addrV6, short protocolFamily, uint port, const in6_addr &addr)
     {
-        bzero(addrV6, sizeof(addrV6));
+        bzero(addrV6, sizeof(*addrV6));
         addrV6->sin6_family = protocolFamily;
         addrV6->sin6_port = htons(port);
         addrV6->sin6_addr= addr;
@@ -450,7 +450,7 @@ namespace net {
         
         SOCKET sock;
         struct sockaddr_in server_socket;
-        struct sockaddr_in client_socket;
+        //struct sockaddr_in client_socket;
 
         if((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
         {
