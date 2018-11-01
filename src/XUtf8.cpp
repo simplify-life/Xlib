@@ -115,7 +115,7 @@ string XUtf8::unicodeToUtf8(const char* src)
         return string((char*)utf,3);
     }else if (utf8code<0x200000)
     {
-        place = 4;//1110xxxx 10xxxxxx 10xxxxxx 10xxxxxx
+        place = 4;//11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
         char utf[5]={static_cast<char>(0xf0|(utf8code>>18)), static_cast<char>(0xe0|(utf8code>>12)),static_cast<char>(0xc0|(utf8code>>6)),static_cast<char>(0x80|(utf8code&0x3f)),0};
         return string((char*)utf,4);
     }
@@ -201,6 +201,23 @@ string XUtf8::substr(const string &src, unsigned int startPos, unsigned int len)
     }
     //assert(0&&"out of range");
     return ""; //out of range
+}
+
+int XUtf8::getUtf8ByteLen(byte b)
+{
+    if(b<0x80){
+        return 1;
+    }
+    if(b>=0xc0&&b<=0xdf){
+        return 2;
+    }
+    if(b>=0xe0&&b<=0xef){
+        return 3;
+    }
+    if(b>=0xf0&&b<=0xf7){
+        return 4;
+    }
+    return 0;
 }
 
 XLIB_END
