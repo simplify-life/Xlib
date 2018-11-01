@@ -55,6 +55,12 @@ namespace XUtf8
      @param len  eg. in MacOS platform  auto str = substr("I'm中国人",4,2) ,the str is "国人"
      */
     std::string substr(const std::string& src,unsigned int startPos,unsigned int len);
+    
+    /**
+     get Utf8 length by first byte from Utf8 code
+     */
+    int getUtf8ByteLen(byte b);
+    
 };
 
 XLIB_END
