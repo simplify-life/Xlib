@@ -120,6 +120,9 @@ int main()
     
     std::string utf8 = XUtf8::unicodeToUtf8("0x8fd9");
     LOG_I(utf8.c_str());
+    byte buffer[] = {0350, 0377, 0231};
+    bool isValid = XUtf8::isValidUtf8Buffer(buffer, 3);
+    LOG_I("🌸%d",isValid);
     for(byte b = 0 ; b< byte_max ; b++){
         LOG_I(" %d len %d",b,XUtf8::getUtf8ByteLen(b));
     }

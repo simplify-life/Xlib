@@ -203,7 +203,7 @@ string XUtf8::substr(const string &src, unsigned int startPos, unsigned int len)
     return ""; //out of range
 }
 
-int XUtf8::getUtf8ByteLen(byte b)
+uint XUtf8::getUtf8ByteLen(byte b)
 {
     if(b<0x80){
         return 1;
@@ -218,6 +218,26 @@ int XUtf8::getUtf8ByteLen(byte b)
         return 4;
     }
     return 0;
+}
+
+bool XUtf8::isValidUtf8ByteExcept1st(byte b){
+    return (b&0x80)==0x80 && (b|0x80)==b;
+}
+
+bool XUtf8::isValidUtf8Buffer(byte* buffer, uint size){
+    for(uint i = 0 ; i < size ;){
+        auto len = getUtf8ByteLen(buffer[i]);
+        if(0 == len) return false;
+        for(uint j = 1 ; j < len ; j++){
+            if(i+j<len){
+                bool res = isValidUtf8ByteExcept1st(buffer[i+j]);
+                if(res) continue;
+                else return false;
+            }else return false;
+        }
+        i += len;
+    }
+    return true;
 }
 
 XLIB_END
