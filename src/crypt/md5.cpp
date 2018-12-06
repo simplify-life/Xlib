@@ -217,7 +217,7 @@ namespace xlib {
             /* transform as many times as possible. */
             if (len >= partLen) {
                 
-                memcpy(&buffer[index], input, partLen);
+                std::memcpy(&buffer[index], input, partLen);
                 transform(buffer);
                 
                 for (i = partLen; i + 63 < len; i += 64) {
@@ -230,7 +230,7 @@ namespace xlib {
             }
             
             /* Buffer remaining input */
-            memcpy(&buffer[index], &input[i], len - i);
+            std::memcpy(&buffer[index], &input[i], len - i);
         }
         
         const std::string MD5(const std::string& message) {
@@ -274,8 +274,8 @@ namespace xlib {
                 uint32 index, padLen;
                 
                 /* Save current state and count. */
-                memcpy(oldState, state, 16);
-                memcpy(oldCount, count, 8);
+                std::memcpy(oldState, state, 16);
+                std::memcpy(oldCount, count, 8);
                 
                 /* Save number of bits */
                 encode(count, bits, 8);
@@ -292,8 +292,8 @@ namespace xlib {
                 encode(state, digest, 16);
                 
                 /* Restore current state and count. */
-                memcpy(state, oldState, 16);
-                memcpy(count, oldCount, 8);
+                std::memcpy(state, oldState, 16);
+                std::memcpy(count, oldCount, 8);
             }
             return digest;
         }
