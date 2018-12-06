@@ -14,14 +14,14 @@
 //#include "src/net/XEpoll.h"
 #include "src/net/http.h"
 #include "src/XRandom.h"
+#include "src/crypt/md5.h"
+
 int main()
 {
      US_NS_X;
-    
     /**
      0. http test
      */
-   
     auto httpRequest = net::http::getRequest();
     std::cout<<httpRequest<<std::endl;
 
@@ -55,7 +55,8 @@ int main()
      4. LOG test
      */
     LOG_SET(LOG_LEVEL::L_ALL);
-    XLog::setWrite(true, XFileUtil::getCurrentPathWithPrefix().append("xliblog"));
+    const std::string originPath = XFileUtil::getCurrentPathWithPrefix();
+    XLog::setWrite(true, std::string(originPath).append("xliblog"));
     
     /**
      5. utf8 test
@@ -126,5 +127,15 @@ int main()
     for(byte b = 0 ; b< byte_max ; b++){
         LOG_I(" %d len %d",b,XUtf8::getUtf8ByteLen(b));
     }
+    const std::string originFile = std::string(originPath).append("img_test_result.png");
+    const std::string encodeFile = std::string(originPath).append("demo-encode");
+    const std::string decodeFile = std::string(originPath).append("demo-decode.png");
+    const std::string password = "蛤🐸,这是🔐";
+    std::cout<<originFile<<std::endl;
+    std::cout<<encodeFile<<std::endl;
+    std::cout<<decodeFile<<std::endl;
+    XFileUtil::encryptFile(originFile, encodeFile,password);
+    XFileUtil::decryptFile(encodeFile, decodeFile,password);
+    std::cout<<XFileUtil::allSameFile(originFile, decodeFile)<<std::endl;
     return 0;
 }

@@ -53,9 +53,19 @@ namespace XFileUtil
     std::vector<std::string> readStringByLine(const std::string& fileFullName);
     
     /**
-        copy
+    copy
      */
     bool copyFile(const std::string& from,const std::string& to);
+    
+    /**
+     crypt file encode and decode
+     */
+    bool encryptFile(const std::string& from,const std::string& to, const std::string& key);
+    bool decryptFile(const std::string& from,const std::string& to, const std::string& key);
+    /**
+     Determine if the file is identical
+     */
+    bool allSameFile(const std::string& from,const std::string& to);
 };
 
 
