@@ -7,6 +7,8 @@
 //
 
 #include "md5.h"
+#include<cstring>
+
 namespace xlib {
     
     namespace crypt{
