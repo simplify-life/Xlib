@@ -62,10 +62,17 @@ namespace XFileUtil
      */
     bool encryptFile(const std::string& from,const std::string& to, const std::string& key);
     bool decryptFile(const std::string& from,const std::string& to, const std::string& key);
+    
+    /**
+     get file bytes length
+     */
+    int64 getFileBytesLength(const std::string& file);
+    
     /**
      Determine if the file is identical
      */
     bool allSameFile(const std::string& from,const std::string& to);
+        
 };
 
 

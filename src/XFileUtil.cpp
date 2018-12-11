@@ -237,32 +237,33 @@ vector<string> XFileUtil::readStringByLine(const string &fileFullName)
 
 bool XFileUtil::copyFile(const std::string &from, const std::string& to)
 {
-    char ch = 0;
+    bool res = true;
     std::ifstream in(from.c_str(), std::ios::binary);
     std::ofstream out(to.c_str(), std::ios::binary);
-    if(in.is_open()){
-        while (true)
-        {
-            if (in.eof())
-                break;
-            in.read(&ch, 1);
-            out.write(&ch, 1);
-            if (std::ios_base::goodbit != out.rdstate()) {
-                out.close();
-                in.close();
-                return false;
-            }
-        }
+    if(in.is_open()&&out.is_open()){
+        out << in.rdbuf();
     }else{
-        return false;
+        res  = false;
     }
-//    out << in.rdbuf();
     out.close();
     in.close();
     return true;
 }
 
+int64 XFileUtil::getFileBytesLength(const std::string &file){
+    std::ifstream in(file.c_str(), std::ios::binary);
+    int64 len = 0;
+    if(in.is_open()){
+        in.seekg(0,std::ios::end);
+        len = in.tellg();
+        in.close();
+    }
+    return len;
+}
+
 bool XFileUtil::encryptFile(const std::string &from, const std::string &to, const std::string &key){
+    int64 lenFrom = getFileBytesLength(from);
+    int64 start = 0;
     char read_ch = 0;
     char write_ch = 0;
     bool res = true;
@@ -273,12 +274,15 @@ bool XFileUtil::encryptFile(const std::string &from, const std::string &to, cons
     if (in.is_open())
     {
         while (true) {
+            if(lenFrom==start)
+                break;
             if (in.eof())
                 break;
             in.read(&read_ch, 1);
             write_ch = read_ch^(keys[idx&15]);
             idx=(idx&15)+1;
             out.write(&write_ch, 1);
+            start++;
             if (std::ios_base::goodbit != out.rdstate()) {
                 out.close();
                 in.close();
@@ -298,6 +302,9 @@ bool XFileUtil::decryptFile(const std::string &from, const std::string &to, cons
 }
 
 bool XFileUtil::allSameFile(const std::string &from, const std::string &to){
+    int64 lenFrom = getFileBytesLength(from);
+    int64 lenTo = getFileBytesLength(to);
+    if(lenTo != lenFrom) return false;
     char chFrom = 0;
     char chTo = 0;
     bool res = true;
@@ -306,10 +313,9 @@ bool XFileUtil::allSameFile(const std::string &from, const std::string &to){
     if(inFrom.is_open()&&inTo.is_open()){
         while (true)
         {
-            if (inFrom.eof())
+            if (inFrom.eof()||inTo.eof()){
                 break;
-            if(inTo.eof())
-                break;
+            }
             inFrom.read(&chFrom, 1);
             inTo.read(&chTo, 1);
             if(chFrom!=chTo){
@@ -325,4 +331,5 @@ bool XFileUtil::allSameFile(const std::string &from, const std::string &to){
     inTo.close();
     return res;
 }
+
 XLIB_END
