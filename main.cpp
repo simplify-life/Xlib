@@ -136,6 +136,13 @@ int main()
     std::cout<<decodeFile<<std::endl;
     XFileUtil::encryptFile(originFile, encodeFile,password);
     XFileUtil::decryptFile(encodeFile, decodeFile,password);
+    //    XFileUtil::copyFile(originFile, decodeFile);
     std::cout<<XFileUtil::allSameFile(originFile, decodeFile)<<std::endl;
+    const std::string readme = std::string(originPath).append("README.MD");
+    std::cout<<XFileUtil::allSameFile(encodeFile, "readme")<<std::endl;
+    
+    std::cout<<XFileUtil::getFileBytesLength(originFile)<<std::endl;
+    std::cout<<XFileUtil::getFileBytesLength(encodeFile)<<std::endl;
+    std::cout<<XFileUtil::getFileBytesLength(decodeFile)<<std::endl;
     return 0;
 }
