@@ -250,9 +250,9 @@ bool XFileUtil::copyFile(const std::string &from, const std::string& to)
     return true;
 }
 
-int64 XFileUtil::getFileBytesLength(const std::string &file){
+uint64 XFileUtil::getFileBytesLength(const std::string &file){
     std::ifstream in(file.c_str(), std::ios::binary);
-    int64 len = 0;
+    uint64 len = 0;
     if(in.is_open()){
         in.seekg(0,std::ios::end);
         len = in.tellg();
@@ -262,8 +262,8 @@ int64 XFileUtil::getFileBytesLength(const std::string &file){
 }
 
 bool XFileUtil::encryptFile(const std::string &from, const std::string &to, const std::string &key){
-    int64 lenFrom = getFileBytesLength(from);
-    int64 start = 0;
+    uint64 lenFrom = getFileBytesLength(from);
+    uint64 start = 0;
     char read_ch = 0;
     char write_ch = 0;
     bool res = true;
@@ -302,8 +302,8 @@ bool XFileUtil::decryptFile(const std::string &from, const std::string &to, cons
 }
 
 bool XFileUtil::allSameFile(const std::string &from, const std::string &to){
-    int64 lenFrom = getFileBytesLength(from);
-    int64 lenTo = getFileBytesLength(to);
+    uint64 lenFrom = getFileBytesLength(from);
+    uint64 lenTo = getFileBytesLength(to);
     if(lenTo != lenFrom) return false;
     char chFrom = 0;
     char chTo = 0;

@@ -42,6 +42,10 @@ struct timerData
 class XTimer;
 namespace XTime
 {
+    struct tm_million{
+        std::tm* tm;
+        uint32 million;
+    };
     /**
      @brief     get time point
      */
@@ -63,7 +67,7 @@ namespace XTime
      @param t       timestamp
      @param timeInterval        time zone diff
      */
-    std::tm* getTimeFromTimestamp_milliseconds(std::time_t t,int timeInterval=0);
+    tm_million* getTimeFromTimestamp_milliseconds(std::time_t t,int timeInterval=0);
     std::tm* getTimeFromTimestamp_seconds(std::time_t t,int timeInterval=0);
     
     /**

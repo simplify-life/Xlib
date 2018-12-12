@@ -66,7 +66,7 @@ namespace XFileUtil
     /**
      get file bytes length
      */
-    int64 getFileBytesLength(const std::string& file);
+    uint64 getFileBytesLength(const std::string& file);
     
     /**
      Determine if the file is identical

@@ -16,109 +16,43 @@
 #include "src/XRandom.h"
 #include "src/crypt/md5.h"
 
-int main()
-{
-     US_NS_X;
-    /**
-     0. http test
-     */
-    auto httpRequest = net::http::getRequest();
-    std::cout<<httpRequest<<std::endl;
+US_NS_X;
+const std::string originPath = XFileUtil::getCurrentPathWithPrefix();
 
-    /**
-     1. Below is tcp server test code
-     */
-    
-     //xlib::net::XSocketTCP server;
-     //server.startServer(4435);
-    
-    
-    /**
-     2. tcp client test
-     */
-   // struct hostent *hostinfo = nullptr;
-   // hostinfo = gethostbyname("www.baidu.com");
-//    auto tcp = std::unique_ptr<net::XSocketTCP>(new net::XSocketTCP);
-
-    //tcp->startClient(net::_server(2347,"180.97.33.107"));
-//    tcp->startHttpClient("www.w3.org");
-//    tcp->Send(httpRequest.c_str(), httpRequest.size());
-    
-    /**
-     3. Epoll tcp server test
-     */
-    //xlib::net::epoll::Epoll server;
-    //server.startServer(4435);
-    
-   
-    /**
-     4. LOG test
-     */
+void setLog(){
     LOG_SET(LOG_LEVEL::L_ALL);
-    const std::string originPath = XFileUtil::getCurrentPathWithPrefix();
-    XLog::setWrite(true, std::string(originPath).append("xliblog"));
-    
-    /**
-     5. utf8 test
-     */
+    XLog::setWrite(true, std::string(originPath).append("xlib.log"));
+}
+
+void testHttp(){
+    auto httpRequest = net::http::getRequest();
+    LOG_I(httpRequest.c_str());
+    auto tcp = std::unique_ptr<net::XSocketTCP>(new net::XSocketTCP);
+    tcp->startHttpClient("www.w3.org");
+    tcp->Send(httpRequest.c_str(), httpRequest.size());
+}
+
+void testTCPServer(){
+    net::XSocketTCP server;
+    server.startServer(4435);
+}
+
+void testTCPClient(){
+     struct hostent *hostinfo = nullptr;
+     hostinfo = gethostbyname("www.baidu.com");
+    auto tcp = std::unique_ptr<net::XSocketTCP>(new net::XSocketTCP);
+    tcp->startClient(net::_server(4435,"127.0.0.1"));
+}
+
+void testEpollServer(){
+    net::epoll::Epoll server;
+    server.startServer(4435);
+}
+
+void testUtf8(){
     std::string chutf8 = "这是一个字符串";
     auto s = XUtf8::utf8ToUnicode(chutf8);
     LOG_I(s.c_str());
-
-    /**
-     6. thread pool test
-     */
-    auto fun = [](int wTime)
-    {
-        std::thread::id tid = std::this_thread::get_id();
-        std::this_thread::sleep_for(std::chrono::seconds(wTime));
-        auto t = XString::formatTime(XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(),8),TIME_F::T_DEFAULT);
-        LOG_I("thread_id=%s,%s,%s",XString::convert<std::string>(tid).c_str(),t.c_str(),XRand::getRandomString(10).c_str());
-    };
-    fun(1);
-    fun(2);
-//    auto pool = std::unique_ptr<XThreadPool>(new XThreadPool(6,8,true));
-//    
-//    pool->addTask(fun);
-//    pool->addTask(fun);
-//    pool->addTask(fun);
-    
-    /**
-     7. timer test
-     */
-//    XTime::doPertime(-1, 1,[]
-//    {
-//        LOG_D("this is a timer,1 second 1 times");
-//    } );
-//    auto loop = []
-//    {
-//        while (true)
-//        {
-//            XTimer::getInstance()->mainLoop();
-//        }
-//    };
-//    pool->addTask(loop);
-    
-    /**
-     8. test udp
-     */
-    
-//    auto udpServer = []
-//    {
-//        net::XSocketUDP server;
-//        server.startServer(8888);
-//    };
-//    
-//    pool->addTask(udpServer);
-//    pool->addTask([]
-//    {
-//        net::XSocketUDP client;
-//        client.startClient("127.0.0.1", 8888);
-//    });
-    
-//    pool->detach();
-//    std::this_thread::sleep_for(std::chrono::seconds(10));
-    
     std::string utf8 = XUtf8::unicodeToUtf8("0x8fd9");
     LOG_I(utf8.c_str());
     byte buffer[] = {0350, 0377, 0231};
@@ -127,22 +61,63 @@ int main()
     for(byte b = 0 ; b< byte_max ; b++){
         LOG_I(" %d len %d",b,XUtf8::getUtf8ByteLen(b));
     }
+}
+
+void testThreadPool(){
+    auto fun = [](int wTime)
+    {
+        std::thread::id tid = std::this_thread::get_id();
+        std::this_thread::sleep_for(std::chrono::seconds(wTime));
+        auto t = XString::formatTime(XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(),8),TIME_F::T_DEFAULT);
+        LOG_I("thread_id=%s,%s,%s",XString::convert<std::string>(tid).c_str(),t.c_str(),XRand::getRandomString(10).c_str());
+    };
+    auto pool = std::unique_ptr<XThreadPool>(new XThreadPool(6,8,true));
+    pool->addTask([=]{fun(0);});
+    pool->addTask([=]{fun(1);});
+    pool->addTask([=]{fun(2);});
+}
+
+void testTimer(){
+    XTime::doPertime(-1, 1,[]
+                     {
+                         LOG_D("this is a timer,1 second 1 times");
+                     } );
+    auto loop = []
+    {
+        while (true)
+        {
+            
+        }
+    };
+    std::unique_ptr<XThreadPool>(new XThreadPool(6,8,true))->addTask(loop);
+}
+
+void testFile(){
     const std::string originFile = std::string(originPath).append("img_test_result.png");
     const std::string encodeFile = std::string(originPath).append("demo-encode");
     const std::string decodeFile = std::string(originPath).append("demo-decode.png");
     const std::string password = "蛤🐸,这是🔐";
-    std::cout<<originFile<<std::endl;
-    std::cout<<encodeFile<<std::endl;
-    std::cout<<decodeFile<<std::endl;
+    LOG_I(originFile.c_str());
+    LOG_I(encodeFile.c_str());
+    LOG_I(decodeFile.c_str());
     XFileUtil::encryptFile(originFile, encodeFile,password);
     XFileUtil::decryptFile(encodeFile, decodeFile,password);
     //    XFileUtil::copyFile(originFile, decodeFile);
-    std::cout<<XFileUtil::allSameFile(originFile, decodeFile)<<std::endl;
+    LOG_I("%d",XFileUtil::allSameFile(originFile, decodeFile));
     const std::string readme = std::string(originPath).append("README.MD");
-    std::cout<<XFileUtil::allSameFile(encodeFile, "readme")<<std::endl;
-    
-    std::cout<<XFileUtil::getFileBytesLength(originFile)<<std::endl;
-    std::cout<<XFileUtil::getFileBytesLength(encodeFile)<<std::endl;
-    std::cout<<XFileUtil::getFileBytesLength(decodeFile)<<std::endl;
+    LOG_I("%d",XFileUtil::allSameFile(encodeFile, "readme"));
+    LOG_I("%llu",XFileUtil::getFileBytesLength(originFile));
+    LOG_I("%llu",XFileUtil::getFileBytesLength(encodeFile));
+    LOG_I("%llu",XFileUtil::getFileBytesLength(decodeFile));
+}
+
+int main()
+{
+    setLog();
+
+    testUtf8();
+
+    testFile();
+//    testHttp();
     return 0;
 }
