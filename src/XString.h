@@ -11,6 +11,7 @@
 #ifndef XString_h
 #define XString_h
 #include "XBase.h"
+#include "XTime.h"
 #include <string>
 #include <vector>
 #include <ctime>
@@ -30,6 +31,7 @@ namespace XString
 {
     std::string format(const char*,...);
     std::string formatTime(const std::tm*,const TIME_F&);
+    std::string formatTime(const XTime::tm_million*,const TIME_F&);
     std::string toUpper(const std::string&);
     std::string toLower(const std::string&);
     /**

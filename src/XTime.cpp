@@ -67,13 +67,18 @@ time_t XTime::getTimestamp_steady_seconds()
 }
 
 
-tm* XTime::getTimeFromTimestamp_milliseconds(time_t t,int timeInterval)
+XTime::tm_million* XTime::getTimeFromTimestamp_milliseconds(time_t t,int timeInterval)
 {
+    uint32 million = t%1000;
     time_t t_t = t + (time_t)timeInterval*60*60*1000;
     auto mTime = milliseconds(t_t);
     auto tp=time_point<system_clock,milliseconds>(mTime);
     auto tt=system_clock::to_time_t(tp);
-    return gmtime(&tt);
+    tm* tm =  gmtime(&tt);
+    XTime::tm_million* t_m = (XTime::tm_million*)malloc(sizeof(XTime::tm_million));
+    t_m->tm = tm;
+    t_m->million = million;
+    return t_m;
 }
 
 

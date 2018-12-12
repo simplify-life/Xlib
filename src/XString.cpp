@@ -186,5 +186,37 @@ string XString::formatTime(const tm * ttime, const xlib::TIME_F &fmt)
     return string(t);
 }
 
+string XString::formatTime(const XTime::tm_million * t_m, const xlib::TIME_F &fmt)
+{
+#define TIME_STR_SIZE 80
+    char t[TIME_STR_SIZE];
+    string sfmt = "";
+    switch (fmt)
+    {
+        case xlib::TIME_F::H12_M_S:
+            sfmt = "%I:%M:%S";
+            break;
+        case xlib::TIME_F::H24_M_S:
+            sfmt = "%H:%M:%S";
+            break;
+        case xlib::TIME_F::Y_M_D:
+            sfmt = "%Y-%m-%d";
+            break;
+        case xlib::TIME_F::W_D:
+            sfmt = "%A";
+            break;
+        case xlib::TIME_F::LOG_TIME:
+            sfmt = "%Y-%m-%d %H:%M:%S";
+            break;
+        case xlib::TIME_F::T_DEFAULT:
+            sfmt = "%Y-%m-%d %A %H:%M:%S";
+        default:
+            break;
+    }
+    strftime(t,TIME_STR_SIZE, sfmt.c_str(), t_m->tm);
+    free((void*)t_m);
+    return string(t).append(".").append(XString::convert<string>(t_m->million).c_str());
+}
+
 
 XLIB_END
