@@ -142,13 +142,13 @@ void XTimer::threadLoop()
 {
     while (true)
     {
-        this_thread::sleep_for(milliseconds(1));
+        this_thread::sleep_for(microseconds(1));
         lock_guard<mutex> lck(tTaskMutex);
         for(auto itr=tTask.begin();itr!=tTask.end();itr++)
         {
-            auto tNow = time_point_cast<milliseconds>(steady_clock::now()).time_since_epoch().count();
+            auto tNow = time_point_cast<microseconds>(steady_clock::now()).time_since_epoch().count();
             auto interval = tNow-itr->t_point;
-            if(interval>=itr->t_interval*1000&&itr->t_call&&itr->t_count)
+            if(interval>=itr->t_interval*1000*1000&&itr->t_call&&itr->t_count)
             {
                 itr->t_point = tNow;
                 itr->t_handler = true;
