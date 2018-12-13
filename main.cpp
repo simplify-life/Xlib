@@ -78,18 +78,19 @@ void testThreadPool(){
 }
 
 void testTimer(){
-    XTime::doPertime(-1, 1,[]
+    std::atomic<int> count(0);
+    XTime::doPertime(5, 0.125,[&count]
                      {
-                         LOG_D("this is a timer,1 second 1 times");
+                        auto v =  count.fetch_add(0);
+                        LOG_D("this is a timer,%d",v);
+                        count.fetch_add(1);
                      } );
-    auto loop = []
-    {
-        while (true)
-        {
-            
+    auto loop = [&count]{
+        while(count.fetch_add(0)<5){
+            XTimer::getInstance()->mainLoop();
         }
     };
-    std::unique_ptr<XThreadPool>(new XThreadPool(6,8,true))->addTask(loop);
+    loop();
 }
 
 void testFile(){
@@ -119,5 +120,6 @@ int main()
 
     testFile();
 //    testHttp();
+    testTimer();
     return 0;
 }
