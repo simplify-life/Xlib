@@ -45,8 +45,8 @@ void testTCPClient(){
 }
 
 void testEpollServer(){
-    net::epoll::Epoll server;
-    server.startServer(4435);
+//    net::epoll::Epoll server;
+//    server.startServer(4435);
 }
 
 void testUtf8(){

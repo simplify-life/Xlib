@@ -214,8 +214,9 @@ string XString::formatTime(const XTime::tm_million * t_m, const xlib::TIME_F &fm
             break;
     }
     strftime(t,TIME_STR_SIZE, sfmt.c_str(), t_m->tm);
+    string million = XString::format(".%03d",t_m->million);
     free((void*)t_m);
-    return string(t).append(".").append(XString::convert<string>(t_m->million).c_str());
+    return string(t).append(million.c_str());
 }
 
 
