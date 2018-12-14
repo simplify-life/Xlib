@@ -48,7 +48,7 @@
 #ifndef http_h
 #define http_h
 #include    "netconfig.h"
-#include    "../XBase.h"
+#include    "macro/XBase.h"
 #include    <string.h>
 #include    <string>
 #include    <vector>

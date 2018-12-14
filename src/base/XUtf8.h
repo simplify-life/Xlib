@@ -12,7 +12,7 @@
 #define XUtf8_h
 #include <string>
 #include <unordered_map>
-#include "XBase.h"
+#include "macro/XBase.h"
 
 XLIB_BEGAIN
 

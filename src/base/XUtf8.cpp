@@ -9,14 +9,12 @@
 //----------------------------------------------//
 
 #include "XUtf8.h"
-#include "XBinary.h"
-#include "XDefine.h"
+#include "macro/XBinary.h"
+#include "macro/XDefine.h"
 #include <queue>
 #include <stdio.h>
 #include <stdlib.h>
 #include <bitset>
-
-
 
 //#include <cassert>
 XLIB_BEGAIN

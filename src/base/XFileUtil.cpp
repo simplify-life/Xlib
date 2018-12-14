@@ -9,7 +9,7 @@
 //----------------------------------------------//
 
 #include "XFileUtil.h"
-#include "xplatform.h"
+#include "macro/xplatform.h"
 #include "crypt/md5.h"
 #include <fstream>
 #include <iostream>
@@ -279,7 +279,7 @@ bool XFileUtil::encryptFile(const std::string &from, const std::string &to, cons
             if (in.eof())
                 break;
             in.read(&read_ch, 1);
-            write_ch = read_ch^(keys[idx&15]);
+            write_ch = ~read_ch^(keys[idx&15]);
             idx=(idx&15)+1;
             out.write(&write_ch, 1);
             start++;
@@ -330,6 +330,13 @@ bool XFileUtil::allSameFile(const std::string &from, const std::string &to){
     inFrom.close();
     inTo.close();
     return res;
+}
+
+string XFileUtil::md5(const std::string file){
+    std::ifstream ifs(file);
+    std::string content( (std::istreambuf_iterator<char>(ifs) ),
+                        (std::istreambuf_iterator<char>() ));
+    return crypt::MD5(content);
 }
 
 XLIB_END

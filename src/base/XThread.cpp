@@ -11,7 +11,7 @@
 #include <assert.h>
 #include <utility>
 
-#include "XDefine.h"
+#include "macro/XDefine.h"
 using namespace std;
 
 XLIB_BEGAIN

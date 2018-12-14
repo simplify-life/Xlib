@@ -17,7 +17,7 @@ class XFactory
 public:
     void regist(const K& k,const V& v)
     {
-        XFactory::get().map_.emplace(key, []{ return v; });
+        XFactory::get().map_.emplace(k, v);
     };
 private:
     inline static XFactory& get()
