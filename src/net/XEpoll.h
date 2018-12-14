@@ -15,7 +15,7 @@
 
 #if	EPOLL_SUPPORT
 
-#include	"../XBase.h"
+#include	"macro/XBase.h"
 //#include	<pcl.h>
 #include	<string>
 

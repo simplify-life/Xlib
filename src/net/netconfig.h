@@ -11,7 +11,7 @@
 #ifndef netconfig_h
 #define netconfig_h
 
-#include	"../xplatform.h"
+#include	"macro/xplatform.h"
 #define	EPOLL_SUPPORT	X_PLATFORM==X_P_LINUX
 #if	EPOLL_SUPPORT
 	#include	<sys/epoll.h>

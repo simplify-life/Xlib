@@ -10,7 +10,7 @@
 
 #ifndef XString_h
 #define XString_h
-#include "XBase.h"
+#include "macro/XBase.h"
 #include "XTime.h"
 #include <string>
 #include <vector>

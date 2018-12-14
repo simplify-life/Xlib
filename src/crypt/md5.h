@@ -8,7 +8,7 @@
 
 #ifndef md5_h
 #define md5_h
-#include "../XBase.h"
+#include "macro/XBase.h"
 #include <string>
 namespace xlib {
     namespace crypt{

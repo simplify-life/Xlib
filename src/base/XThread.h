@@ -11,7 +11,7 @@
 #ifndef XThread_h
 #define XThread_h
 
-#include "XBase.h"
+#include "macro/XBase.h"
 #include <thread>
 #include <atomic>
 #include <list>

@@ -10,9 +10,9 @@
 
 #ifndef XDefine_h
 #define XDefine_h
-#include "XLog.h"
-#include "XString.h"
-#include "XTime.h"
+#include "base/XLog.h"
+#include "base/XString.h"
+#include "base/XTime.h"
 #include "xplatform.h"
 namespace xlib {
     

@@ -6,16 +6,7 @@
 //  Copyright © 2016年 ximena. All rights reserved.
 //
 #include <memory>
-#include "src/XDefine.h"
-#include "src/XThread.h"
-#include "src/XFileUtil.h"
-#include "src/XUtf8.h"
-#include "src/net/XSocket.h"
-//#include "src/net/XEpoll.h"
-#include "src/net/http.h"
-#include "src/XRandom.h"
-#include "src/crypt/md5.h"
-
+#include "xlib.h"
 US_NS_X;
 const std::string originPath = XFileUtil::getCurrentPathWithPrefix();
 
@@ -38,8 +29,8 @@ void testTCPServer(){
 }
 
 void testTCPClient(){
-     struct hostent *hostinfo = nullptr;
-     hostinfo = gethostbyname("www.baidu.com");
+    struct hostent *hostinfo = nullptr;
+    hostinfo = gethostbyname("www.baidu.com");
     auto tcp = std::unique_ptr<net::XSocketTCP>(new net::XSocketTCP);
     tcp->startClient(net::_server(4435,"127.0.0.1"));
 }
@@ -94,6 +85,7 @@ void testTimer(){
 }
 
 void testFile(){
+    const std::string originPath = XFileUtil::getCurrentPathWithPrefix();
     const std::string originFile = std::string(originPath).append("img_test_result.png");
     const std::string encodeFile = std::string(originPath).append("demo-encode");
     const std::string decodeFile = std::string(originPath).append("demo-decode.png");
@@ -110,7 +102,12 @@ void testFile(){
     LOG_I("%llu",XFileUtil::getFileBytesLength(originFile));
     LOG_I("%llu",XFileUtil::getFileBytesLength(encodeFile));
     LOG_I("%llu",XFileUtil::getFileBytesLength(decodeFile));
+    std::string md5OriginFile = XFileUtil::md5(originFile);
+    std::string md5DecodeFile = XFileUtil::md5(decodeFile);
+    LOG_I("origin md5=%s",md5OriginFile.c_str());
+    LOG_I("decodeFile md5=%s",md5DecodeFile.c_str());
 }
+
 
 int main()
 {

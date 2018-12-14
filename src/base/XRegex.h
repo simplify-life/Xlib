@@ -10,7 +10,7 @@
 
 #ifndef XRegex_h
 #define XRegex_h
-#include "XBase.h"
+#include "macro/XBase.h"
 #include <vector>
 #include <string>
 

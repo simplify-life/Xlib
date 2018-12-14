@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "XBase.h"
+#include "macro/XBase.h"
 
 
 XLIB_BEGAIN
@@ -72,6 +72,11 @@ namespace XFileUtil
      Determine if the file is identical
      */
     bool allSameFile(const std::string& from,const std::string& to);
+    
+    /**
+     get file md5
+     */
+    std::string md5(const std::string file);
         
 };
 

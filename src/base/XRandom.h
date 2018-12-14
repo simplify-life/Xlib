@@ -10,7 +10,7 @@
 
 #ifndef XRandom_h
 #define XRandom_h
-#include "XBase.h"
+#include "macro/XBase.h"
 #include <vector>
 #include <string>
 XLIB_BEGAIN

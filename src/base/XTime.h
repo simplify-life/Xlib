@@ -9,7 +9,7 @@
 
 #ifndef XTime_h
 #define XTime_h
-#include "XBase.h"
+#include "macro/XBase.h"
 #include <iostream>
 #include <chrono>
 #include <thread>

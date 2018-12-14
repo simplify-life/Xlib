@@ -11,7 +11,7 @@
 #ifndef XLog_h
 #define XLog_h
 
-#include "XBase.h"
+#include "macro/XBase.h"
 #include <iostream>
 #include <stdarg.h>
 

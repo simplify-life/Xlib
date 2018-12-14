@@ -11,7 +11,7 @@
 #ifndef XSocket_h
 #define XSocket_h
 #include "netconfig.h"
-#include "../XBase.h"
+#include "macro/XBase.h"
 #include <string>
 #include <exception>
 #include <iosfwd>

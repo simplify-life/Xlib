@@ -28,7 +28,8 @@ DIR = .
 SRC_PATH = $(DIR)/
 OBJ_PATH = $(DIR)/obj
 DIRS = $(OBJ_PATH)
-INCLUDES = -I $(SRC_PATH)
+INCLUDES = -I $(SRC_PATH) \
+           -I $(SRC_PATH)/src
 #define system
 UNAME_S:=$(shell uname -s)
 rwildcard = $(foreach d, $(wildcard $1*), $(call rwildcard,$d/,$2) \
@@ -68,7 +69,7 @@ debug:$(TARGET)
 $(TARGET):$(OBJS)
 	@echo 'Linking: $@'
 	@$(START_TIME)
-	@$(CXX) $(CXX_TAGS) $(CXX_LIBS) -o $@ $^
+	@$(CXX) $(CXX_TAGS) $(CXX_LIBS) $(INCLUDES) -o $@ $^
 	@echo -en 'Link time:'
 	@$(END_TIME)
 -include $(DEPS)

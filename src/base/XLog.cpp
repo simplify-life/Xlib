@@ -12,7 +12,7 @@
 #include "XString.h"
 #include "XTime.h"
 #include "XFileUtil.h"
-#include "xplatform.h"
+#include "macro/xplatform.h"
 #include <string.h>
 #if X_PLATFORM==X_P_ANDROID
 #include <android/log.h>
