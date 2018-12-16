@@ -25,7 +25,7 @@ print-%:
 #定义路径
 DIR_EXT = /
 DIR = .
-SRC_PATH = $(DIR)
+SRC_PATH = $(DIR)/
 OBJ_PATH = $(DIR)/obj
 DIRS = $(OBJ_PATH)
 INCLUDES_CXX = -I $(SRC_PATH)/src

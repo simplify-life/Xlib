@@ -60,8 +60,8 @@ namespace XFileUtil
     /**
      crypto file encode and decode
      */
-    bool encryptFile(const std::string& from,const std::string& to, const std::string& key);
-    bool decryptFile(const std::string& from,const std::string& to, const std::string& key);
+    bool encryptoFile(const std::string& from,const std::string& to, const std::string& key);
+    bool decryptoFile(const std::string& from,const std::string& to, const std::string& key);
     
     /**
      get file bytes length

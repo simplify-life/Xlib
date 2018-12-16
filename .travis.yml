@@ -1,11 +1,11 @@
 language: cpp
 sudo: required
-
+before_install:
+    - docker build -t xlib-test .
 install:
-
- - make -f shCXX
-
+    - make -f shCXX
 script:
+    - docker run -i -t xlib-test
     - if [ "$CXX" = "g++" ]; then g++ --version; fi
     - if [ "$CXX" != "g++" ]; then clang++ --version; fi
     - make clean
