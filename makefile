@@ -65,6 +65,7 @@ SRCS := $(call rwildcard, $(SRC_PATH),*.$(SRC_EXT))
 #OBJS:=$(patsubst %.$(SRC_EXT),%.o,$(SRCS))
 OBJS = $(SRCS:$(SRC_PATH)%.$(SRC_EXT)=$(OBJ_PATH)/%.o)
 DEPS = $(patsubst %.o,%.d,$(OBJS))
+
 debug:$(TARGET)
 	@echo "build successed!"
 $(TARGET):$(OBJS)
@@ -73,7 +74,6 @@ $(TARGET):$(OBJS)
 	@$(CXX) $(CXX_TAGS) $(CXX_LIBS) $(INCLUDES_H) -o $@ $^
 	@echo -en 'Link time:'
 	@$(END_TIME)
-# -include $(DEPS)
 
 $(OBJ_PATH)/%.o:$(SRC_PATH)%.$(SRC_EXT)
 	@$(MKDIR) $(dir $(OBJS))

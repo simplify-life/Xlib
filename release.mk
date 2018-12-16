@@ -1,7 +1,7 @@
 #make 文件
 
 -include vars.mk
-
+VERSION ?=v0.0.0
 TARGET = xlib.a
 AR = ar
 # compile msg
@@ -19,13 +19,14 @@ MKDIR = mkdir -p
 RM = rm -f
 RM_RF = rm -rf
 MV = mv 
+ZIP = tar -jcvf xlib-$(VERSION)-osx-86x64.tar.bz2 include lib
 print-%:
 	 @echo $*=$($*)
 
 #定义路径
 DIR_EXT = /
 DIR = .
-SRC_PATH = $(DIR)
+SRC_PATH = $(DIR)/
 OBJ_PATH = $(DIR)/obj
 DIRS = $(OBJ_PATH)
 INCLUDES_CXX = -I $(SRC_PATH)/src
@@ -65,6 +66,7 @@ SRCS := $(call rwildcard, $(SRC_PATH),*.$(SRC_EXT))
 OBJS = $(SRCS:$(SRC_PATH)%.$(SRC_EXT)=$(OBJ_PATH)/%.o)
 DEPS = $(patsubst %.o,%.d,$(OBJS))
 all:$(TARGET)
+	@$(ZIP)
 	@echo "build successed!"
 $(TARGET):$(OBJS)
 	@echo 'Linking: $@'
