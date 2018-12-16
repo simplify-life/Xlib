@@ -8,7 +8,7 @@
 //  Contact Email: xiaominghe2014@gmail.com
 //----------------------------------------------//
 
-#include "XSocket.h"
+#include "net/XSocket.h"
 
 XLIB_BEGAIN
 namespace net {

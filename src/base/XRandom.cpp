@@ -7,8 +7,8 @@
 //    Copyright © 2016年 ximena. All rights reserved.
 //  Contact Email: xiaominghe2014@gmail.com
 //----------------------------------------------//
-#include "XRandom.h"
-#include "XTime.h"
+#include "base/XRandom.h"
+#include "base/XTime.h"
 #include <random>
 #include <algorithm>
 

@@ -7,11 +7,11 @@
 //    Copyright © 2016年 ximena. All rights reserved.
 //  Contact Email: xiaominghe2014@gmail.com
 //----------------------------------------------//
-#include "base64.h"
+#include "crypto/base64.h"
 
 
 namespace xlib {
-    namespace crypt{
+    namespace crypto{
         
         
         void _3to4(unsigned char * a3, unsigned char * a4)
@@ -144,5 +144,5 @@ namespace xlib {
         
         
         
-    }//end crypt
+    }//end crypto
 }//end xlib

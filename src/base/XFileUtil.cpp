@@ -8,9 +8,9 @@
 //  Contact Email: xiaominghe2014@gmail.com
 //----------------------------------------------//
 
-#include "XFileUtil.h"
+#include "base/XFileUtil.h"
 #include "macro/xplatform.h"
-#include "crypt/md5.h"
+#include "crypto/md5.h"
 #include <fstream>
 #include <iostream>
 #include <sys/stat.h>
@@ -267,7 +267,7 @@ bool XFileUtil::encryptFile(const std::string &from, const std::string &to, cons
     char read_ch = 0;
     char write_ch = 0;
     bool res = true;
-    const byte* keys = crypt::md5Digest(key);
+    const byte* keys = crypto::md5Digest(key);
     byte idx = 0;
     std::ifstream in(from.c_str(), std::ios::binary);
     std::ofstream out(to.c_str(), std::ios::binary);
@@ -336,7 +336,7 @@ string XFileUtil::md5(const std::string file){
     std::ifstream ifs(file);
     std::string content( (std::istreambuf_iterator<char>(ifs) ),
                         (std::istreambuf_iterator<char>() ));
-    return crypt::MD5(content);
+    return crypto::MD5(content);
 }
 
 XLIB_END

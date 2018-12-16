@@ -8,10 +8,10 @@
 //  Contact Email: xiaominghe2014@gmail.com
 //----------------------------------------------//
 
-#include "XLog.h"
-#include "XString.h"
-#include "XTime.h"
-#include "XFileUtil.h"
+#include "base/XLog.h"
+#include "base/XString.h"
+#include "base/XTime.h"
+#include "base/XFileUtil.h"
 #include "macro/xplatform.h"
 #include <string.h>
 #if X_PLATFORM==X_P_ANDROID

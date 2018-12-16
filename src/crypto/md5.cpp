@@ -6,12 +6,12 @@
 //  Copyright © 2018 Ximena. All rights reserved.
 //
 
-#include "md5.h"
+#include "crypto/md5.h"
 #include<cstring>
 
 namespace xlib {
     
-    namespace crypt{
+    namespace crypto{
         
         /* Parameters of MD5. */
         #define s11 7
@@ -300,6 +300,6 @@ namespace xlib {
             return digest;
         }
         
-    }//! end crypt
+    }//! end crypto
     
 }//!end xlib

@@ -30,7 +30,7 @@ OBJ_PATH = $(DIR)/obj
 DIRS = $(OBJ_PATH)
 INCLUDES_CXX = -I $(SRC_PATH) \
                -I $(SRC_PATH)/src
-INCLUDES_H = -I $(SRC_PATH)/src
+INCLUDES_H = -I $(SRC_PATH)/include
 #define system
 UNAME_S:=$(shell uname -s)
 rwildcard = $(foreach d, $(wildcard $1*), $(call rwildcard,$d/,$2) \
@@ -73,13 +73,13 @@ $(TARGET):$(OBJS)
 	@$(CXX) $(CXX_TAGS) $(CXX_LIBS) $(INCLUDES_H) -o $@ $^
 	@echo -en 'Link time:'
 	@$(END_TIME)
--include $(DEPS)
+# -include $(DEPS)
 
 $(OBJ_PATH)/%.o:$(SRC_PATH)%.$(SRC_EXT)
 	@$(MKDIR) $(dir $(OBJS))
 	@echo 'Compiling: $< --> $@' 
 	@$(START_TIME)
-	@$(CXX) $(CXX_TAGS) $(CXX_LIBS) $(INCLUDES_CXX) -MP -MMD -c -o $@ $^
+	@$(CXX) $(CXX_TAGS) $(CXX_LIBS) $(INCLUDES_CXX) $(INCLUDES_H) -MP -MMD -c -o $@ $^
 	@echo -en 'Compile time: '
 	@$(END_TIME)
 clean:
