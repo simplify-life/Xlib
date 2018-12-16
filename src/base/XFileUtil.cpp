@@ -261,7 +261,7 @@ uint64 XFileUtil::getFileBytesLength(const std::string &file){
     return len;
 }
 
-bool XFileUtil::encryptFile(const std::string &from, const std::string &to, const std::string &key){
+bool XFileUtil::encryptoFile(const std::string &from, const std::string &to, const std::string &key){
     uint64 lenFrom = getFileBytesLength(from);
     uint64 start = 0;
     char read_ch = 0;
@@ -297,8 +297,8 @@ bool XFileUtil::encryptFile(const std::string &from, const std::string &to, cons
     return false;
 }
 
-bool XFileUtil::decryptFile(const std::string &from, const std::string &to, const std::string &key){
-    return encryptFile(from, to, key);
+bool XFileUtil::decryptoFile(const std::string &from, const std::string &to, const std::string &key){
+    return encryptoFile(from, to, key);
 }
 
 bool XFileUtil::allSameFile(const std::string &from, const std::string &to){

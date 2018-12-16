@@ -1,6 +1,6 @@
 //
 //  main.cpp
-//  C++11_XLib
+// xlib
 //
 //  Created by ximena on 16/5/26.
 //  Copyright © 2016年 ximena. All rights reserved.
@@ -93,8 +93,8 @@ void testFile(){
     LOG_I(originFile.c_str());
     LOG_I(encodeFile.c_str());
     LOG_I(decodeFile.c_str());
-    XFileUtil::encryptFile(originFile, encodeFile,password);
-    XFileUtil::decryptFile(encodeFile, decodeFile,password);
+    XFileUtil::encryptoFile(originFile, encodeFile,password);
+    XFileUtil::decryptoFile(encodeFile, decodeFile,password);
     //    XFileUtil::copyFile(originFile, decodeFile);
     LOG_I("%d",XFileUtil::allSameFile(originFile, decodeFile));
     const std::string readme = std::string(originPath).append("README.MD");

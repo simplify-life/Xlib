@@ -1,6 +1,6 @@
 //----------------------------------------------//
 //  XString.cpp
-//  C++11_XLib
+// xlib
 //
 //  Copyright (c) __DATA__  Ximena.
 //  Created by ximena on 16/5/26.
