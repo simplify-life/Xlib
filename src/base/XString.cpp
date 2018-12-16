@@ -7,7 +7,7 @@
 //    Copyright © 2016年 ximena. All rights reserved.
 //  Contact Email: xiaominghe2014@gmail.com
 //----------------------------------------------//
-#include "XString.h"
+#include "base/XString.h"
 #include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>

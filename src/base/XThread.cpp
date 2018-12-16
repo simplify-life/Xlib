@@ -7,7 +7,7 @@
 //    Copyright © 2016年 ximena. All rights reserved.
 //  Contact Email: xiaominghe2014@gmail.com
 //----------------------------------------------//
-#include "XThread.h"
+#include "base/XThread.h"
 #include <assert.h>
 #include <utility>
 

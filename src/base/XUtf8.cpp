@@ -8,7 +8,7 @@
 //  Contact Email: xiaominghe2014@gmail.com
 //----------------------------------------------//
 
-#include "XUtf8.h"
+#include "base/XUtf8.h"
 #include "macro/XBinary.h"
 #include "macro/XDefine.h"
 #include <queue>

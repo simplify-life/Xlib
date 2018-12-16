@@ -58,7 +58,7 @@ namespace XFileUtil
     bool copyFile(const std::string& from,const std::string& to);
     
     /**
-     crypt file encode and decode
+     crypto file encode and decode
      */
     bool encryptFile(const std::string& from,const std::string& to, const std::string& key);
     bool decryptFile(const std::string& from,const std::string& to, const std::string& key);

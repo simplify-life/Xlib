@@ -14,7 +14,7 @@
 
 namespace xlib {
  
-    namespace crypt{
+    namespace crypto{
         
         const char kBase64Char[] =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -26,7 +26,7 @@ namespace xlib {
         std::string encode64(const std::string& in);
         std::string decode64(const std::string& in);
         
-    }//! end crypt
+    }//! end crypto
     
 }//!end xlib
 

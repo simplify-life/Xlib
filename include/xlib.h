@@ -23,6 +23,6 @@
 #include "base/XString.h"
 #include "base/XFileUtil.h"
 #include "base/XRandom.h"
-#include "crypt/base64.h"
-#include "crypt/md5.h"
+#include "crypto/base64.h"
+#include "crypto/md5.h"
 #endif /* xlib_h */
