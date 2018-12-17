@@ -85,7 +85,6 @@ void testTimer(){
 }
 
 void testFile(){
-    const std::string originPath = XFileUtil::getCurrentPathWithPrefix();
     const std::string originFile = std::string(originPath).append("img_test_result.png");
     const std::string encodeFile = std::string(originPath).append("demo-encode");
     const std::string decodeFile = std::string(originPath).append("demo-decode.png");
@@ -108,6 +107,13 @@ void testFile(){
     LOG_I("decodeFile md5=%s",md5DecodeFile.c_str());
 }
 
+void testSHA1(){
+    crypto::SHA1 sha1;
+    sha1.update("360#as");
+    LOG_I("sha1(360#as)=%s",sha1.final().c_str());
+    const std::string originFile = std::string(originPath).append("img_test_result.png");
+    LOG_I("sha1(originFile)=%s",sha1.from_file(originFile).c_str());
+}
 
 int main()
 {
@@ -118,5 +124,6 @@ int main()
     testFile();
 //    testHttp();
     testTimer();
+    testSHA1();
     return 0;
 }

@@ -25,4 +25,5 @@
 #include "base/XRandom.h"
 #include "crypto/base64.h"
 #include "crypto/md5.h"
+#include "crypto/sha1.h"
 #endif /* xlib_h */
