@@ -13,9 +13,9 @@
 namespace xlib {
     
     namespace crypto{
-        const uint64 BLOCK_INTS = 16;  /* number of 32bit integers per SHA1 block */
-        const uint64 BLOCK_BYTES = BLOCK_INTS * 4;
-        void reset(uint32 digest[], std::string &buffer, uint64 &transforms)
+        const size_t BLOCK_INTS = 16;  /* number of 32bit integers per SHA1 block */
+        const size_t BLOCK_BYTES = BLOCK_INTS * 4;
+        void reset(uint32 digest[], std::string &buffer, size_t &transforms)
         {
             /* SHA1 initialization constants */
             digest[0] = 0x67452301;
@@ -28,11 +28,11 @@ namespace xlib {
             buffer = "";
             transforms = 0;
         }
-        uint32 rol(const uint32 value, const uint64 bits)
+        uint32 rol(const uint32 value, const size_t bits)
         {
             return (value << bits) | (value >> (32 - bits));
         }
-        uint32 blk(const uint32 block[BLOCK_INTS], const uint64 i)
+        uint32 blk(const uint32 block[BLOCK_INTS], const size_t i)
         {
             return rol(block[(i+13)&15] ^ block[(i+8)&15] ^ block[(i+2)&15] ^ block[i], 1);
         }
@@ -40,13 +40,13 @@ namespace xlib {
          * (R0+R1), R2, R3, R4 are the different operations used in SHA1
          */
         
-         void R0(const uint32 block[BLOCK_INTS], const uint32 v, uint32 &w, const uint32 x, const uint32 y, uint32 &z, const uint64 i)
+         void R0(const uint32 block[BLOCK_INTS], const uint32 v, uint32 &w, const uint32 x, const uint32 y, uint32 &z, const size_t i)
         {
             z += ((w&(x^y))^y) + block[i] + 0x5a827999 + rol(v, 5);
             w = rol(w, 30);
         }
         
-        void R1(uint32 block[BLOCK_INTS], const uint32 v, uint32 &w, const uint32 x, const uint32 y, uint32 &z, const uint64 i)
+        void R1(uint32 block[BLOCK_INTS], const uint32 v, uint32 &w, const uint32 x, const uint32 y, uint32 &z, const size_t i)
         {
             block[i] = blk(block, i);
             z += ((w&(x^y))^y) + block[i] + 0x5a827999 + rol(v, 5);
@@ -60,14 +60,14 @@ namespace xlib {
             w = rol(w, 30);
         }
         
-        void R3(uint32 block[BLOCK_INTS], const uint32 v, uint32 &w, const uint32 x, const uint32 y, uint32 &z, const uint64 i)
+        void R3(uint32 block[BLOCK_INTS], const uint32 v, uint32 &w, const uint32 x, const uint32 y, uint32 &z, const size_t i)
         {
             block[i] = blk(block, i);
             z += (((w|x)&y)|(w&x)) + block[i] + 0x8f1bbcdc + rol(v, 5);
             w = rol(w, 30);
         }
         
-        void R4(uint32 block[BLOCK_INTS], const uint32 v, uint32 &w, const uint32 x, const uint32 y, uint32 &z, const uint64 i)
+        void R4(uint32 block[BLOCK_INTS], const uint32 v, uint32 &w, const uint32 x, const uint32 y, uint32 &z, const size_t i)
         {
             block[i] = blk(block, i);
             z += (w^x^y) + block[i] + 0xca62c1d6 + rol(v, 5);
@@ -78,7 +78,7 @@ namespace xlib {
          * Hash a single 512-bit block. This is the core of the algorithm.
          */
         
-        void transform(uint32 digest[], uint32 block[BLOCK_INTS], uint64 &transforms)
+        void transform(uint32 digest[], uint32 block[BLOCK_INTS], size_t &transforms)
         {
             /* Copy digest[] to working vars */
             uint32 a = digest[0];
@@ -211,7 +211,7 @@ namespace xlib {
                 {
                     return;
                 }
-                uint32_t block[BLOCK_INTS];
+                uint32 block[BLOCK_INTS];
                 buffer_to_block(buffer, block);
                 transform(digest, block, transforms);
                 buffer.clear();
@@ -229,7 +229,7 @@ namespace xlib {
             
             /* Padding */
             buffer += (char)0x80;
-            uint64 orig_size = buffer.size();
+            size_t orig_size = buffer.size();
             while (buffer.size() < BLOCK_BYTES)
             {
                 buffer += (char)0x00;
@@ -254,7 +254,7 @@ namespace xlib {
             
             /* Hex std::string */
             std::ostringstream result;
-            for (uint64 i = 0; i < sizeof(digest) / sizeof(digest[0]); i++)
+            for (size_t i = 0; i < sizeof(digest) / sizeof(digest[0]); i++)
             {
                 result << std::hex << std::setfill('0') << std::setw(8);
                 result << digest[i];
@@ -267,9 +267,11 @@ namespace xlib {
         }
 
         std::string SHA1::from_file(const std::string &filename){
-            std::ifstream stream(filename.c_str(), std::ios::binary);
+            std::ifstream ifs(filename);
+            std::string content( (std::istreambuf_iterator<char>(ifs) ),
+                                (std::istreambuf_iterator<char>() ));
             SHA1 checksum;
-            checksum.update(stream);
+            checksum.update(content);
             return checksum.final();
         }
     }

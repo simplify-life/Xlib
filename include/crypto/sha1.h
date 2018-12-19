@@ -22,7 +22,7 @@ namespace xlib {
         private:
             uint32 digest[5];
             std::string buffer;
-            uint64 transforms;
+            size_t transforms;
         };
     }//! end crypto
 }//!end xlib

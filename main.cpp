@@ -118,12 +118,10 @@ void testSHA1(){
 int main()
 {
     setLog();
-
+    testSHA1();
     testUtf8();
-
     testFile();
 //    testHttp();
     testTimer();
-    testSHA1();
     return 0;
 }
