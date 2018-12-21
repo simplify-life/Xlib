@@ -14,8 +14,6 @@ using namespace std::chrono;
 //std::timed_mutex mtx_time;
 XLIB_BEGAIN
 
-XTimer* XTimer::tSelf=nullptr;
-
 steady_point XTime::getTimePoint_steady()
 {
     return steady_clock::now();
@@ -89,87 +87,47 @@ tm* XTime::getTimeFromTimestamp_seconds(time_t t,int timeInterval)
 }
 
 
-void XTime::doPertime(int count,float interval, const std::function<void ()>& call)
-{
-    auto mTimer = XTimer::getInstance();
-    mTimer->start();
-    mTimer->addTask(timerData(count,interval,call));
-}
-
 ////////////////////////////////////////////////////////////////////////
 
-XTimer::XTimer():tThread(),tTask(),isStart(false)
-{
-
-}
+XTimer::XTimer():_execute(false){}
 
 XTimer::~XTimer()
 {
-    if(tThread.joinable()) tThread.join();
+    if(_execute.load(std::memory_order_acquire))
+    stop();
 }
 
-XTimer* XTimer::getInstance()
+void XTimer::start(uint32 count, float interval, const std::function<void ()> &call)
 {
-    if(!tSelf) tSelf = new XTimer;
-    return tSelf;
+    if( _execute.load(std::memory_order_acquire) ) {
+        stop();
+    };
+    _execute.store(true, std::memory_order_release);
+    
+    tThread = std::thread([this, interval, call, count]()
+                       {
+                           while (_execute.load(std::memory_order_acquire)) {
+                               for (uint32 i = 0 ; i< count ; i++){
+                                   this_thread::sleep_for(nanoseconds((uint64)(interval*1000*1000*1000)));
+                                   call();
+                               }
+                               _execute.store(false, std::memory_order_release);
+                           }
+                       });
+    tThread.join();
 }
 
-void XTimer::start()
+
+void XTimer::stop()
 {
-    if(!isStart)
-    {
-        isStart = true;
-        tThread=thread(std::bind(&XTimer::threadLoop,this));
-        tThread.detach();
-    }
+    _execute.store(false, std::memory_order_release);
+    if( tThread.joinable() )
+    tThread.join();
 }
 
-void XTimer::mainLoop()
-{
-
-    lock_guard<mutex> lck(tTaskMutex);
-    for(auto &e:tTask)
-    {
-        if(e.t_handler&&e.t_call)
-        {
-            e.t_handler = false;
-            e.t_call();
-        }
-    }
-}
-
-void XTimer::threadLoop()
-{
-    while (true)
-    {
-        this_thread::sleep_for(microseconds(1));
-        lock_guard<mutex> lck(tTaskMutex);
-        for(auto itr=tTask.begin();itr!=tTask.end();itr++)
-        {
-            auto tNow = time_point_cast<microseconds>(steady_clock::now()).time_since_epoch().count();
-            auto interval = tNow-itr->t_point;
-            if(interval>=itr->t_interval*1000*1000&&itr->t_call&&itr->t_count)
-            {
-                itr->t_point = tNow;
-                itr->t_handler = true;
-                itr->t_count--;
-            }
-            else
-            {
-                if(itr->t_count==0&&itr!=tTask.end())
-                {
-                    itr->t_call=nullptr;
-                    itr=tTask.erase(itr);
-                }
-            }
-        }
-    }
-}
-
-void XTimer::addTask(const timerData &data)
-{
-    lock_guard<mutex> lck(tTaskMutex);
-    tTask.emplace_back(data);
+bool XTimer::is_running() const noexcept{
+    return (_execute.load(std::memory_order_acquire)) &&
+    (tThread.joinable());
 }
 
 XLIB_END

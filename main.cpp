@@ -69,19 +69,12 @@ void testThreadPool(){
 }
 
 void testTimer(){
-    std::atomic<int> count(0);
-    XTime::doPertime(5, 0.125,[&count]
-                     {
-                        auto v =  count.fetch_add(0);
-                        LOG_D("this is a timer,%d",v);
-                        count.fetch_add(1);
-                     } );
-    auto loop = [&count]{
-        while(count.fetch_add(0)<5){
-            XTimer::getInstance()->mainLoop();
-        }
-    };
-    loop();
+    XTimer timer;
+    int idx = 0;
+    timer.start(5, 0.125,[&idx]{
+        idx++;
+        LOG_D("this is a timer,%d",idx);
+    });
 }
 
 void testFile(){
@@ -117,11 +110,11 @@ void testSHA1(){
 
 int main()
 {
-    setLog();
-    testSHA1();
-    testUtf8();
-    testFile();
-//    testHttp();
+//    setLog();
     testTimer();
+//    testSHA1();
+//    testUtf8();
+//    testFile();
+//    testHttp();
     return 0;
 }

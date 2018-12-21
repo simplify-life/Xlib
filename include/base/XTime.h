@@ -17,27 +17,11 @@
 #include <mutex>
 #include <functional>
 #include <ctime>
+#include <atomic>
 XLIB_BEGAIN
 
 using steady_point = std::chrono::steady_clock::time_point;
 using system_point = std::chrono::system_clock::time_point;
-
-struct timerData
-{
-    bool t_handler;
-    int t_count;
-    float t_interval;
-    std::time_t t_point;
-    std::function<void()> t_call;
-    timerData(int count,float interval,const std::function<void()>& call)
-    {
-        t_handler = false;
-        t_count = count;
-        t_interval = interval;
-        t_call = std::move(call);
-        t_point = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()).time_since_epoch().count();
-    };
-};
 
 class XTimer;
 namespace XTime
@@ -70,34 +54,21 @@ namespace XTime
     tm_million* getTimeFromTimestamp_milliseconds(std::time_t t,int timeInterval=0);
     std::tm* getTimeFromTimestamp_seconds(std::time_t t,int timeInterval=0);
     
-    /**
-     @brief     this thread timer
-     */
-    void doPertime(int count,float interval,const std::function<void()>& call);
 };
 
 class XTimer
 {
 public:
-    static XTimer* getInstance();
     XTimer();
     virtual ~XTimer();
-    void start();
-    void addTask(const timerData& data);
-    /**
-     @note     you need add mainLoop in your engine mainLoop function
-     */
-    void mainLoop();
-protected:
-    void threadLoop();
+    void start(uint32 count, float interval, const std::function<void()>& call);
+    void stop();
 private:
     DISALLOW_COPY_AND_ASSIGN(XTimer)
+    bool is_running() const noexcept;
 private:
-    bool isStart;
-    static XTimer* tSelf;
+    std::atomic<bool> _execute;
     std::thread tThread;
-    std::vector<timerData> tTask;
-    std::mutex tTaskMutex;
 };
 
 XLIB_END
