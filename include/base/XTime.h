@@ -54,6 +54,7 @@ namespace XTime
     tm_million* getTimeFromTimestamp_milliseconds(std::time_t t,int timeInterval=0);
     std::tm* getTimeFromTimestamp_seconds(std::time_t t,int timeInterval=0);
     
+    uint64 getNanosecondsCount();
 };
 
 class XTimer
@@ -62,13 +63,8 @@ public:
     XTimer();
     virtual ~XTimer();
     void start(uint32 count, float interval, const std::function<void()>& call);
-    void stop();
 private:
     DISALLOW_COPY_AND_ASSIGN(XTimer)
-    bool is_running() const noexcept;
-private:
-    std::atomic<bool> _execute;
-    std::thread tThread;
 };
 
 XLIB_END

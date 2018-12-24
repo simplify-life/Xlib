@@ -86,48 +86,29 @@ tm* XTime::getTimeFromTimestamp_seconds(time_t t,int timeInterval)
     return gmtime(&tt);
 }
 
-
+uint64 XTime::getNanosecondsCount()
+{
+    return time_point_cast<nanoseconds>(steady_clock::now()).time_since_epoch().count();
+}
 ////////////////////////////////////////////////////////////////////////
 
-XTimer::XTimer():_execute(false){}
+XTimer::XTimer(){}
 
-XTimer::~XTimer()
-{
-    if(_execute.load(std::memory_order_acquire))
-    stop();
-}
+XTimer::~XTimer(){}
 
 void XTimer::start(uint32 count, float interval, const std::function<void ()> &call)
 {
-    if( _execute.load(std::memory_order_acquire) ) {
-        stop();
-    };
-    _execute.store(true, std::memory_order_release);
-    
-    tThread = std::thread([this, interval, call, count]()
-                       {
-                           while (_execute.load(std::memory_order_acquire)) {
-                               for (uint32 i = 0 ; i< count ; i++){
-                                   this_thread::sleep_for(nanoseconds((uint64)(interval*1000*1000*1000)));
-                                   call();
-                               }
-                               _execute.store(false, std::memory_order_release);
-                           }
-                       });
-    tThread.join();
-}
-
-
-void XTimer::stop()
-{
-    _execute.store(false, std::memory_order_release);
-    if( tThread.joinable() )
-    tThread.join();
-}
-
-bool XTimer::is_running() const noexcept{
-    return (_execute.load(std::memory_order_acquire)) &&
-    (tThread.joinable());
+    for (uint32 i = 0 ; i< count ; i++){
+        auto tNow = XTime::getNanosecondsCount();
+        while(true){
+            this_thread::sleep_for(microseconds(1));
+            if (XTime::getNanosecondsCount()-tNow>=(interval*1000*1000*1000)){
+                tNow = XTime::getNanosecondsCount();
+                call();
+                break;
+            }
+        }
+    }
 }
 
 XLIB_END
