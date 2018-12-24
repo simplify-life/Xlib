@@ -110,11 +110,11 @@ void testSHA1(){
 
 int main()
 {
-//    setLog();
+    setLog();
     testTimer();
-//    testSHA1();
-//    testUtf8();
-//    testFile();
+    testSHA1();
+    testUtf8();
+    testFile();
 //    testHttp();
     return 0;
 }
