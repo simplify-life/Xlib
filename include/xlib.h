@@ -26,4 +26,5 @@
 #include "crypto/base64.h"
 #include "crypto/md5.h"
 #include "crypto/sha1.h"
+#include "crypto/url.h"
 #endif /* xlib_h */

@@ -70,6 +70,10 @@ namespace XUtf8
      check byteArray utf8 code illegal or not
      */
     bool isValidUtf8Buffer(byte* buffer, uint size);
+    /**
+    find First valid utf8 string
+     */
+//    std::string findPrefixUtf8(const std::string&);
 };
 
 XLIB_END

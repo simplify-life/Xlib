@@ -219,5 +219,7 @@ string XString::formatTime(const XTime::tm_million * t_m, const xlib::TIME_F &fm
     return string(t).append(million.c_str());
 }
 
-
+bool XString::isCharInString(const char&c,const string&src){
+    return src.find(XString::convert<string>(c))!=string::npos;
+}
 XLIB_END

@@ -1,10 +1,3 @@
-//
-//  main.cpp
-// xlib
-//
-//  Created by ximena on 16/5/26.
-//  Copyright © 2016年 ximena. All rights reserved.
-//
 #include <memory>
 #include "xlib.h"
 US_NS_X;
@@ -48,46 +41,76 @@ void testUtf8(){
     LOG_I(utf8.c_str());
     byte buffer[] = {0350, 0377, 0231};
     bool isValid = XUtf8::isValidUtf8Buffer(buffer, 3);
-    LOG_I("🌸%d",isValid);
+    LOG_I(u8"🌸%d",isValid);
     for(byte b = 0 ; b< byte_max ; b++){
         LOG_I(" %d len %d",b,XUtf8::getUtf8ByteLen(b));
     }
+    //
+//    auto pre0 = XUtf8::findPrefixUtf8("你瞧�瞧");
+//    auto pre1 = XUtf8::findPrefixUtf8("你瞧瞧332");
+//    LOG_I(XUtf8::findPrefixUtf8("你瞧�瞧").c_str());
+//    LOG_I(XUtf8::findPrefixUtf8("你瞧瞧332").c_str());
 }
 
 void testThreadPool(){
-    auto fun = [](int wTime)
+    auto fun = [](float wTime, XTime::TIMER_LEVEL level)
     {
         std::thread::id tid = std::this_thread::get_id();
-        std::this_thread::sleep_for(std::chrono::seconds(wTime));
-        auto t = XString::formatTime(XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(),8),TIME_F::T_DEFAULT);
-        LOG_I("thread_id=%s,%s,%s",XString::convert<std::string>(tid).c_str(),t.c_str(),XRand::getRandomString(10).c_str());
+        XTime::startTimer(5, wTime,[=]{
+            std::string des = "";
+            switch (level) {
+                case XTime::TIMER_LEVEL::L_SECOND:
+                    des = "seconds";
+                    break;
+                case XTime::TIMER_LEVEL::L_MILLION:
+                    des = "milliseconds";
+                    break;
+                case XTime::TIMER_LEVEL::L_MICRO:
+                    des = "microseconds";
+                    break;
+                default:
+                    break;
+            }
+            LOG_I("this is a %s timer ,thread_id=%s",des.c_str(),XString::convert<std::string>(tid).c_str());
+        },XTime::TIMER_LEVEL::L_MILLION);
     };
-    auto pool = std::unique_ptr<XThreadPool>(new XThreadPool(6,8,true));
-    pool->addTask([=]{fun(0);});
-    pool->addTask([=]{fun(1);});
-    pool->addTask([=]{fun(2);});
+    auto pool = std::unique_ptr<XThreadPool>(new XThreadPool(6));
+    pool->addTask([=]{fun(1,XTime::TIMER_LEVEL::L_SECOND);});
+    pool->addTask([=]{fun(0.001,XTime::TIMER_LEVEL::L_MILLION);});
+    pool->addTask([=]{fun(0.001,XTime::TIMER_LEVEL::L_MICRO);});
+    pool->detach();
+//    std::thread([=]{fun(1,XTime::TIMER_LEVEL::L_SECOND);}).detach();
+//    std::thread([=]{fun(0.001,XTime::TIMER_LEVEL::L_MILLION);}).detach();
+//    std::thread([=]{fun(0.001,XTime::TIMER_LEVEL::L_MICRO);}).detach();
+//    std::this_thread::sleep_for(std::chrono::seconds(10));
 }
 
 void testTimer(){
-    XTimer timer;
     int idx = 0;
-    timer.start(5, 0.125,[&idx]{
+    XTime::startTimer(5, 1,[&idx]{
         idx++;
-        LOG_D("this is a timer,%d",idx);
-    });
+        LOG_D("this is a seconds timer ,%d",idx);
+    },XTime::TIMER_LEVEL::L_MILLION);
+    XTime::startTimer(5, 0.001,[&idx]{
+        idx++;
+        LOG_D("this is a milliseconds timer ,%d",idx);
+    },XTime::TIMER_LEVEL::L_MILLION);
+    XTime::startTimer(5, 0.001,[&idx]{
+        idx++;
+        LOG_D("this is a microseconds timer ,%d",idx);
+    },XTime::TIMER_LEVEL::L_MICRO);
 }
 
 void testFile(){
     const std::string originFile = std::string(originPath).append("img_test_result.png");
     const std::string encodeFile = std::string(originPath).append("demo-encode");
     const std::string decodeFile = std::string(originPath).append("demo-decode.png");
-    const std::string password = "蛤🐸,这是🔐";
+    const std::string password = u8"蛤🐸,这是🔐";
     LOG_I(originFile.c_str());
     LOG_I(encodeFile.c_str());
     LOG_I(decodeFile.c_str());
     XFileUtil::encryptoFile(originFile, encodeFile,password);
     XFileUtil::decryptoFile(encodeFile, decodeFile,password);
-    //    XFileUtil::copyFile(originFile, decodeFile);
     LOG_I("%d",XFileUtil::allSameFile(originFile, decodeFile));
     const std::string readme = std::string(originPath).append("README.MD");
     LOG_I("%d",XFileUtil::allSameFile(encodeFile, "readme"));
@@ -108,6 +131,29 @@ void testSHA1(){
     LOG_I("sha1(originFile)=%s",sha1.from_file(originFile).c_str());
 }
 
+void testUrl(){
+    std::string url1 = "123@$%$*언서ハングルКирилл үсэг你瞧瞧332";
+    std::string url1encode = crypto::urlencode(url1);
+    LOG_I("%s",url1encode.c_str());
+    std::string url1decode = crypto::urldecode(url1encode);
+    LOG_I("%s",url1decode.c_str());
+    if(0==url1.compare(url1decode)){
+        LOG_I("url1 crypto succuess");
+    }else{
+        LOG_I("url1 crypto failed");
+    }
+    std::string url2 = "https://www.example.com/s?key0=你好&&key1=测试";
+    std::string url2encode = crypto::urlencode(url2,true,false);
+    LOG_I("%s",url2encode.c_str());
+    std::string url2decode = crypto::urldecode(url2encode);
+    LOG_I("%s",url2decode.c_str());
+    if(0==url2.compare(url2decode)){
+        LOG_I("url2 crypto succuess");
+    }else{
+        LOG_I("url2 crypto failed");
+    }
+}
+
 int main()
 {
     setLog();
@@ -115,6 +161,6 @@ int main()
     testSHA1();
     testUtf8();
     testFile();
-//    testHttp();
+    testUrl();
     return 0;
 }

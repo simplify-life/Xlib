@@ -30,6 +30,12 @@ namespace XTime
         std::tm* tm;
         uint32 million;
     };
+    
+    enum class TIMER_LEVEL{
+        L_SECOND,
+        L_MILLION,
+        L_MICRO
+    };
     /**
      @brief     get time point
      */
@@ -55,17 +61,11 @@ namespace XTime
     std::tm* getTimeFromTimestamp_seconds(std::time_t t,int timeInterval=0);
     
     uint64 getNanosecondsCount();
+    
+    void startTimer(uint32 count, float interval, const std::function<void ()> &call, TIMER_LEVEL);
 };
 
-class XTimer
-{
-public:
-    XTimer();
-    virtual ~XTimer();
-    void start(uint32 count, float interval, const std::function<void()>& call);
-private:
-    DISALLOW_COPY_AND_ASSIGN(XTimer)
-};
+
 
 XLIB_END
 #endif /* XTime_h */

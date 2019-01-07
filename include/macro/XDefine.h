@@ -71,7 +71,7 @@ if (xlib::LOG_LEVEL::L_INFO < log_level || xlib::LOG_LEVEL::L_ALL == log_level)\
 		XLIB_LOG(log_level,lfmt,##__VA_ARGS__); \
 	} \
 else \
-xlib::XLog::log(log_level,fmt,##__VA_ARGS__); \
+    xlib::XLog::log(log_level,fmt,##__VA_ARGS__); \
 }while(0)
 
 #define XLOG(fmt,...) xlib::XLog::log(fmt,##__VA_ARGS__)

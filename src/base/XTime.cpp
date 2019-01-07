@@ -90,21 +90,29 @@ uint64 XTime::getNanosecondsCount()
 {
     return time_point_cast<nanoseconds>(steady_clock::now()).time_since_epoch().count();
 }
-////////////////////////////////////////////////////////////////////////
 
-XTimer::XTimer(){}
-
-XTimer::~XTimer(){}
-
-void XTimer::start(uint32 count, float interval, const std::function<void ()> &call)
+void XTime::startTimer(uint32 count, float interval, const std::function<void ()> &call, TIMER_LEVEL level)
 {
+    auto cb = std::move(call);
     for (uint32 i = 0 ; i< count ; i++){
         auto tNow = XTime::getNanosecondsCount();
         while(true){
-            this_thread::sleep_for(microseconds(1));
+            switch (level) {
+                case TIMER_LEVEL::L_SECOND:
+                    this_thread::sleep_for(milliseconds(1));
+                    break;
+                case TIMER_LEVEL::L_MILLION:
+                    this_thread::sleep_for(microseconds(1));
+                    break;
+                case TIMER_LEVEL::L_MICRO:
+                    this_thread::sleep_for(nanoseconds(1));
+                    break;
+                default:
+                break;
+            }
             if (XTime::getNanosecondsCount()-tNow>=(interval*1000*1000*1000)){
                 tNow = XTime::getNanosecondsCount();
-                call();
+                cb();
                 break;
             }
         }

@@ -50,7 +50,9 @@ namespace XString
     int count(const std::string&,const std::string&);
     bool isInt(const std::string&,bool ignoreSymbols=true);
     int compareVersion(const std::string&,const std::string&,const std::string& key=".");
-
+    
+    bool isCharInString(const char&,const std::string&);
+    
     template<class T_out,class T_in>
     T_out convert(const T_in& in)
     {
