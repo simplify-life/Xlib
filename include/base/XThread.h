@@ -14,126 +14,44 @@
 #include "macro/XBase.h"
 #include <thread>
 #include <atomic>
-#include <list>
 #include <functional>
-#include <limits>
 #include <mutex>
 #include <condition_variable>
 #include <vector>
-#include <map>
+#include <future>
+#include <queue>
 
 XLIB_BEGAIN
-//////TaskQueue class
-template <class T>
-class XTaskQueue : private std::mutex
-{
+
+class XThreadPool{
 public:
-    static const int wait_default = std::numeric_limits<int>::max();
-    
-    XTaskQueue(size_t capacity=0):mCapacity(capacity),exit_(false){};
-    
-    bool push(T&& task);
-    T popWait(int waitTime=wait_default);
-    bool popWait(T* v,int waitTime=wait_default);
-    size_t capacity();
-    void exit();
-    inline bool isExited(){return exit_;};
-private:
-    DISALLOW_COPY_AND_ASSIGN(XTaskQueue)
-    void waitReady(std::unique_lock<std::mutex>&,int);
-private:
-    std::atomic<bool> exit_;
-    size_t mCapacity;
-    std::list<T> mTasks;
-    std::condition_variable ready_;
-};
-
-//////////XThreadPool class
-//using Task_void = std::map<std::function<void()>,bool>;
-using Task_void = std::function<void()>;
-extern template class XTaskQueue<Task_void>;
-
-class XThreadPool
-{
-private:
-    DISALLOW_COPY_AND_ASSIGN(XThreadPool)
-public:
-    explicit XThreadPool(int threads,int taskCapacity=0,bool start=true);
-    ~XThreadPool();
-    XThreadPool& exit(){mTaskQueue.exit(); return *this;};
-    void start();
-    void join();
-    void detach();
-    bool addTask(Task_void&&);
-    bool addTask(Task_void& task){ return addTask(Task_void(task));};
-    size_t taskSize() {return mTaskQueue.capacity();};
-private:
-    XTaskQueue<Task_void> mTaskQueue;
-    std::vector<std::thread> mThreads;
-};
-
-//////////////////////////////////////////
-template <class T>
-size_t XTaskQueue<T>::capacity()
-{
-    std::lock_guard<std::mutex> lk(*this);
-    return mTasks.size();
-}
-template<class T>
-void XTaskQueue<T>::exit()
-{
-    std::lock_guard<mutex> lk(*this);
-    exit_=true;
-    ready_.notify_all();
-}
-template<class T>
-bool XTaskQueue<T>::push(T &&task)
-{
-    std::lock_guard<mutex> lk(*this);
-    if(exit_||(mCapacity&&mTasks.size()>=mCapacity))
-    {
-        return false;
+    using Task = std::function<void()>;
+    using PackagedTask = std::packaged_task<void()>;
+    XThreadPool();
+    XThreadPool(uint threadCount);
+     ~XThreadPool();
+    template <typename Function, typename... Args>
+    inline std::shared_future<void> async(Function &&F, Args &&... ArgList) {
+        auto task =
+        std::bind(std::forward<Function>(F), std::forward<Args>(ArgList)...);
+        return asyncImpl(std::move(task));
     }
-    mTasks.push_back(std::move(task));
-    ready_.notify_one();
-    return true;
-}
-template<class T>
-void XTaskQueue<T>::waitReady(std::unique_lock<std::mutex> & lk, int waitTime)
-{
-    if(exit_||!mTasks.empty()) return;
-    if(wait_default==waitTime)
-       ready_.wait(lk,[this]{return exit_||!mTasks.empty();});
-    else if(0<waitTime)
-    {
-        auto tp=std::chrono::steady_clock::now()+std::chrono::milliseconds(waitTime);
-        while (ready_.wait_until(lk, tp)!=std::cv_status::timeout&&mTasks.empty()&&!exit_)
-        {
-            
-        }
+    template <typename Function>
+    inline std::shared_future<void> async(Function &&F) {
+        return asyncImpl(std::forward<Function>(F));
     }
-}
-template<class T>
-bool XTaskQueue<T>::popWait(T *v,int waitTime)
-{
-    std::unique_lock<mutex> lk(*this);
-    waitReady(lk,waitTime);
-    if(mTasks.empty()) return false;
-    *v = std::move(mTasks.front());
-    mTasks.pop_front();
-    return true;
-}
-
-template<class T>
-T XTaskQueue<T>::popWait(int waitTime)
-{
-    std::unique_lock<mutex> lk(*this);
-    waitReady(lk,waitTime);
-    if(mTasks.empty()) return T();
-    T t = std::move(mTasks.front());
-    mTasks.pop_front();
-    return t;
-}
+    void wait();
+private:
+    std::shared_future<void> asyncImpl(Task F);
+    std::vector<std::thread> mThreads; ///<所有线程
+    std::queue<PackagedTask> mTaskQueue; ///<任务队列
+    std::mutex queueLock;  ///<任务队列锁
+    std::condition_variable queueCondition;
+    std::mutex readyLock;  ///<准备条件锁
+    std::condition_variable readyCondition;
+    std::atomic<unsigned> activeThreads; ///<工作中的线程
+    bool exitFlag; ///<是否退出
+};
 
 XLIB_END
 #endif /* XThread_h */

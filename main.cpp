@@ -73,33 +73,18 @@ void testThreadPool(){
             }
             LOG_I("this is a %s timer ,thread_id=%s",des.c_str(),XString::convert<std::string>(tid).c_str());
         },XTime::TIMER_LEVEL::L_MILLION);
+        return wTime;
     };
-    auto pool = std::unique_ptr<XThreadPool>(new XThreadPool(6));
-    pool->addTask([=]{fun(1,XTime::TIMER_LEVEL::L_SECOND);});
-    pool->addTask([=]{fun(0.001,XTime::TIMER_LEVEL::L_MILLION);});
-    pool->addTask([=]{fun(0.001,XTime::TIMER_LEVEL::L_MICRO);});
-    pool->detach();
-//    std::thread([=]{fun(1,XTime::TIMER_LEVEL::L_SECOND);}).detach();
-//    std::thread([=]{fun(0.001,XTime::TIMER_LEVEL::L_MILLION);}).detach();
-//    std::thread([=]{fun(0.001,XTime::TIMER_LEVEL::L_MICRO);}).detach();
-//    std::this_thread::sleep_for(std::chrono::seconds(10));
+    auto pool = std::unique_ptr<XThreadPool>(new XThreadPool(2));
+    pool->async([=]{fun(1,XTime::TIMER_LEVEL::L_SECOND);});
+    pool->async([=]{fun(0.001,XTime::TIMER_LEVEL::L_MILLION);});
+    pool->async([=]{fun(0.001,XTime::TIMER_LEVEL::L_MICRO);});
+    pool->async([=](int x, int y){
+        LOG_I("%d + %d = %d",x,y,x+y);
+        return x+y;
+    }, 10,11);
 }
 
-void testTimer(){
-    int idx = 0;
-    XTime::startTimer(5, 1,[&idx]{
-        idx++;
-        LOG_D("this is a seconds timer ,%d",idx);
-    },XTime::TIMER_LEVEL::L_MILLION);
-    XTime::startTimer(5, 0.001,[&idx]{
-        idx++;
-        LOG_D("this is a milliseconds timer ,%d",idx);
-    },XTime::TIMER_LEVEL::L_MILLION);
-    XTime::startTimer(5, 0.001,[&idx]{
-        idx++;
-        LOG_D("this is a microseconds timer ,%d",idx);
-    },XTime::TIMER_LEVEL::L_MICRO);
-}
 
 void testFile(){
     const std::string originFile = std::string(originPath).append("img_test_result.png");
@@ -157,7 +142,7 @@ void testUrl(){
 int main()
 {
     setLog();
-    testTimer();
+    testThreadPool();
     testSHA1();
     testUtf8();
     testFile();

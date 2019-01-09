@@ -16,61 +16,67 @@ using namespace std;
 
 XLIB_BEGAIN
 
-template class XTaskQueue<Task_void>;
-
-XThreadPool::XThreadPool(int threads,int maxWaiting,bool start):
-mTaskQueue(maxWaiting),mThreads(threads)
-{
-    if(start)
-    {
-        this->start();
-    }
-}
-
-XThreadPool::~XThreadPool()
-{
-    mTaskQueue.exit();
-    assert(mTaskQueue.isExited());
-    if(mTaskQueue.capacity())
-    {
-        LOG_E("%lu tasks not processed when thread pool exited\n",mTaskQueue.capacity());
-    }
-}
-
-void XThreadPool::start()
-{
-    for(auto &th: mThreads)
-    {
-        thread t([this]
-        {
-            while (!mTaskQueue.isExited())
-            {
-                Task_void task;
-                if(mTaskQueue.popWait(&task))
+XThreadPool::XThreadPool() : XThreadPool(thread::hardware_concurrency()) {}
+XThreadPool::XThreadPool(uint threadCount)
+: activeThreads(0), exitFlag(false) {
+    mThreads.reserve(threadCount);
+    for (uint t = 0; t < threadCount; t++) {
+        mThreads.emplace_back([&] {
+            while (true) {
+                PackagedTask task;
                 {
-                    task();
+                    unique_lock<mutex> LockGuard(queueLock);
+                    queueCondition.wait(LockGuard,
+                                        [&] { return exitFlag || !mTaskQueue.empty(); });
+                    if (exitFlag && mTaskQueue.empty()) return;
+                    {
+                        unique_lock<mutex> LockGuard(readyLock);
+                        activeThreads++;
+                    }
+                    task = move(mTaskQueue.front());
+                    mTaskQueue.pop();
                 }
+                task();
+                {
+                    unique_lock<mutex> LockGuard(readyLock);
+                    --activeThreads;
+                }
+                readyCondition.notify_all();
             }
         });
-        th.swap(t);
     }
 }
 
-void XThreadPool::join()
-{
-    for(auto &e:mThreads)
-        e.join();
+void XThreadPool::wait() {
+    unique_lock<mutex> LockGuard(readyLock);
+    readyCondition.wait(LockGuard,
+                             [&] { return !activeThreads && mTaskQueue.empty(); });
+}
+shared_future<void> XThreadPool::asyncImpl(Task task) {
+    PackagedTask PackagedTask(move(task));
+    auto Future = PackagedTask.get_future();
+    {
+        unique_lock<mutex> LockGuard(queueLock);
+        if(exitFlag){
+            LOG_E("XThreadPool exited:线程池已经退出");
+        }
+        mTaskQueue.push(move(PackagedTask));
+    }
+    readyCondition.notify_one();
+    return Future.share();
 }
 
-void XThreadPool::detach()
-{
-    for(auto &e:mThreads)
-        e.detach();
+XThreadPool::~XThreadPool() {
+    {
+        unique_lock<mutex> LockGuard(queueLock);
+        exitFlag = true;
+    }
+    if(mTaskQueue.size()){
+        LOG_W("%lu tasks not processed when thread pool exited\n",mTaskQueue.size());
+    }
+    queueCondition.notify_all();
+    for (auto &e : mThreads){
+        if(e.joinable()) e.join();
+    }
 }
-
-bool XThreadPool::addTask(Task_void && task)
-{
-    return mTaskQueue.push(move(task));
-}
-
 XLIB_END
