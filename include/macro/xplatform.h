@@ -141,7 +141,7 @@ namespace xlib{
 inline bool isPlatformLittleEndian()
 {
     int n = 1;
-    return *((char*)&n) ? true : false;
+    return *((char*)&n);
 }
 
 }//end xlib
