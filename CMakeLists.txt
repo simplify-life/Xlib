@@ -43,5 +43,20 @@ add_library(Xlib_static STATIC ${SOURCES})
 set_target_properties(Xlib_static PROPERTIES OUTPUT_NAME "Xlib_static")
 
 # 生成执行main.cpp的测试执行文件
+enable_testing()
+
 add_executable(test_main ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 target_link_libraries(test_main Xlib_static)
+
+add_test(name Test_main COMMAND test_main)
+
+# add_executable(test1 test1.cpp)
+# add_test(NAME Test1 COMMAND test1)
+
+# add_executable(test2 test2.cpp)
+# add_test(NAME Test2 COMMAND test2)
+
+# add_test(NAME MyTest COMMAND ${CMAKE_CTEST_COMMAND}
+#          --output-on-failure
+#          -C $<CONFIGURATION>
+#          -R "^Test[12]$")
