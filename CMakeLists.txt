@@ -1,0 +1,42 @@
+cmake_minimum_required(VERSION 3.18.2)
+
+set(PROJECT_NAME Xlib)
+
+# Set C++ standard to 14
+set(CMAKE_CXX_STANDARD 14)
+
+# Define project
+project(${PROJECT_NAME}) 
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+#--------------------------- PLATFORM SPECIFIC -------------------------------------------------------------------------
+
+if(APPLE)
+  # Fix linking on 10.14+. See https://stackoverflow.com/questions/54068035
+  include_directories(/usr/local/include)
+  link_directories(/usr/local/lib)
+endif()
+
+if(NOT WIN32)
+  string(ASCII 27 Esc)
+  set(ColorReset   "${Esc}[m")
+  set(ColorBold    "${Esc}[1m")
+  set(ColorRed     "${Esc}[31m")
+  set(ColorBoldRed "${ColorRed}${ColorBold}")
+endif()
+
+# 设置源文件为当前目录和src路径下的所有子目录
+file(GLOB_RECURSE SOURCES 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.cpp 
+    EXCLUDE
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+)
+
+# Add executable and link libraries
+# add_executable(${PROJECT_NAME} ${SOURCES})
+# target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
+
+# 生成静态链接库
+add_library(Xlib_static STATIC ${SOURCES})
+set_target_properties(Xlib_static PROPERTIES OUTPUT_NAME "Xlib_static")
