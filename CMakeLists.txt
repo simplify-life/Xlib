@@ -5,6 +5,7 @@ set(PROJECT_NAME Xlib)
 # Set C++ standard to 14
 set(CMAKE_CXX_STANDARD 14)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 # Define project
 project(${PROJECT_NAME}) 
 
@@ -40,3 +41,7 @@ file(GLOB_RECURSE SOURCES
 # 生成静态链接库
 add_library(Xlib_static STATIC ${SOURCES})
 set_target_properties(Xlib_static PROPERTIES OUTPUT_NAME "Xlib_static")
+
+# 生成执行main.cpp的测试执行文件
+add_executable(test_main ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+target_link_libraries(test_main Xlib_static)
