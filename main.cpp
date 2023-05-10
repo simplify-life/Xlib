@@ -53,32 +53,19 @@ void testUtf8(){
 }
 
 void testThreadPool(){
-    auto fun = [](float wTime, XTime::TIMER_LEVEL level)
+    auto fun = [](uint32 count,float wTime)
     {
         std::thread::id tid = std::this_thread::get_id();
-        XTime::startTimer(5, wTime,[=]{
+        XTime::startTimer(count, wTime,[=]{
             std::string des = "";
-            switch (level) {
-                case XTime::TIMER_LEVEL::L_SECOND:
-                    des = "seconds";
-                    break;
-                case XTime::TIMER_LEVEL::L_MILLION:
-                    des = "milliseconds";
-                    break;
-                case XTime::TIMER_LEVEL::L_MICRO:
-                    des = "microseconds";
-                    break;
-                default:
-                    break;
-            }
-            LOG_I("this is a %s timer ,thread_id=%s",des.c_str(),XString::convert<std::string>(tid).c_str());
-        },XTime::TIMER_LEVEL::L_MILLION);
+            LOG_I("this is a %f seconds timer ,thread_id=%s",wTime,XString::convert<std::string>(tid).c_str());
+        });
         return wTime;
     };
-    auto pool = std::unique_ptr<XThreadPool>(new XThreadPool(2));
-    pool->async([=]{fun(1,XTime::TIMER_LEVEL::L_SECOND);});
-    pool->async([=]{fun(0.001,XTime::TIMER_LEVEL::L_MILLION);});
-    pool->async([=]{fun(0.001,XTime::TIMER_LEVEL::L_MICRO);});
+    auto pool = std::unique_ptr<XThreadPool>(new XThreadPool(4));
+    pool->async([=]{fun(20,1);});
+    pool->async([=]{fun(10,0.001);});
+//    pool->async([=]{fun(10,0.00001,XTime::TIMER_LEVEL::L_MICRO);});
     pool->async([=](int x, int y){
         LOG_I("%d + %d = %d",x,y,x+y);
         return x+y;
@@ -108,7 +95,7 @@ void testFile(){
     LOG_I("decodeFile md5=%s",md5DecodeFile.c_str());
 }
 
-void testSHA1(){
+void testSHA(){
     crypto::SHA1 sha1;
     sha1.update("360#as");
     LOG_I("sha1(360#as)=%s",sha1.final().c_str());
@@ -139,13 +126,92 @@ void testUrl(){
     }
 }
 
+
+// 测量排序时间的函数模板
+template<typename T>
+double measureSortTime(std::vector<T>& arr, void (*sort_func)(std::vector<T>&)) {
+    auto start_time = std::chrono::high_resolution_clock::now();
+    sort_func(arr);
+    auto end_time = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed_time = end_time - start_time;
+    return elapsed_time.count();
+}
+
+
+// 测量排序时间的函数模板
+template<typename T>
+double measureSortTime2(std::vector<T>& arr, void (*sort_func)(std::vector<T>&,int arg0, int arg1)) {
+    auto start_time = std::chrono::high_resolution_clock::now();
+    sort_func(arr,0,arr.size()-1);
+    auto end_time = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed_time = end_time - start_time;
+    return elapsed_time.count();
+}
+
+void testSort(){
+    std::vector<int> my_vector = { 13, 1, 4, 126, 1, 5, 9, 45, 2, 6, 5, 3 };
+
+    // 测量冒泡排序时间
+    std::vector<int> bubble_sort_data = my_vector;
+    double bubble_sort_time = measureSortTime(bubble_sort_data, sort::bubbleSort<int>);
+    std::cout << "冒泡排序时间：" << bubble_sort_time << " 秒" << std::endl;
+
+    // 测量选择排序时间
+    std::vector<int> select_sort_data = my_vector;
+    double selection_sort_time = measureSortTime(select_sort_data, sort::selectionSort<int>);
+    std::cout << "选择排序时间：" << selection_sort_time << " 秒" << std::endl;
+
+    // 测量插入排序时间
+    std::vector<int> insert_sort_data = my_vector;
+    double insertion_sort_time = measureSortTime(insert_sort_data, sort::insertionSort<int>);
+    std::cout << "插入排序时间：" << insertion_sort_time << " 秒" << std::endl;
+
+    // 测量希尔排序时间
+    std::vector<int> shell_sort_data = my_vector;
+    double shell_sort_time = measureSortTime(shell_sort_data, sort::shellSort<int>);
+    std::cout << "希尔排序时间：" << shell_sort_time << " 秒" << std::endl;
+
+    // 测量快速排序时间
+    std::vector<int> quick_sort_data = my_vector;
+    double quick_sort_time = measureSortTime2(quick_sort_data, sort::quickSort<int>);
+    std::cout << "快速排序时间：" << quick_sort_time << " 秒" << std::endl;
+
+    // 测量归并排序时间
+    std::vector<int> merge_sort_data = my_vector;
+    double merge_sort_time = measureSortTime2(merge_sort_data, sort::mergeSort<int>);
+    std::cout << "归并排序时间：" << merge_sort_time << " 秒" << std::endl;
+
+    // 测量堆排序时间
+    std::vector<int> heap_sort_data = my_vector;
+    double heap_sort_time = measureSortTime(heap_sort_data, sort::heapSort<int>);
+    std::cout << "堆排序时间：" << heap_sort_time << " 秒" << std::endl;
+
+    // 测量计数排序时间
+    std::vector<int> counting_sort_data = my_vector;
+    double counting_sort_time = measureSortTime(counting_sort_data, sort::countingSort<int>);
+    std::cout << "计数排序时间：" << counting_sort_time << " 秒" << std::endl;
+
+    // 测量桶排序时间
+    std::vector<int> bucket_sort_data = my_vector;
+    double bucket_sort_time = measureSortTime(bucket_sort_data, sort::bucketSort<int>);
+    std::cout << "桶排序时间：" << bucket_sort_time << " 秒" << std::endl;
+
+    // 测量基数排序时间
+    std::vector<int> radix_sort_data = my_vector;
+    double radix_sort_time = measureSortTime(radix_sort_data, sort::radixSort<int>);
+    std::cout << "基数排序时间：" << radix_sort_time << " 秒" << std::endl;
+
+}
+
+
 int main()
 {
     setLog();
     testThreadPool();
-    testSHA1();
+    testSHA();
     testUtf8();
     testFile();
     testUrl();
+    testSort();
     return 0;
 }

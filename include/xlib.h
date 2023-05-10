@@ -27,4 +27,6 @@
 #include "crypto/md5.h"
 #include "crypto/sha1.h"
 #include "crypto/url.h"
+#include "algorithm/sort.h"
+#include "algorithm/search.h"
 #endif /* xlib_h */

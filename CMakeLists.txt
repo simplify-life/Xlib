@@ -14,6 +14,13 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 #--------------------------- PLATFORM SPECIFIC -------------------------------------------------------------------------
 
 if(APPLE)
+  # 生成XCode工程
+  # 设置C编译器路径
+  set(CMAKE_XCODE_GENERATE_SCHEME ON)
+  set(CMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH NO)
+  set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT "dwarf-with-dsym")
+  set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT[variant=Debug] "dwarf-with-dsym")
+  set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT[variant=Release] "dwarf-with-dsym")
   # Fix linking on 10.14+. See https://stackoverflow.com/questions/54068035
   include_directories(/usr/local/include)
   link_directories(/usr/local/lib)

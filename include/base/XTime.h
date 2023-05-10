@@ -62,7 +62,7 @@ namespace XTime
     
     uint64 getNanosecondsCount();
     
-    void startTimer(uint32 count, float interval, const std::function<void ()> &call, TIMER_LEVEL);
+    void startTimer(uint32 count, float interval, const std::function<void ()> &call);
 };
 
 
