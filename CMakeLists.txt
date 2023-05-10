@@ -55,7 +55,7 @@ enable_testing()
 add_executable(test_main ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 target_link_libraries(test_main Xlib_static)
 
-add_test(name Test_main COMMAND test_main)
+add_test(name test_main COMMAND test_main)
 
 # add_executable(test1 test1.cpp)
 # add_test(NAME Test1 COMMAND test1)
