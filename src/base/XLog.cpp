@@ -27,7 +27,7 @@ bool XLog::mWrite = false;
 
 std::string XLog::logFile = "";
 
-void XLog::log(LOG_LEVEL level, const char * fmt, ...)
+void XLog::log(LOG_LEVEL level, const char * fmt, ...) noexcept
 {
     if(level<mLog_level||level==LOG_LEVEL::L_OFF) return;
     string logstr = "";
@@ -170,12 +170,12 @@ string XLog::_log(const char *format, va_list args)
 }
 
 
-void XLog::setLevel(LOG_LEVEL level)
+void XLog::setLevel(LOG_LEVEL level) noexcept
 {
     mLog_level = level;
 }
 
-string XLog::logTime()
+string XLog::logTime() noexcept
 {
 	string timelog = XString::formatTime(XTime::getTimeFromTimestamp_milliseconds(XTime::getTimestamp_milliseconds(), mTimeZone), xlib::TIME_F::LOG_TIME);
 	return "[" + timelog + "]";

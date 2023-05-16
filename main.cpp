@@ -63,8 +63,8 @@ void testThreadPool(){
         return wTime;
     };
     auto pool = std::unique_ptr<XThreadPool>(new XThreadPool(4));
-    pool->async([=]{fun(20,1);});
-    pool->async([=]{fun(10,0.001);});
+    pool->async([=]{fun(3,1);});
+    pool->async([=]{fun(2,0.001);});
 //    pool->async([=]{fun(10,0.00001,XTime::TIMER_LEVEL::L_MICRO);});
     pool->async([=](int x, int y){
         LOG_I("%d + %d = %d",x,y,x+y);
@@ -130,10 +130,20 @@ void testUrl(){
 // 测量排序时间的函数模板
 template<typename T>
 double measureSortTime(std::vector<T>& arr, void (*sort_func)(std::vector<T>&)) {
+    for (auto i : arr)
+    {
+        std::cout << i << " ";
+    }
+    std::cout << "-> ";
     auto start_time = std::chrono::high_resolution_clock::now();
     sort_func(arr);
     auto end_time = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed_time = end_time - start_time;
+    for (auto i : arr)
+    {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
     return elapsed_time.count();
 }
 
@@ -141,15 +151,25 @@ double measureSortTime(std::vector<T>& arr, void (*sort_func)(std::vector<T>&)) 
 // 测量排序时间的函数模板
 template<typename T>
 double measureSortTime2(std::vector<T>& arr, void (*sort_func)(std::vector<T>&,int arg0, int arg1)) {
+    for (auto i : arr)
+    {
+        std::cout << i << " ";
+    }
+    std::cout << "-> ";
     auto start_time = std::chrono::high_resolution_clock::now();
     sort_func(arr,0,arr.size()-1);
     auto end_time = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed_time = end_time - start_time;
+    for (auto i : arr)
+    {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
     return elapsed_time.count();
 }
 
 void testSort(){
-    std::vector<int> my_vector = { 13, 1, 4, 126, 1, 5, 9, 45, 2, 6, 5, 3 };
+    std::vector<int> my_vector = { 114115, 13, 1, 4, 126, 1, 5, 9, 45, 2, 6, 5, 3 };
 
     // 测量冒泡排序时间
     std::vector<int> bubble_sort_data = my_vector;
@@ -204,8 +224,18 @@ void testSort(){
 }
 
 
-int main()
+int main(int argc, char* argv[])
 {
+//    int opt;
+//    while ((opt = getopt(argc, argv, "")) != -1)
+//    {
+//        switch (opt)
+//        {
+//            default:
+//                std::cout << "Option: " << opt << ", Value: " << optarg << std::endl;
+//                break;
+//        }
+//    }
     setLog();
     testThreadPool();
     testSHA();

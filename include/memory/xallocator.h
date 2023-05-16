@@ -8,6 +8,35 @@
 //  Contact Email: xiaominghe2014@gmail.com
 //----------------------------------------------//
 
+
+// int example()
+// {
+//     // 使用XAllocator分配内存
+//     xlib::xmemory::XAllocator<int> allocator;
+//     int* p = allocator.allocate(10);
+//     for (int i = 0; i < 10; ++i)
+//     {
+//         allocator.construct(p + i, i);
+//     }
+    
+//     // 使用XAllocator构造vector
+//     std::vector<int, xlib::xmemory::XAllocator<int>> vec(allocator);
+//     for (int i = 0; i < 10; ++i)
+//     {
+//         vec.push_back(i);
+//     }
+    
+//     // 释放内存
+//     for (int i = 0; i < 10; ++i)
+//     {
+//         allocator.destroy(p + i);
+//     }
+//     allocator.deallocate(p, 10);
+    
+//     return 0;
+// }
+
+
 #ifndef xallocator_h
 #define xallocator_h
 #include <climits>

@@ -32,15 +32,15 @@ enum class LOG_LEVEL
 class XLog
 {
 public:
-    static void log(LOG_LEVEL,const char*,...);
+    static void log(LOG_LEVEL,const char*,...) noexcept;
     static void androidLog(LOG_LEVEL,const char*,...);
     static void log(const char*,...);
-    static void setLevel(LOG_LEVEL);
-    inline static void setTimeZone(int timeZone){ mTimeZone = timeZone;};
-    inline static void setWrite(bool isWrite,const std::string& fullLogfile){ mWrite = isWrite; logFile = fullLogfile;};
+    static void setLevel(LOG_LEVEL) noexcept;
+    inline static void setTimeZone(int timeZone) noexcept { mTimeZone = timeZone;};
+    inline static void setWrite(bool isWrite,const std::string& fullLogfile) noexcept { mWrite = isWrite; logFile = fullLogfile;};
 private:
     static std::string _log(const char*,va_list);
-    static std::string logTime();
+    static std::string logTime() noexcept;
     static void writeLog(const std::string& logmsg);
 private:
     static LOG_LEVEL mLog_level;

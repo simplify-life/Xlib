@@ -138,7 +138,7 @@ namespace xlib{
     
     
 /** 判断平台是否为小端字节序 */
-inline bool isPlatformLittleEndian()
+inline bool isPlatformLittleEndian() noexcept
 {
     int n = 1;
     return *((char*)&n);
