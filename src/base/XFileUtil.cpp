@@ -279,8 +279,8 @@ bool XFileUtil::encryptoFile(const std::string &from, const std::string &to, con
             if (in.eof())
                 break;
             in.read(&read_ch, 1);
-            write_ch = ~read_ch^(keys[idx&15]);
-            idx=(idx&15)+1;
+            write_ch = ~read_ch^(keys[idx&0xF]);
+            idx=(idx&0xF)+1;
             out.write(&write_ch, 1);
             start++;
             if (std::ios_base::goodbit != out.rdstate()) {
@@ -294,7 +294,7 @@ bool XFileUtil::encryptoFile(const std::string &from, const std::string &to, con
     }
     out.close();
     in.close();
-    return false;
+    return true;
 }
 
 bool XFileUtil::decryptoFile(const std::string &from, const std::string &to, const std::string &key){

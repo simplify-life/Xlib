@@ -223,6 +223,19 @@ void testSort(){
 
 }
 
+void testJson(){
+        std::string jsonStr = "{ name: \"Alice\", age: 25, arr:[1,2,3]}";
+        xlib::JSON json = xlib::JSON::parse(jsonStr);
+
+        std::string name = json["name"].asString();
+        int age = json["age"].asInt();
+        std::vector<JSON> arr = json["arr"].asArray();
+        LOG_I("Name: %s", name.c_str());
+        LOG_I("Age: %d", age);
+        LOG_I("Arr[0]: %d", arr.at(0).asInt());
+        LOG_I("Arr[1]: %d", arr.at(1).asInt());
+        LOG_I("Arr[2]: %d", arr.at(2).asInt());
+}
 
 int main(int argc, char* argv[])
 {
@@ -237,6 +250,7 @@ int main(int argc, char* argv[])
 //        }
 //    }
     setLog();
+    testJson();
     testThreadPool();
     testSHA();
     testUtf8();

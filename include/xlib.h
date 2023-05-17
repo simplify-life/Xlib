@@ -29,4 +29,5 @@
 #include "crypto/url.h"
 #include "algorithm/sort.h"
 #include "algorithm/search.h"
+#include "json/json.h"
 #endif /* xlib_h */
