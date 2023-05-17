@@ -13,6 +13,7 @@
 #include "crypto/md5.h"
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <sys/stat.h>
 #if(X_PLATFORM==X_P_WIN32)
 #include<direct.h>
@@ -200,16 +201,13 @@ void XFileUtil::writeTxtLineToExistFile(const string &line, const string &fileFu
 
 string XFileUtil::readStringFromFile(const string &fileFullName)
 {
-    ifstream inFile(fileFullName,ios::in);
+    ifstream inFile(fileFullName, ios::in);
     string result = "";
-    if(inFile.is_open())
+    if (inFile.is_open())
     {
-        while (!inFile.eof())
-        {
-            char tmp[MAX_READ_STRING_SIZE];
-            inFile>>tmp;
-            result.append(string(tmp));
-        }
+        stringstream buffer;
+        buffer << inFile.rdbuf();
+        result = buffer.str();
         inFile.close();
     }
     return result;
