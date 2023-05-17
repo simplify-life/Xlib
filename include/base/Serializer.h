@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <cstring>
 
 namespace xlib {
 
@@ -49,7 +50,7 @@ namespace xlib {
 
         template<typename T>
         static void serialize(const T& obj, char* buffer) {
-            std::memcpy(buffer, &obj, sizeof(obj));
+            memcpy(buffer, &obj, sizeof(obj));
         }
 
         template<typename T>
@@ -59,7 +60,7 @@ namespace xlib {
 
         template<typename T>
         static void deserialize(T& obj, const std::vector<char>& data) {
-            std::memcpy(&obj, data.data(), sizeof(obj));
+            memcpy(&obj, data.data(), sizeof(obj));
         }
     };
 
