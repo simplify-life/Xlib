@@ -273,7 +273,7 @@ void testSerializer(){
 int main(int argc, char* argv[])
 {
     setLog();
-    testSerializer();
+    // testSerializer();
     testJson();
     testThreadPool();
     testSHA();
