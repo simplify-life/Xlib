@@ -1,5 +1,6 @@
 
-[![XLIB](https://travis-ci.org/xiaominghe2014/Xlib.svg)](https://travis-ci.org/xiaominghe2014/Xlib)
+[![CMake](https://github.com/simplify-life/Xlib/actions/workflows/cmake.yml/badge.svg)](https://github.com/simplify-life/Xlib/actions/workflows/cmake.yml)
+[![CodeQL](https://github.com/simplify-life/Xlib/actions/workflows/codeql.yml/badge.svg)](https://github.com/simplify-life/Xlib/actions/workflows/codeql.yml)
 ## What is XLIB?
 
 [![Join the chat at https://gitter.im/xiaominghe2014/C-11-XLib](https://badges.gitter.im/xiaominghe2014/C-11-XLib.svg)](https://gitter.im/xiaominghe2014/C-11-XLib?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
