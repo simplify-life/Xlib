@@ -213,13 +213,13 @@ namespace xlib{
             std::vector<JSON> vec;
             char next = ' ';
             while (iss >> next && next != ']') {
-            if (next == ',') {
-                continue;
-            }
-            iss.putback(next);
-            JSON value;
-            parseValue(value, iss);
-            vec.push_back(value);
+                if (next == ',') {
+                    continue;
+                }
+                iss.putback(next);
+                JSON value;
+                parseValue(value, iss);
+                vec.push_back(value);
             }
             json = vec;
         } else if (c == '{') {
@@ -232,6 +232,9 @@ namespace xlib{
                 iss.putback(next);
                 std::string key;
                 std::getline(iss >> std::ws, key, ':');
+                size_t start = key.find_first_not_of(" \t\n\r\"");
+                size_t end = key.find_last_not_of(" \t\n\r\"");
+                key = key.substr(start, end - start + 1);
                 JSON value;
                 parseValue(value, iss);
                 map[key] = value;

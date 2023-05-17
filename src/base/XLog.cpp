@@ -35,22 +35,22 @@ void XLog::log(LOG_LEVEL level, const char * fmt, ...) noexcept
     switch (level)
     {
         case LOG_LEVEL::L_INFO:
-	    attr += "info:    ";
+	    attr += " [INFO]:    ";
             break;
         case LOG_LEVEL::L_DEBUG:
-            attr += "debug:   ";
+            attr += " [DEBUG]:   ";
             break;
         case LOG_LEVEL::L_WARN:
-            attr += "warn:    ";
+            attr += " [WARN]:    ";
             break;
         case LOG_LEVEL::L_ERROR:
-            attr += "error:   ";
+            attr += " [ERROR]:   ";
             break;
         case LOG_LEVEL::L_ALL:
-            attr += "all:   ";
+            attr += " [ALL]:   ";
             break;
         case LOG_LEVEL::L_FATAL:
-            attr += "fatal:   ";
+            attr += " [FATAL]:   ";
             break;
         default:
             break;

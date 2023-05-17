@@ -23,6 +23,7 @@
 #include "base/XString.h"
 #include "base/XFileUtil.h"
 #include "base/XRandom.h"
+#include "base/Serializer.h"
 #include "crypto/base64.h"
 #include "crypto/md5.h"
 #include "crypto/sha1.h"

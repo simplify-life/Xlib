@@ -224,7 +224,8 @@ void testSort(){
 }
 
 void testJson(){
-        std::string jsonStr = "{ name: \"Alice\", age: 25, arr:[1,2,3]}";
+        std::string jsonStr = "{ \"name\": \"Alice\", \"age\": 25,\n\t \"arr\":[1,\n" \
+    "2,3]}";
         xlib::JSON json = xlib::JSON::parse(jsonStr);
 
         std::string name = json["name"].asString();
@@ -237,19 +238,42 @@ void testJson(){
         LOG_I("Arr[2]: %d", arr.at(2).asInt());
 }
 
+void testSerializer(){
+    struct Person {
+        std::string name;
+        int age;
+        bool isMarried;
+    };
+    Person p1{"Alice", 25, false};
+    
+    std::string binFile = std::string(originPath).append("person.bin");
+    
+    // Serialize to file
+    xlib::Serializer::serialize(p1, binFile);
+
+    // Deserialize from file
+    Person p2;
+    xlib::Serializer::deserialize(p2, binFile);
+
+    // Serialize to buffer
+    std::vector<char> buffer = xlib::Serializer::serialize(p1);
+
+    // Deserialize from buffer
+    Person p3 = xlib::Serializer::deserialize<Person>(buffer);
+
+    // Print results
+    std::cout << "p1: " << p1.name << ", " << p1.age << ", " << p1.isMarried << std::endl;
+    std::cout << "p2: " << p2.name << ", " << p2.age << ", " << p2.isMarried << std::endl;
+    std::cout << "p3: " << p3.name << ", " << p3.age << ", " << p3.isMarried << std::endl;
+
+}
+
+
+
 int main(int argc, char* argv[])
 {
-//    int opt;
-//    while ((opt = getopt(argc, argv, "")) != -1)
-//    {
-//        switch (opt)
-//        {
-//            default:
-//                std::cout << "Option: " << opt << ", Value: " << optarg << std::endl;
-//                break;
-//        }
-//    }
     setLog();
+    testSerializer();
     testJson();
     testThreadPool();
     testSHA();
