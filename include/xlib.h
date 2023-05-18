@@ -30,5 +30,6 @@
 #include "crypto/url.h"
 #include "algorithm/sort.h"
 #include "algorithm/search.h"
-#include "json/json.h"
+#include "config/json.h"
+#include "config/YamlParser.h"
 #endif /* xlib_h */

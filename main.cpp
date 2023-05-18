@@ -174,60 +174,58 @@ void testSort(){
     // 测量冒泡排序时间
     std::vector<int> bubble_sort_data = my_vector;
     double bubble_sort_time = measureSortTime(bubble_sort_data, sort::bubbleSort<int>);
-    std::cout << "冒泡排序时间：" << bubble_sort_time << " 秒" << std::endl;
+    LOG_I("冒泡排序时间：%f 秒", bubble_sort_time);
 
     // 测量选择排序时间
     std::vector<int> select_sort_data = my_vector;
     double selection_sort_time = measureSortTime(select_sort_data, sort::selectionSort<int>);
-    std::cout << "选择排序时间：" << selection_sort_time << " 秒" << std::endl;
+    LOG_I("选择排序时间：%f 秒", selection_sort_time);
 
     // 测量插入排序时间
     std::vector<int> insert_sort_data = my_vector;
     double insertion_sort_time = measureSortTime(insert_sort_data, sort::insertionSort<int>);
-    std::cout << "插入排序时间：" << insertion_sort_time << " 秒" << std::endl;
-
+    LOG_I("插入排序时间：%f 秒", insertion_sort_time);
+    
     // 测量希尔排序时间
     std::vector<int> shell_sort_data = my_vector;
     double shell_sort_time = measureSortTime(shell_sort_data, sort::shellSort<int>);
-    std::cout << "希尔排序时间：" << shell_sort_time << " 秒" << std::endl;
-
+    LOG_I("希尔排序时间：%f 秒", shell_sort_time);
+    
     // 测量快速排序时间
     std::vector<int> quick_sort_data = my_vector;
     double quick_sort_time = measureSortTime2(quick_sort_data, sort::quickSort<int>);
-    std::cout << "快速排序时间：" << quick_sort_time << " 秒" << std::endl;
-
+    LOG_I("快速排序时间：%f 秒", quick_sort_time);
+    
     // 测量归并排序时间
     std::vector<int> merge_sort_data = my_vector;
     double merge_sort_time = measureSortTime2(merge_sort_data, sort::mergeSort<int>);
-    std::cout << "归并排序时间：" << merge_sort_time << " 秒" << std::endl;
-
+    LOG_I("归并排序时间：%f 秒", merge_sort_time);
+    
     // 测量堆排序时间
     std::vector<int> heap_sort_data = my_vector;
     double heap_sort_time = measureSortTime(heap_sort_data, sort::heapSort<int>);
-    std::cout << "堆排序时间：" << heap_sort_time << " 秒" << std::endl;
-
+    LOG_I("堆排序时间：%f 秒", heap_sort_time);
+    
     // 测量计数排序时间
     std::vector<int> counting_sort_data = my_vector;
     double counting_sort_time = measureSortTime(counting_sort_data, sort::countingSort<int>);
-    std::cout << "计数排序时间：" << counting_sort_time << " 秒" << std::endl;
-
+    LOG_I("计数排序时间：%f 秒", counting_sort_time);
+    
     // 测量桶排序时间
     std::vector<int> bucket_sort_data = my_vector;
     double bucket_sort_time = measureSortTime(bucket_sort_data, sort::bucketSort<int>);
-    std::cout << "桶排序时间：" << bucket_sort_time << " 秒" << std::endl;
-
+    LOG_I("桶排序时间：%f 秒", bucket_sort_time);
+    
     // 测量基数排序时间
     std::vector<int> radix_sort_data = my_vector;
     double radix_sort_time = measureSortTime(radix_sort_data, sort::radixSort<int>);
-    std::cout << "基数排序时间：" << radix_sort_time << " 秒" << std::endl;
-
+    LOG_I("基数排序时间：%f 秒", radix_sort_time);
 }
 
 void testJson(){
         std::string jsonStr = "{ \"name\": \"Alice\", \"age\": 25,\n\t \"arr\":[1,\n" \
-    "2,3]}";
+    "2,3], own:null, b1:false, b2:true }";
         xlib::JSON json = xlib::JSON::parse(jsonStr);
-
         std::string name = json["name"].asString();
         int age = json["age"].asInt();
         std::vector<JSON> arr = json["arr"].asArray();
@@ -236,6 +234,8 @@ void testJson(){
         LOG_I("Arr[0]: %d", arr.at(0).asInt());
         LOG_I("Arr[1]: %d", arr.at(1).asInt());
         LOG_I("Arr[2]: %d", arr.at(2).asInt());
+        LOG_I("B1: %d", json["b1"].asBoolean());
+        LOG_I("B2: %d", json["b2"].asBoolean());
 }
 
 void testSerializer(){
@@ -262,18 +262,36 @@ void testSerializer(){
     Person p3 = xlib::Serializer::deserialize<Person>(buffer);
 
     // Print results
-    std::cout << "p1: " << p1.name << ", " << p1.age << ", " << p1.isMarried << std::endl;
-    std::cout << "p2: " << p2.name << ", " << p2.age << ", " << p2.isMarried << std::endl;
-    std::cout << "p3: " << p3.name << ", " << p3.age << ", " << p3.isMarried << std::endl;
+    LOG_I("p1: %s, %d, %d", p1.name.c_str(), p1.age, p1.isMarried);
+    LOG_I("p2: %s, %d, %d", p2.name.c_str(), p2.age, p2.isMarried);
+    LOG_I("p3: %s, %d, %d", p3.name.c_str(), p3.age, p3.isMarried);
 
 }
 
-
+void testYml(){
+    std::string yml = "key1:\n"
+                             "  key2:\n"
+                             "    key3:\n"
+                             "      key4:\n"
+                             "        key5: value\n"
+                             "  key6:\n"
+                             "    key7: haha\n"
+                             "    key8: 8\n"
+                             " # below is arr value"
+                             "k:\n"
+                             "  array:\n"
+                             "    - item1\n"
+                             "    - item2\n"
+                             "    - item3\n";
+    YamlParser parser = YamlParser::fromString(yml);
+    parser.print();
+}
 
 int main(int argc, char* argv[])
 {
     setLog();
-    // testSerializer();
+    testYml();
+//    testSerializer();
     testJson();
     testThreadPool();
     testSHA();

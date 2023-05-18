@@ -56,6 +56,9 @@ namespace xlib {
         template<typename T>
         static void deserialize(T& obj, std::istream& is) {
             is.read(reinterpret_cast<char*>(&obj), sizeof(obj));
+            if (is.gcount() != sizeof(obj)) {
+                throw std::runtime_error("Failed to read entire object");
+            }
         }
 
         template<typename T>

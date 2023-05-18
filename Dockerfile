@@ -1,9 +1,9 @@
 #VERSION 0.0.1
 #build xlib container image
 
-FROM gcc:4.9
+FROM gcc:8.0
 
-MAINTAINER ximena "xiaominghe2014@gmail.com"
+LABEL org.opencontainers.image.authors="xiaominghe2014@gmail.com"
 
 COPY . /usr/src/Xlib
 WORKDIR /usr/src/Xlib

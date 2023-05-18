@@ -205,11 +205,18 @@ namespace xlib {
             while (true)
             {
                 char sbuf[BLOCK_BYTES];
-                is.read(sbuf, BLOCK_BYTES - buffer.size());
-                buffer.append(sbuf, (std::size_t)is.gcount());
-                if (buffer.size() != BLOCK_BYTES)
-                {
-                    return;
+                // 檢查 buffer 的大小是否足夠
+                if (buffer.size() < BLOCK_BYTES) {
+                    // 補齊 buffer 的大小
+                    std::size_t remaining = BLOCK_BYTES - buffer.size();
+                    is.read(sbuf, remaining);
+                    buffer.append(sbuf, (std::size_t)is.gcount());
+                    if (buffer.size() != BLOCK_BYTES) {
+                        return;
+                    }
+                } else {
+                    is.read(sbuf, BLOCK_BYTES - buffer.size());
+                    buffer.append(sbuf, (std::size_t)is.gcount());
                 }
                 uint32 block[BLOCK_INTS];
                 buffer_to_block(buffer, block);

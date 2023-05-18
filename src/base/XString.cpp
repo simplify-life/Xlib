@@ -94,6 +94,22 @@ std::string XString::replace(const std::string& src,const std::string& sfind,con
 }
 
 
+std::size_t XString::findNthOccurrence(const std::string& str, char c, int n)  {
+    std::size_t pos = std::string::npos;
+    for (int i = 0; i < n; i++) {
+        if (pos == std::string::npos) {
+            pos = str.find(c, 0);
+        }
+        else{
+            pos = str.find(c, pos + 1);
+        }
+        if (pos == std::string::npos) {
+            return pos;
+        }
+    }
+    return pos;
+}
+
 
 int XString::count(const string & key, const string &str)
 {

@@ -1,4 +1,4 @@
-#include "json/json.h"
+#include "config/json.h"
 #include <sstream>
 
 namespace xlib{
@@ -194,17 +194,41 @@ namespace xlib{
             return;
         }
         if (c == 'n') {
-            char nullBuffer[4];
-            iss.read(nullBuffer, 4);
-            json = nullptr;
+            std::size_t remain = iss.rdbuf()->in_avail();
+            if(remain>3){
+                char buffer[3];
+                iss.read(buffer, 3);
+                if (std::string(buffer, 3) != "ull") {
+                    throw std::runtime_error("Invalid JSON: expected 'null'");
+                }
+                json = nullptr;
+            }else{
+                throw std::runtime_error("Invalid JSON: expected 'null'");
+            }
         } else if (c == 't') {
-            char trueBuffer[4];
-            iss.read(trueBuffer, 4);
-            json = true;
+            std::size_t remain = iss.rdbuf()->in_avail();
+            if(remain>3){
+                char buffer[3];
+                iss.read(buffer, 3);
+                if (std::string(buffer, 3) != "rue") {
+                    throw std::runtime_error("Invalid JSON: expected 'true'");
+                }
+                json = true;
+            }else{
+                throw std::runtime_error("Invalid JSON: expected 'true'");
+            }
         } else if (c == 'f') {
-            char falseBuffer[5];
-            iss.read(falseBuffer, 5);
-            json = false;
+            std::size_t remain = iss.rdbuf()->in_avail();
+            if(remain>4){
+                char buffer[4];
+                iss.read(buffer, 4);
+                if (std::string(buffer, 4) != "alse") {
+                    throw std::runtime_error("Invalid JSON: expected 'false'");
+                }
+                json = false;
+            }else{
+                throw std::runtime_error("Invalid JSON: expected 'false'");
+            }
         } else if (c == '"') {
             std::string str;
             std::getline(iss, str, '"');

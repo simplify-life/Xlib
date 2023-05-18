@@ -235,9 +235,9 @@ vector<string> XFileUtil::readStringByLine(const string &fileFullName)
 
 bool XFileUtil::copyFile(const std::string &from, const std::string& to)
 {
-    bool res = true;
     std::ifstream in(from.c_str(), std::ios::binary);
     std::ofstream out(to.c_str(), std::ios::binary);
+    bool res = true;
     if(in.is_open()&&out.is_open()){
         out << in.rdbuf();
     }else{
@@ -261,26 +261,26 @@ uint64 XFileUtil::getFileBytesLength(const std::string &file){
 
 bool XFileUtil::encryptoFile(const std::string &from, const std::string &to, const std::string &key){
     uint64 lenFrom = getFileBytesLength(from);
-    uint64 start = 0;
-    char read_ch = 0;
-    char write_ch = 0;
-    bool res = true;
     const byte* keys = crypto::md5Digest(key);
-    byte idx = 0;
     std::ifstream in(from.c_str(), std::ios::binary);
     std::ofstream out(to.c_str(), std::ios::binary);
     if (in.is_open())
     {
+        uint64 start = 0;
+        char read_ch = 0;
+        char write_ch = 0;
+        byte idx = 0;
         while (true) {
             if(lenFrom==start)
                 break;
             if (in.eof())
                 break;
-            in.read(&read_ch, 1);
-            write_ch = ~read_ch^(keys[idx&0xF]);
-            idx=(idx&0xF)+1;
-            out.write(&write_ch, 1);
-            start++;
+            if(in.read(&read_ch, 1)){
+                write_ch = ~read_ch^(keys[idx&0xF]);
+                idx=(idx&0xF)+1;
+                out.write(&write_ch, 1);
+                start++;
+            }
             if (std::ios_base::goodbit != out.rdstate()) {
                 out.close();
                 in.close();
@@ -288,7 +288,7 @@ bool XFileUtil::encryptoFile(const std::string &from, const std::string &to, con
             }
         }
     }else{
-        res = false;
+        return false;
     }
     out.close();
     in.close();
@@ -314,9 +314,13 @@ bool XFileUtil::allSameFile(const std::string &from, const std::string &to){
             if (inFrom.eof()||inTo.eof()){
                 break;
             }
-            inFrom.read(&chFrom, 1);
-            inTo.read(&chTo, 1);
-            if(chFrom!=chTo){
+            if(inFrom.read(&chFrom, 1) && inTo.read(&chTo, 1)){
+                if(chFrom!=chTo){
+                    inFrom.close();
+                    inTo.close();
+                    return false;
+                }
+            }else{
                 inFrom.close();
                 inTo.close();
                 return false;

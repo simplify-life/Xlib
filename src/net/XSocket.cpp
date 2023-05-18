@@ -470,11 +470,11 @@ namespace net {
         server_socket.sin_port = htons(port);
         server_socket.sin_addr.s_addr= inet_addr(ip);
         
-        char buffer[]="this is a UDP test message from client!";
+        const std::string msg ="this is a UDP test message from client!";
         
         while(1)
         {
-            if (sendto(sock, buffer, strlen(buffer), 0, (struct sockaddr *) &server_socket, sizeof(server_socket)) < 0)
+            if (sendto(sock, msg.c_str(), msg.size(), 0, (struct sockaddr *) &server_socket, sizeof(server_socket)) < 0)
             {
                 std::cout<<"start UDP client sendto error!"<<std::endl;
                 exit(0);

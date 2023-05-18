@@ -1,1 +1,2 @@
-cmake -B ./build -DCMAKE_BUILD_TYPE=Release && cmake --build ./build --config Release && ctest -C Release
+#!/bin/sh
+cmake -B ./build -DCMAKE_BUILD_TYPE=Release && cmake --build ./build --config Release && cd ./build && ctest -C Release
