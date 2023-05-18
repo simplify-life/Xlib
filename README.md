@@ -1,4 +1,5 @@
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d5ec0109fd3b4e7b9077b53152888d81)](https://app.codacy.com/gh/simplify-life/Xlib?utm_source=github.com&utm_medium=referral&utm_content=simplify-life/Xlib&utm_campaign=Badge_Grade)
 [![CMake](https://github.com/simplify-life/Xlib/actions/workflows/cmake.yml/badge.svg)](https://github.com/simplify-life/Xlib/actions/workflows/cmake.yml)
 [![CodeQL](https://github.com/simplify-life/Xlib/actions/workflows/codeql.yml/badge.svg)](https://github.com/simplify-life/Xlib/actions/workflows/codeql.yml)
 ## What is XLIB?
