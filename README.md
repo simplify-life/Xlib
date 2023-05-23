@@ -1,12 +1,13 @@
 
-[![XLIB](https://travis-ci.org/xiaominghe2014/Xlib.svg)](https://travis-ci.org/xiaominghe2014/Xlib)
+[![CMake](https://github.com/simplify-life/Xlib/actions/workflows/cmake.yml/badge.svg)](https://github.com/simplify-life/Xlib/actions/workflows/cmake.yml)
+[![CodeQL](https://github.com/simplify-life/Xlib/actions/workflows/codeql.yml/badge.svg)](https://github.com/simplify-life/Xlib/actions/workflows/codeql.yml)
 ## What is XLIB?
 
 [![Join the chat at https://gitter.im/xiaominghe2014/C-11-XLib](https://badges.gitter.im/xiaominghe2014/C-11-XLib.svg)](https://gitter.im/xiaominghe2014/C-11-XLib?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ---
-**Xlib is a collection of c + + commonly used functions and basic components.   
-It is for the purpose of cross-platform and reuse.   
+**Xlib is a collection of c + + commonly used functions and basic components.     
+It is for the purpose of cross-platform and reuse.     
 Including the logging system, thread pool, timer, TCP communications, and so on.  
 You can easily use it in your program.**
 
@@ -100,7 +101,7 @@ tcp->Send(chutf8.c_str(), sizeof(chutf8));
 ```
 ## Notes
 ---
-1. *Compile environment*: need GCC 4.8 or above, more than clang3.1.     
+1. *Compile environment*: need GCC 8.0 or above.     
 2. *TDD*: the whole project, on the MAC and centos test has no problem. Perform the make, then run the generated script.And specific usage see main.cpp.
 
 ## Q&A

@@ -203,11 +203,11 @@ namespace xlib{
                 data
              */
             template<class T>
-            string getData(const char* type,T&& value)
+            string getData(const string& type,T&& value)
             {
                 stringstream data;
                 ;
-                if(strlen(type))
+                if(!type.empty())
                     data<<type<<"="<<value;
                 else
                     data<<"";
@@ -217,7 +217,7 @@ namespace xlib{
             /**
              request : this just a example
              */
-            string getRequest(const Method& method=Method::GET,const char* url="/History.html",const char* type = "",const char* value="")
+            string getRequest(const Method& method=Method::GET,const char* url="/History.html",const string& type = "",const string& value="")
             {
                 stringstream request;
                 

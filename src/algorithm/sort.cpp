@@ -2,7 +2,7 @@
 //  sort.cpp
 //  com.xm.xlib
 //
-//  Created by apple on 2023/5/10.
+//  Created by xiaominghe2014@gmail.com on 2023/5/10.
 //
 
 #include "algorithm/sort.h"

@@ -92,28 +92,28 @@ string XUtf8::unicodeToUtf8(const char* src)
 {
     
     char *tmp;
-    int place = 0;
+//    int place = 0;
     auto utf8code = std::strtol(src, &tmp , 16);
     if(utf8code<0x80)
     {
-        place = 1;//0xxxxxxx
+//        place = 1;//0xxxxxxx
         char utf[2] = {static_cast<char>(utf8code),0};
         return string((char*)utf,1);
     }
     else if (utf8code<0x800)
     {
-        place = 2;//110xxxxx 10xxxxxx
+//        place = 2;//110xxxxx 10xxxxxx
         char utf[3]={static_cast<char>(0xc0|(utf8code>>6)),static_cast<char>(0x80|(utf8code&0x3f)),0};
         return string((char*)utf,2);
     }
     else if (utf8code<0x10000)
     {
-        place = 3;//1110xxxx 10xxxxxx 10xxxxxx
+//        place = 3;//1110xxxx 10xxxxxx 10xxxxxx
         char utf[4]={static_cast<char>(0xe0|(utf8code>>12)),static_cast<char>(0xc0|(utf8code>>6)),static_cast<char>(0x80|(utf8code&0x3f)),0};
         return string((char*)utf,3);
     }else if (utf8code<0x200000)
     {
-        place = 4;//11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+//        place = 4;//11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
         char utf[5]={static_cast<char>(0xf0|(utf8code>>18)), static_cast<char>(0xe0|(utf8code>>12)),static_cast<char>(0xc0|(utf8code>>6)),static_cast<char>(0x80|(utf8code&0x3f)),0};
         return string((char*)utf,4);
     }

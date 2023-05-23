@@ -46,6 +46,8 @@ namespace XString
      @eg.   replace("this,,is,,my,,name,,",",,","||")="this||is||my||name||"
      */
     std::string replace(const std::string& src,const std::string& sfind,const std::string& sreplace);
+
+    std::size_t findNthOccurrence(const std::string& str, char c, int n) ;
     
     int count(const std::string&,const std::string&);
     bool isInt(const std::string&,bool ignoreSymbols=true);
