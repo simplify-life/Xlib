@@ -1,3 +1,8 @@
 
 .*
 xlib
+build/*
+obj/*
+demo-encode
+demo-decode.png
+xlib.log

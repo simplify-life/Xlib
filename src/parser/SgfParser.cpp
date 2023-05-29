@@ -40,7 +40,7 @@ namespace xlib {
         Parser::Parser() noexcept :currentNode(nullptr){};
             
         Parser::~Parser(){
-//            backToRoot();
+            backToRoot();
             safeDeleteNode(currentNode);
         };
     

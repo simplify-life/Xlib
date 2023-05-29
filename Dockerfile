@@ -1,7 +1,7 @@
 #VERSION 0.0.1
 #build xlib container image
 
-FROM gcc:8.0
+FROM gcc:latest
 
 LABEL org.opencontainers.image.authors="xiaominghe2014@gmail.com"
 
