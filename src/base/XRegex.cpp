@@ -9,57 +9,60 @@
 //----------------------------------------------//
 
 #include "base/XRegex.h"
-#ifdef __clang__
 #include <regex>
-#else
-    #if defined(__GNUC__) && defined(__GNUC_MINOR__ )
-        #if(__GNUC__>4)||(__GNUC__==4)&&(__GNUC_MINOR__>=9)
-            #include <regex>
-            #else
-            //#include <tr1::regex>
-            //using namespace std::tr1;
-            #define NO_USE_REGEX
-        #endif
-    #endif
-    #ifdef _MSC_VER
-        #if _MSC_VER>=1800
-            #include <regex>
-            #else
-            #include <tr1::regex>
-            using namespace std::tr1;
-        #endif
-    #endif
-#endif
+#include <string>
+
 XLIB_BEGAIN
 
-/**
- <regex> is not supported by some stl version,so what a pity，Only temporarily canceled
- */
-#ifndef NO_USE_REGEX
-#define NO_USE_REGEX
-#endif
 
 using namespace std;
 
-vector<string> XRegex::getMatch(const string &src, const string &pattern)
+
+vector<XRegex::MatchInfo> XRegex::getMatch(const string &src, const string &pattern, bool onlyFirst)
 {
-    vector<string> result;
-#ifndef NO_USE_REGEX
-    const sregex_token_iterator end;
-    for (sregex_token_iterator i(src.begin(),src.end(),regex(pattern.c_str())); i!=end;i++)
-    {
-        result.emplace_back(*i);
+    vector<XRegex::MatchInfo> result;
+    regex re(pattern);
+    smatch sm;
+    auto iter = src.cbegin();
+    long start = 0;
+    while(regex_search(iter,src.cend(), sm, re)) {
+        std::string str = sm.str();
+//        copy(sm.begin(), sm.end(), std::back_inserter(result));
+        XRegex::MatchInfo info;
+        info.str = str;
+        info.pos = sm.position()+start;
+        result.push_back(info);
+        start += sm.position() + str.length();
+        iter = sm[0].second;
+        if(onlyFirst) break;
+        
     }
-#endif
     return result;
 }
 
-string XRegex::replace(const string &src, const string &pattern, const string &replace_str)
+string XRegex::replace(const string &src, const string &pattern, const string &replace_str, int idx)
 {
-#ifndef NO_USE_REGEX
-    return regex_replace(src,regex(pattern),replace_str);
-#endif
-    return "";
+    
+    if(0==idx){
+        regex re(pattern);
+        return regex_replace(src,re,replace_str);
+    }
+    vector<XRegex::MatchInfo> result = getMatch(src, pattern,false);
+    size_t total = result.size();
+    if(total==0){
+        return src;
+    }
+    if(idx<0){
+        idx = total + idx;
+    }else{
+        idx -=1;
+    }
+    if(idx>=total){
+        return src;
+    }
+    auto info = result.at(idx);
+    std::string r = std::string(src);
+    return r.replace(info.pos,info.str.length(),replace_str);
 }
 
 XLIB_END

@@ -28,7 +28,7 @@ namespace XUtf8
     std::string utf8ToUnicode(const std::string& src);
 
     /**
-     *  eg. unicodeToUtf8("0x8fd9") = "\350\377\231";
+     *  eg. unicodeToUtf8("0x8fd9") = "这";
      **/
     std::string unicodeToUtf8(const char*);
     

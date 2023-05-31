@@ -109,12 +109,12 @@ string XUtf8::unicodeToUtf8(const char* src)
     else if (utf8code<0x10000)
     {
 //        place = 3;//1110xxxx 10xxxxxx 10xxxxxx
-        char utf[4]={static_cast<char>(0xe0|(utf8code>>12)),static_cast<char>(0xc0|(utf8code>>6)),static_cast<char>(0x80|(utf8code&0x3f)),0};
+        char utf[4]={static_cast<char>(0xe0|(utf8code>>12)),static_cast<char>(0x80|((utf8code>>6)&0x3f)),static_cast<char>(0x80|(utf8code&0x3f)),0};
         return string((char*)utf,3);
     }else if (utf8code<0x200000)
     {
 //        place = 4;//11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-        char utf[5]={static_cast<char>(0xf0|(utf8code>>18)), static_cast<char>(0xe0|(utf8code>>12)),static_cast<char>(0xc0|(utf8code>>6)),static_cast<char>(0x80|(utf8code&0x3f)),0};
+        char utf[5]={static_cast<char>(0xf0|(utf8code>>18)), static_cast<char>(0xe0|((utf8code>>12)&0x3f)),static_cast<char>(0x80|((utf8code>>6)&0x3f)),static_cast<char>(0x80|(utf8code&0x3f)),0};
         return string((char*)utf,4);
     }
     return "";

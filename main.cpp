@@ -1,11 +1,21 @@
 #include <memory>
+#include <cstdlib>
 #include "xlib.h"
 US_NS_X;
 const std::string originPath = XFileUtil::getCurrentPathWithPrefix();
 
 void setLog(){
+    std::string xlib_log_dir = std::string();
+    const char* dir = getenv("xlib_log_dir");
+    if(nullptr != dir){
+        xlib_log_dir = std::string(dir);
+    }
+    if(xlib_log_dir.empty()){
+        xlib_log_dir = originPath;
+        setenv("xlib_log_dir", xlib_log_dir.c_str(), 1);
+    }
     LOG_SET(LOG_LEVEL::L_ALL);
-    XLog::setWrite(true, std::string(originPath).append("xlib.log"));
+    XLog::setWrite(true, xlib_log_dir.append("xlib.log"));
 }
 
 void testHttp(){
@@ -300,15 +310,24 @@ void testSgf(){
     auto parser = std::unique_ptr<sgf::Parser>(new sgf::Parser());
     parser->parseSgf(sgfStr);
     auto v = parser->getmoveList();
-    for(auto s:v){
+    for(auto &s:v){
         LOG_I("%s",s.c_str());
     }
 }
 
+void testRegex(){
+    std::vector<XRegex::MatchInfo> result = XRegex::getMatch("helloo123world456", "\\d+", false);
+    for (const auto& info : result) {
+        LOG_I("%d,%s",info.pos,info.str.c_str());
+    }
+    std::string r = XRegex::replace("hello123world456", "\\d+", "数",-1);
+    LOG_I("%s",r.c_str());
+}
+
 int main(int argc, char* argv[])
 {
-    
     setLog();
+    testRegex();
     testYml();
     testSgf();
     // testSerializer();
