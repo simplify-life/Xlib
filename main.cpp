@@ -324,9 +324,29 @@ void testRegex(){
     LOG_I("%s",r.c_str());
 }
 
+void testMatrix(){
+    Matrix  A(5,5);
+    Matrix  B(5,5);
+    A(2,2) = 3;
+    B(2,2) = 2;
+    LOG_I("A:\n%s",A.toString().c_str());
+    LOG_I("B:\n%s",B.toString().c_str());
+    auto C = A+B;
+    LOG_I("A+B:\n%s",C.toString().c_str());
+    std::vector<std::vector<int>> matrixD = {{5,2,4},{3,8,2},{6,0,4},{0,1,6}};
+    Matrix D(matrixD);
+    std::vector<std::vector<int>> matrixE = {{2,4},{1,3},{3,2}};
+    Matrix E = matrixE;
+    LOG_I("D:\n%s",D.toString().c_str());
+    LOG_I("E:\n%s",E.toString().c_str());
+    Matrix F = D*E;
+    LOG_I("D*E:\n%s",F.toString().c_str());
+}
+
 int main(int argc, char* argv[])
 {
     setLog();
+    testMatrix();
     testRegex();
     testYml();
     testSgf();
