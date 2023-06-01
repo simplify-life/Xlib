@@ -6,7 +6,8 @@
 //
 
 #include "math/matrix.h"
-#include <string>
+#include <cstring>
+#include <stdexcept>
 
 namespace xlib {
 
