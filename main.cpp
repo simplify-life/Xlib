@@ -1,5 +1,6 @@
 #include <memory>
 #include <cstdlib>
+#include <sstream>
 #include "xlib.h"
 US_NS_X;
 const std::string originPath = XFileUtil::getCurrentPathWithPrefix();
@@ -325,6 +326,29 @@ void testRegex(){
 }
 
 void testMatrix(){
+    std::vector<int> arr= {0,1,2,3,4};
+    auto perm = permutation(arr, 2);
+    std::stringstream ss;
+    for(auto& e:perm){
+        for(auto& e1:e){
+            ss<<e1;
+            ss<<" ";
+        }
+        ss<<"\n";
+    }
+    LOG_I("permutation:\n%s",ss.str().c_str());
+    
+    auto com = combination(arr, 2);
+    std::stringstream ssc;
+    for(auto& e:com){
+        for(auto& e1:e){
+            ssc<<e1;
+            ssc<<" ";
+        }
+        ssc<<"\n";
+    }
+    LOG_I("combination:\n%s",ssc.str().c_str());
+    
     Matrix  A(5,5);
     Matrix  B(5,5);
     A(2,2) = 3;
@@ -341,6 +365,35 @@ void testMatrix(){
     LOG_I("E:\n%s",E.toString().c_str());
     Matrix F = D*E;
     LOG_I("D*E:\n%s",F.toString().c_str());
+    
+    std::vector<std::vector<int>> matrixG = {
+        {1,2,3,4},
+        {5,-1,7,8},
+        {8,10,11,12},
+        {17,14,15,16}
+    };
+    
+    Matrix G = matrixG;
+    
+    LOG_I("G.det():\n%d",G.det());
+    
+    std::vector<std::vector<int>> matrixH = {
+        {1,2,3},
+        {4,5,6},
+        {7,8,9}
+    };
+    
+    Matrix H = matrixH;
+    
+    LOG_I("H:\n%s",H.toString().c_str());
+    
+    auto subArr = H.submatrix(2);
+    
+    for(auto& m:subArr){
+        LOG_I("H.submatrix 2:\n%s",m.toString().c_str());
+    }
+    
+    LOG_I("H rank: %d",H.rank());
 }
 
 int main(int argc, char* argv[])

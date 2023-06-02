@@ -12,6 +12,11 @@
 #include <string>
 
 namespace xlib {
+    int reverse_count(const std::vector<int>&);
+    //排列
+    std::vector<std::vector<int>> permutation(const std::vector<int>&,const int m);
+    //组合
+    std::vector<std::vector<int>> combination(const std::vector<int>&,const int m);
     // 定义矩阵类
     class Matrix {
         public:
@@ -39,7 +44,14 @@ namespace xlib {
             int& operator()(int i,int j);
             
             std::string toString() const;
+                
+            //行列式的值
+            int det();
             
+            //k阶子式
+            std::vector<Matrix> submatrix(int k);
+        
+            //矩阵的秩
             int rank();
     };
 }
