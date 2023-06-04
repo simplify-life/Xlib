@@ -33,5 +33,5 @@
 #include "parser/json.h"
 #include "parser/YamlParser.h"
 #include "parser/SgfParser.h"
-#include "math/matrix.h"
+#include "math/math.h"
 #endif /* xlib_h */

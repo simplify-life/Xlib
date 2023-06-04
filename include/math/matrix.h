@@ -12,11 +12,6 @@
 #include <string>
 
 namespace xlib {
-    int reverse_count(const std::vector<int>&);
-    //排列
-    std::vector<std::vector<int>> permutation(const std::vector<int>&,const int m);
-    //组合
-    std::vector<std::vector<int>> combination(const std::vector<int>&,const int m);
     // 定义矩阵类
     class Matrix {
         public:
@@ -53,6 +48,24 @@ namespace xlib {
         
             //矩阵的秩
             int rank();
+            
+            //转置矩阵 transpose Matrix
+            Matrix transpose();
+            
+            //是否为方阵
+            inline bool isSquare(){ return m==n;};
+            
+            //高斯消元解方程组---唯一解
+            std::vector<double> gaussianElimination(std::vector<double>& B);
+        
+            //增广矩阵
+            Matrix augmented(const Matrix& mat);
+            
+            //n 阶单位矩阵
+            static Matrix identity(int n);
+        
+            //逆矩阵 inverse Matrix
+            Matrix inverse();
     };
 }
 

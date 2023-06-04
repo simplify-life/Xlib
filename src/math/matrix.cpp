@@ -6,110 +6,12 @@
 //
 
 #include "math/matrix.h"
+#include "math/util.h"
 #include <cstring>
 #include <stdexcept>
 
 namespace xlib {
     
-
-    void dfs_permutation(const std::vector<int>& arr,int m, int n,int low,int hight,std::vector<int>& buf,std::vector<int>& used,std::vector<std::vector<int>>& result){
-        if(low==hight){
-            std::vector<int> r;
-            for(int i = 0 ; i< m ; i++){
-                r.push_back(buf.at(i));
-            }
-            result.push_back(r);
-        }else{
-            for(int i = 0 ; i< n ; i++){
-                if(!used.at(i)){
-                    used.at(i) = 1;
-                    buf.at(low) = arr.at(i);
-                    dfs_permutation(arr,m,n,low+1,hight,buf,used,result);
-                    used.at(i) = false;
-                }
-            }
-        }
-    }
-
-    std::vector<std::vector<int>> permutation(const std::vector<int>& arr,const int m){
-        int n = arr.size();
-        int len = n-m;
-        std::vector<std::vector<int>> result;
-        if(len>=0){
-            auto buf = std::vector<int>(m);
-            auto used = std::vector<int>(n);
-            dfs_permutation(arr, m, n, 0, m, buf, used, result);
-        }
-        return result;
-    }
-
-    void dfs_combination(const std::vector<int>& arr,int m, int n,int low,int hight,std::vector<int>& buf,std::vector<int>& used,std::vector<std::vector<int>>& result,std::vector<std::vector<int>>& first){
-        if(low==hight){
-            std::vector<int> r;
-            for(int i = 0 ; i< m ; i++){
-                r.push_back(buf.at(i));
-            }
-            result.push_back(r);
-        }else{
-            for(int i = 0 ; i< n ; i++){
-                bool next = true;
-                for(int l = 0 ; l<m && next; l++){
-                    if (l < low) {
-                        for (auto& e : first[l]) {
-                            if (e == arr[i]) {
-                                next = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (!used[i] && next) {
-                    used[i] = true;
-                    buf[low] = arr[i];
-                    first[low].push_back(arr[i]);
-                    for (int j = low + 1; j < m; j++) {
-                        first[j].resize(0);
-                    }
-                    dfs_combination(arr,m,n,low + 1, hight,buf,used,result,first);
-                    used[i] = false;
-                }
-            }
-        }
-    }
-    
-    std::vector<std::vector<int>> combination(const std::vector<int>& arr,const int m){
-        int n = arr.size();
-        int len = n-m;
-        std::vector<std::vector<int>> result;
-        if(len==0){
-            result.push_back(arr);
-            return result;
-        }
-        if(len>0){
-            auto buf = std::vector<int>(m);
-            auto used = std::vector<int>(n);
-            auto first = std::vector<std::vector<int>>(m);
-            dfs_combination(arr, m, n, 0, m, buf, used, result,first);
-        }
-        return result;
-    }
-
-    int reverse_count(const std::vector<int>& arr){
-        if(arr.empty()) return 0;
-        int count = 0;
-        int len = arr.size();
-        for(int i = 1 ; i< len ; i++){
-            for(int j = 0 ; j< len ; j++){
-                if(j<i){
-                    if(arr[j]>arr[i]){
-                        count++;
-                    }
-                }else break;
-            }
-        }
-        return count;
-    }
-
     Matrix::Matrix() noexcept{
         m = 1;
         n = 1;
@@ -225,7 +127,7 @@ namespace xlib {
             int cnt =  reverse_count(pm);
             int mul = 1;
             for(int i = 0 ; i< n ; i++){
-                mul *=a[i][pm[i]];
+                mul = mul*a[i][pm[i]];
             }
             if(cnt%2){
                 mul = -mul;
@@ -285,5 +187,174 @@ namespace xlib {
             r--;
         }
         return r;
+    }
+
+    Matrix Matrix::transpose(){
+        Matrix T(n,m);
+        for(int i=0;i<m;i++){
+            for (int j = 0 ; j<n; j++) {
+                T(j,i) = a[i][j];
+            }
+        }
+        return T;
+    }
+
+    std::vector<double> Matrix::gaussianElimination(std::vector<double>& B){
+        
+        if(m!=n){
+            throw std::runtime_error("matrix must be row equal col");
+        }
+        
+        if(B.size()!=m){
+            throw std::runtime_error("vector size must be equal matrix col");
+        }
+        
+        if(0==det()){
+            //非满秩矩阵，无唯一解
+            throw std::runtime_error("not full rank matrix");
+            //@TODO 找到一种可行解是否可以？
+        }
+        
+        std::vector<double> result = std::vector<double>(m);
+        std::vector<int> canceled = std::vector<int>(m);
+        for(int j = 0 ; j< m ; j++){
+            bool pivot = false;
+            for(int i = 0 ; i< m ; i++){
+                //找到第i 行 第j 列不为0的元素作为主元
+                if(!canceled[i] && !pivot && a[i][j]!=0){
+                    pivot = true;
+                    canceled[i] = 1;
+                    //查找最小公倍数
+                    std::vector<int> v;
+                    for(int k = 0 ; k< m ; k++){
+                        if(a[k][j]!=0){
+                            v.push_back(a[k][j]);
+                        }
+                    }
+                    int lc = lcm(v);
+                    for(int k = 0 ; k< m ; k++){
+                        if(a[k][j]!=0){
+                            int mul = lc/a[k][j];
+                            for(int l = 0 ; l< m; l++){
+                                a[k][l] = a[k][l]*mul;
+                            }
+                            B[k] = B[k]*mul;
+                        }
+                    }
+                    //消元
+                    for(int k = 0 ; k< m ; k++){
+                        if(k!=i && a[k][j]!=0){
+                            //k行减去i行
+                            for(int l = 0 ; l< m; l++){
+                                a[k][l] -= a[i][l];
+                            }
+                            B[k] -= B[i];
+                        }
+                    }
+                }
+            }
+            if(!pivot){
+                //没有找到主元
+                throw std::runtime_error("not pivot in matrix on " + std::to_string(j));
+            }
+        }
+        for(int i = 0 ; i< m ; i++){
+            for(int j = 0 ; j< m ; j++){
+                //i 行 j 列
+                if(a[i][j]!=0){
+                    //第j个解
+                    result[j] = B[i]/a[i][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    Matrix Matrix::augmented(const Matrix& mat){
+        Matrix AM(m,n+mat.n);
+        for(int i = 0 ; i< m ; i++){
+            for(int j = 0 ; j < n+mat.n ; j++){
+                AM(i,j) = j<n ? a[i][j] : mat.a[i][j-n];
+            }
+        }
+        return AM;
+    }
+    
+    Matrix Matrix::identity(int n){
+        Matrix E(n,n);
+        for(int i = 0 ; i < n ; i++){
+            E(i,i) = 1;
+        }
+        return E;
+    }
+    
+    Matrix Matrix::inverse(){
+        if(m!=n){
+            throw std::runtime_error("matrix must be row equal col");
+        }
+        Matrix E = Matrix::identity(n);
+        for(int i = 0 ; i< n ; i++){
+            if(a[i][i]!=0){
+                //查找最小公倍数
+                std::vector<int> v;
+                for(int k = 0 ; k< n ; k++){
+                    if(a[k][i]!=0){
+                        v.push_back(a[k][i]);
+                    }
+                }
+                int lc = lcm(v);
+                for(int k = 0 ; k< n ; k++){
+                    if(a[k][i]!=0){
+                        int mul = lc/a[k][i];
+                        for(int l = 0 ; l< n; l++){
+                            a[k][l] = a[k][l]*mul;
+                            E.a[k][l] = E.a[k][l]*mul;
+                        }
+                    }
+                }
+                //消元
+                for(int k = 0 ; k< n ; k++){
+                    if(k!=i && a[k][i]!=0){
+                        //k行减去i行
+                        for(int l = 0 ; l< n; l++){
+                            a[k][l] -= a[i][l];
+                            E.a[k][l] -= E.a[i][l];
+                        }
+                    }
+                }
+            }else{
+                //为0，得让它变成1
+                bool set = true;
+                for(int p = 0 ; p< n ; p++){
+                    if(!set){
+                        break;
+                    }
+                    if(p!=i){
+                        if(a[p][i]!=0){
+                            set = false;
+                            //加上p行
+                            for(int k = 0 ; k< n ; k++){
+                                a[i][k] += a[p][k];
+                                E.a[i][k] += E.a[p][k];
+                            }
+                        }
+                    }
+                }
+                if(set){
+                    throw std::runtime_error("matrix have not inverse");
+                }
+                i-=1;
+            }
+        }
+        for(int i = 0 ; i< n ; i++){
+            if(a[i][i]!=1){
+                int factor = a[i][i];
+                for(int j = 0 ; j< n; j++){
+                    a[i][j] /= factor;
+                    E.a[i][j] /= factor;
+                }
+            }
+        }
+        return E;
     }
 }
