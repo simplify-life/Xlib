@@ -18,10 +18,8 @@ namespace xlib {
     namespace sgf{
     
         struct Node {
-            std::string origin;
             std::map<std::string,std::string> properties;
             std::vector<Node*> children;
-            std::string comment;
             char color;
             std::string coord;
             Node* parent;
@@ -37,10 +35,12 @@ namespace xlib {
                 Node* parseSgf(const std::string& sgfStr);
                 std::vector<std::string> getmoveList();
             private:
-                void parseNodeByOrigin(Node* node);
+                void parseProperty();
                 void parseLine(std::string &line, bool& first);
                 void backToRoot();
-                Node* currentNode;
+                std::string _parseStr;
+                bool _parse;
+                Node* _currentNode;
         };
     }
 }

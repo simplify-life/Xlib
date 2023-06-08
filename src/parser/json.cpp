@@ -258,6 +258,12 @@ namespace xlib{
                 std::getline(iss >> std::ws, key, ':');
                 size_t start = key.find_first_not_of(" \t\n\r\"");
                 size_t end = key.find_last_not_of(" \t\n\r\"");
+                if(start==std::string::npos){
+                    start = 0;
+                }
+                if(end==std::string::npos){
+                    end = key.size();
+                }
                 key = key.substr(start, end - start + 1);
                 JSON value;
                 parseValue(value, iss);

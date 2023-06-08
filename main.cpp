@@ -314,6 +314,36 @@ void testSgf(){
     for(auto &s:v){
         LOG_I("%s",s.c_str());
     }
+    sgfStr ="(;GM[1]FF[4]SZ[19]HA[0]KM[0]GN[Cho L&D (abc)]\
+        AB[bb][cb][db][fb]\
+        AW[ea][eb][bc][cc][dc]C[Advanced]\
+            (;B[ec];W[fc];B[ed];W[gb]\
+                    (;B[fd];W[gc]\
+                        (;B[ab];W[ba]\
+                            (;B[bd];W[cd];B[ce];W[be]\
+                                (;B[dd];W[ad];B[ac]C[Correct.])\
+                                (;B[ac];W[ad];B[dd]C[Correct.])\
+                            )\
+                            (;B[ce]WV[];W[ac]C[Wrong.])\
+                        )\
+                        (;B[da]WV[];W[fa];B[ab];W[ba]C[Wrong.])\
+                    )\
+                (;B[ab];W[ba];B[fd];W[gc]\
+                    (;B[bd];W[cd];B[ce];W[be]\
+                        (;B[dd];W[ad];B[ac]C[Correct.])\
+                        (;B[ac];W[ad];B[dd]C[Correct.])\
+                    )\
+                    (;B[ce]WV[];W[ac]C[Wrong.])\
+                )\
+                (;B[da]WV[];W[fa];B[ab];W[ba]C[Wrong.])\
+            )\
+            (;B[da]WV[];W[fc];B[ab];W[ba]C[Wrong.])\
+    )";
+    parser->parseSgf(sgfStr);
+    v = parser->getmoveList();
+    for(auto &s:v){
+        LOG_I("%s",s.c_str());
+    }
 }
 
 void testRegex(){
@@ -436,6 +466,7 @@ void testGaussianElimination(){
 int main(int argc, char* argv[])
 {
     setLog();
+    
     testMath();
     testMatrix();
     testGaussianElimination();
