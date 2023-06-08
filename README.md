@@ -21,7 +21,8 @@ You can easily use it in your program.**
 ###  [json parser](#json)
 ###  [Serializer](#Serializer)
 ###  [thread](#thread)
-
+###  [math](#math)
+###  [matrix](#matrix)
 
 <h4 id='log'>log </h4>
 
@@ -155,6 +156,102 @@ LOG_I("%s",s.c_str());
         LOG_I("%d + %d = %d",x,y,x+y);
         return x+y;
     }, 10,11);
+```
+
+
+<h4 id='math'>math </h4>
+
+```C++
+
+    int a = 15,b=36,c=6,d=42;
+    int g = gcd({a,b,c,d});
+    LOG_I("gcd(%d,%d,%d,%d)=%d",a,b,c,d,g);
+    int cm = lcm({a,b,c,d});
+    LOG_I("lcm(%d,%d,%d,%d)=%d",a,b,c,d,cm);
+    std::vector<int> arr= {0,1,2,3,4};
+    auto perm = permutation(arr, 2);
+    std::stringstream ss;
+    for(auto& e:perm){
+        for(auto& e1:e){
+            ss<<e1;
+            ss<<" ";
+        }
+        ss<<"\n";
+    }
+    LOG_I("permutation:\n%s",ss.str().c_str());
+    
+    auto com = combination(arr, 2);
+    std::stringstream ssc;
+    for(auto& e:com){
+        for(auto& e1:e){
+            ssc<<e1;
+            ssc<<" ";
+        }
+        ssc<<"\n";
+    }
+    LOG_I("combination:\n%s",ssc.str().c_str());
+
+```
+
+<h4 id='matrix'>matrix </h4>
+
+```C++
+
+   Matrix  A(5,5);
+    Matrix  B(5,5);
+    A(2,2) = 3;
+    B(2,2) = 2;
+    LOG_I("A:\n%s",A.toString().c_str());
+    LOG_I("B:\n%s",B.toString().c_str());
+    auto C = A+B;
+    LOG_I("A+B:\n%s",C.toString().c_str());
+    std::vector<std::vector<int>> matrixD = {{5,2,4},{3,8,2},{6,0,4},{0,1,6}};
+    Matrix D(matrixD);
+    std::vector<std::vector<int>> matrixE = {{2,4},{1,3},{3,2}};
+    Matrix E = matrixE;
+    LOG_I("D:\n%s",D.toString().c_str());
+    LOG_I("E:\n%s",E.toString().c_str());
+    Matrix F = D*E;
+    LOG_I("D*E:\n%s",F.toString().c_str());
+    
+    std::vector<std::vector<int>> matrixG = {
+        {1,2,3,4},
+        {5,-1,7,8},
+        {8,10,11,12},
+        {17,14,15,16}
+    };
+    
+    Matrix G = matrixG;
+    
+    LOG_I("G.det():\n%d",G.det());
+    
+    std::vector<std::vector<int>> matrixH = {
+        {1,2,3},
+        {4,5,6},
+        {7,8,9}
+    };
+    
+    Matrix H = matrixH;
+    
+    LOG_I("H:\n%s",H.toString().c_str());
+    
+    auto subArr = H.submatrix(2);
+    
+    for(auto& m:subArr){
+        LOG_I("H.submatrix 2:\n%s",m.toString().c_str());
+    }
+    
+    LOG_I("H rank: %d",H.rank());
+    
+    std::vector<std::vector<int>> matrixI = {
+        {-16,4,3},
+        {-2,1,0},
+        {7,-2,-1},
+    };
+    Matrix I = matrixI;
+    Matrix IV = I.inverse();
+    LOG_I("I inverse:\n %s",IV.toString().c_str());
+
 ```
 
 ## Test

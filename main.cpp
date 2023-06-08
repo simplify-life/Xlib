@@ -310,7 +310,7 @@ void testSgf(){
     ")";
     auto parser = std::unique_ptr<sgf::Parser>(new sgf::Parser());
     parser->parseSgf(sgfStr);
-    auto v = parser->getmoveList();
+    auto v = parser->getSingleSgf();
     for(auto &s:v){
         LOG_I("%s",s.c_str());
     }
@@ -340,7 +340,7 @@ void testSgf(){
             (;B[da]WV[];W[fc];B[ab];W[ba]C[Wrong.])\
     )";
     parser->parseSgf(sgfStr);
-    v = parser->getmoveList();
+    v = parser->getSingleSgf();
     for(auto &s:v){
         LOG_I("%s",s.c_str());
     }

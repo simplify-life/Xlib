@@ -51,7 +51,6 @@ namespace xlib {
             std::cout<<"start parse: "<<_parseStr<<std::endl;
             std::size_t pos = _parseStr.find('[');
             std::string currentKey;
-            std::string currentValue;
             while (pos!=std::string::npos) {
                 if(currentKey.empty()){
                     currentKey = _parseStr.substr(0,pos);
@@ -79,23 +78,25 @@ namespace xlib {
                     //判断一下是否解析结束
                     bool parseEnd = pos> start_branch || pos > end_branch || pos> next_node;
                     if(parseEnd) pos = std::string::npos;
-                    currentValue = currentValue.empty() ? value: currentValue.append(",").append(value);
                     if(currentKey=="B" || currentKey=="W"){
                         _currentNode->color = currentKey.back();
-                        _currentNode->coord = currentValue;
-                        std::cout<<"move:"<<currentKey<<"->"<<currentValue<<std::endl;
+                        _currentNode->coord = value;
+                        std::cout<<"move:"<<currentKey<<"->"<<value<<std::endl;
                         currentKey.clear();
-                        currentValue.clear();
                         continue;
                     }
+                    auto it = _currentNode->properties.find(currentKey);
+                    if(it==_currentNode->properties.end()){
+                        std::vector<std::string> v;
+                        v.push_back(value);
+                        _currentNode->properties.insert(std::pair<std::string, std::vector<std::string>>(currentKey,v));
+                    }else{
+                        it->second.push_back(value);
+                    }
+                    std::cout<<currentKey<<"->"<<value<<std::endl;
                     bool isEnd = next==std::string::npos || (next != end+1);
-                    if(isEnd){
-                        _currentNode->properties.insert(std::pair<std::string, std::string>(currentKey,currentValue));
-                        std::cout<<currentKey<<"->"<<currentValue<<std::endl;
-                        currentKey.clear();
-                        currentValue.clear();
-                        continue;
-                    }
+                    if(isEnd) currentKey.clear();
+                    continue;
                     
                 }else{
                     std::cout<<"stop parse :"<< _parseStr <<std::endl;
@@ -222,17 +223,19 @@ namespace xlib {
         }
             
         void traverseNodeMove(Node* node,std::vector<std::string>& result,std::string mStr){
+            mStr.append(1,';');
             if(!node->coord.empty()){
-                mStr.append(1,';');
                 mStr.append(1,node->color);
                 mStr.append(1,'[');
                 mStr.append(node->coord);
                 mStr.append(1,']');
-                auto it = node->properties.find("C");
-                if(it!=node->properties.end()){
-                    mStr.append(1,'C');
+            }
+            for(auto& p:node->properties){
+                mStr.append(p.first);
+                auto v = p.second;
+                for(auto& s:v){
                     mStr.append(1,'[');
-                    mStr.append(it->second);
+                    mStr.append(s);
                     mStr.append(1,']');
                 }
             }
@@ -246,11 +249,16 @@ namespace xlib {
                 traverseNodeMove(n,result,mStr);
             }
             if(end){
-                if(!mStr.empty()) result.push_back(mStr);
+                if(!mStr.empty()){
+                    std::string sgf = "(";
+                    sgf.append(mStr);
+                    sgf.append(")");
+                    result.push_back(sgf);
+                }
             }
         }
     
-        std::vector<std::string> Parser::getmoveList(){
+        std::vector<std::string> Parser::getSingleSgf(){
             std::vector<std::string> v;
             //深度搜索
             std::string str;

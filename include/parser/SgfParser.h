@@ -18,7 +18,7 @@ namespace xlib {
     namespace sgf{
     
         struct Node {
-            std::map<std::string,std::string> properties;
+            std::map<std::string,std::vector<std::string>> properties;
             std::vector<Node*> children;
             char color;
             std::string coord;
@@ -33,7 +33,8 @@ namespace xlib {
                 Parser() noexcept;
                 ~Parser();
                 Node* parseSgf(const std::string& sgfStr);
-                std::vector<std::string> getmoveList();
+                //多分支棋谱，转成单分支棋谱
+                std::vector<std::string> getSingleSgf();
             private:
                 void parseProperty();
                 void parseLine(std::string &line, bool& first);
