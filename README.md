@@ -23,7 +23,7 @@ You can easily use it in your program.**
 ###  [thread](#thread)
 ###  [math](#math)
 ###  [matrix](#matrix)
-### [LightsOutPuzzle](#matrix)
+### [LightsOutPuzzle](#LightsOutPuzzle)
 
 <h4 id='log'>log </h4>
 
