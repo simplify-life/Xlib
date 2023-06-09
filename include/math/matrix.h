@@ -57,6 +57,9 @@ namespace xlib {
             
             //高斯消元解方程组---唯一解
             std::vector<double> gaussianElimination(std::vector<double>& B);
+            
+            //所有运算在指定模内操作
+            std::vector<int> solveLightsOutPuzzle(std::vector<int>& B,int mod);
         
             //增广矩阵
             Matrix augmented(const Matrix& mat);

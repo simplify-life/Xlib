@@ -16,6 +16,7 @@ void setLog(){
         setenv("xlib_log_dir", xlib_log_dir.c_str(), 1);
     }
     LOG_SET(LOG_LEVEL::L_ALL);
+    LOG_I("log dir:%s",xlib_log_dir.c_str());
     XLog::setWrite(true, xlib_log_dir.append("xlib.log"));
 }
 
@@ -454,13 +455,81 @@ void testGaussianElimination(){
         10,15,3,5    };
     Matrix A = matrix;
     auto result = A.gaussianElimination(B);
-    
     std::stringstream ssc;
     for(auto& e:result){
         ssc<<e;
         ssc<<" ";
     }
     LOG_I("GaussianElimination result:%s",ssc.str().c_str());
+}
+
+void testSolveLightsOutPuzzle(){
+    int lightSize = 10;
+    int r = lightSize*lightSize;
+    Matrix matrixLight(r,r);
+    for(int i = 0 ; i< lightSize ; i++){
+        for(int j = 0 ; j< lightSize; j++){
+            //点亮 i 行j 列的灯
+            int c = i*lightSize + j;
+            // 上
+            if(i>0){
+                int r = (i-1)*lightSize+j;
+                matrixLight(c,r) = 1;
+            }
+            // 下
+            if(i<lightSize-1){
+                int r = (i+1)*lightSize+j;
+                matrixLight(c,r) = 1;
+            }
+            // 中
+            {
+                int r = i*lightSize+j;
+                matrixLight(c,r) = 1;
+            }
+            // 左
+            if(j>0){
+                int r = i*lightSize+j-1;
+                matrixLight(c,r) = 1;
+            }
+            // 右
+            if(j<lightSize-1){
+                int r = i*lightSize+j+1;
+                matrixLight(c,r) = 1;
+            }
+        }
+    }
+    
+    std::vector<int> status=std::vector<int>(lightSize*lightSize,1);
+
+    auto result = matrixLight.solveLightsOutPuzzle(status,2);
+    
+    std::stringstream ssc;
+    int idx = 0;
+    for(auto& e:result){
+        ssc<<(e==-1?1:e);
+        idx = idx+1;
+        if(idx==lightSize){
+            ssc<<"\n";
+            idx = 0;
+        }else{
+            ssc<<" ";
+        }
+    }
+    LOG_I("solveLightsOutPuzzle %dx%d : \n%s",lightSize,lightSize,ssc.str().c_str());
+    //expect output:
+    /**
+         solveLightsOutPuzzle 10x10 :
+         1 0 1 0 0 0 0 1 0 1
+         0 1 0 0 1 1 0 0 1 0
+         1 0 1 0 1 1 0 1 0 1
+         0 0 0 1 0 0 1 0 0 0
+         0 1 1 0 1 1 0 1 1 0
+         0 1 1 0 1 1 0 1 1 0
+         0 0 0 1 0 0 1 0 0 0
+         1 0 1 0 1 1 0 1 0 1
+         0 1 0 0 1 1 0 0 1 0
+         1 0 1 0 0 0 0 1 0 1
+     */
 }
 
 int main(int argc, char* argv[])
@@ -470,6 +539,7 @@ int main(int argc, char* argv[])
     testMath();
     testMatrix();
     testGaussianElimination();
+    testSolveLightsOutPuzzle();
     testRegex();
     testYml();
     testSgf();

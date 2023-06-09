@@ -270,6 +270,80 @@ namespace xlib {
         return result;
     }
 
+    std::vector<int> Matrix::solveLightsOutPuzzle(std::vector<int>& B,int mod){
+        if(m!=n){
+            throw std::runtime_error("matrix must be row equal col");
+        }
+        
+        if(B.size()!=m){
+            throw std::runtime_error("vector size must be equal matrix col");
+        }
+        
+//        if(0==det()){
+//            //非满秩矩阵，无唯一解
+//            //找到一种可行解
+//        }
+        std::vector<int> result = std::vector<int>(m);
+        std::vector<int> canceled = std::vector<int>(m);
+        std::vector<int> freeArg;
+        for(int j = 0 ; j< m ; j++){
+            bool pivot = false;
+            for(int i = 0 ; i< m ; i++){
+                //找到第i 行 第j 列不为0的元素作为主元
+                if(!canceled[i] && !pivot && a[i][j]!=0){
+                    pivot = true;
+                    canceled[i] = 1;
+                    //查找最小公倍数
+                    std::vector<int> v;
+                    for(int k = 0 ; k< m ; k++){
+                        if(a[k][j]!=0){
+                            v.push_back(a[k][j]);
+                        }
+                    }
+                    int lc = lcm(v);
+                    for(int k = 0 ; k< m ; k++){
+                        if(a[k][j]!=0){
+                            int mul = lc/a[k][j];
+                            for(int l = 0 ; l< m; l++){
+                                a[k][l] = (a[k][l]*mul)%mod;
+                            }
+                            B[k] = (B[k]*mul)%mod;
+                        }
+                    }
+                    //消元
+                    for(int k = 0 ; k< m ; k++){
+                        if(k!=i && a[k][j]!=0){
+                            //k行减去i行
+                            for(int l = 0 ; l< m; l++){
+                                a[k][l] = (a[k][l]-a[i][l])%mod;
+                            }
+                            B[k] = (B[k]-B[i])%mod;
+                        }
+                    }
+                }
+            }
+            if(!pivot){
+                //没有找到主元
+//                throw std::runtime_error("not pivot in matrix on " + std::to_string(j));
+                //自由变量
+                freeArg.push_back(j);
+            }
+        }
+        for(int i = 0 ; i< m ; i++){
+            for(int j = 0 ; j< m ; j++){
+                //i 行 j 列
+                if(a[i][j]!=0){
+                    //第j个解
+                    result[j] = (B[i]/a[i][j])%mod;
+                }
+            }
+        }
+        for(auto& idx : freeArg){
+            result[idx] = 0;
+        }
+        return result;
+    }
+
     Matrix Matrix::augmented(const Matrix& mat){
         Matrix AM(m,n+mat.n);
         for(int i = 0 ; i< m ; i++){

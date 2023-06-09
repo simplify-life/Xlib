@@ -23,6 +23,7 @@ You can easily use it in your program.**
 ###  [thread](#thread)
 ###  [math](#math)
 ###  [matrix](#matrix)
+### [LightsOutPuzzle](#matrix)
 
 <h4 id='log'>log </h4>
 
@@ -68,7 +69,7 @@ LOG_I("%s",s.c_str());
 <h4 id='sgf'>sgf parser </h4>
 
 ```C++
-    std::string sgfStr ="(;SZ[19]AP[MultiGo:3.6.0]AB[pb][pc][oc][od][ne][nf][og][pg][qg][rg][rf]AW[qf][pf][of][oe][re][qd][qc][pd]\n"
+std::string sgfStr ="(;SZ[19]AP[MultiGo:3.6.0]AB[pb][pc][oc][od][ne][nf][og][pg][qg][rg][rf]AW[qf][pf][of][oe][re][qd][qc][pd]\n"
     "(;B[sd](;W[rb]    ;B[qe](;W[pe]    ;B[rd]    ;W[se]    ;B[sf]    ;W[qe]    ;B[qb]    ;W[rc]    ;B[ra])\n"
     "(;W[rd]    ;B[sc]    ;W[se]    ;B[pe]    ;W[qb]    ;B[qa]    ;W[ra]    ;B[sb])\n"
     ")\n"
@@ -78,8 +79,38 @@ LOG_I("%s",s.c_str());
     ")";
     auto parser = std::unique_ptr<sgf::Parser>(new sgf::Parser());
     parser->parseSgf(sgfStr);
-    auto v = parser->getmoveList();
-    for(auto s:v){
+    auto v = parser->getSingleSgf();
+    for(auto &s:v){
+        LOG_I("%s",s.c_str());
+    }
+    sgfStr ="(;GM[1]FF[4]SZ[19]HA[0]KM[0]GN[Cho L&D (abc)]\
+        AB[bb][cb][db][fb]\
+        AW[ea][eb][bc][cc][dc]C[Advanced]\
+            (;B[ec];W[fc];B[ed];W[gb]\
+                    (;B[fd];W[gc]\
+                        (;B[ab];W[ba]\
+                            (;B[bd];W[cd];B[ce];W[be]\
+                                (;B[dd];W[ad];B[ac]C[Correct.])\
+                                (;B[ac];W[ad];B[dd]C[Correct.])\
+                            )\
+                            (;B[ce]WV[];W[ac]C[Wrong.])\
+                        )\
+                        (;B[da]WV[];W[fa];B[ab];W[ba]C[Wrong.])\
+                    )\
+                (;B[ab];W[ba];B[fd];W[gc]\
+                    (;B[bd];W[cd];B[ce];W[be]\
+                        (;B[dd];W[ad];B[ac]C[Correct.])\
+                        (;B[ac];W[ad];B[dd]C[Correct.])\
+                    )\
+                    (;B[ce]WV[];W[ac]C[Wrong.])\
+                )\
+                (;B[da]WV[];W[fa];B[ab];W[ba]C[Wrong.])\
+            )\
+            (;B[da]WV[];W[fc];B[ab];W[ba]C[Wrong.])\
+    )";
+    parser->parseSgf(sgfStr);
+    v = parser->getSingleSgf();
+    for(auto &s:v){
         LOG_I("%s",s.c_str());
     }
 
@@ -251,6 +282,82 @@ LOG_I("%s",s.c_str());
     Matrix I = matrixI;
     Matrix IV = I.inverse();
     LOG_I("I inverse:\n %s",IV.toString().c_str());
+
+```
+
+<h4 id='LightsOutPuzzle'>LightsOutPuzzle solover</h4>
+
+点灯游戏的解决方案,
+点灯游戏网页例子可以参考:https://github.com/xiaominghe2014/FlipGame
+
+```C++
+
+ int lightSize = 10;
+    int r = lightSize*lightSize;
+    Matrix matrixLight(r,r);
+    for(int i = 0 ; i< lightSize ; i++){
+        for(int j = 0 ; j< lightSize; j++){
+            //点亮 i 行j 列的灯
+            int c = i*lightSize + j;
+            // 上
+            if(i>0){
+                int r = (i-1)*lightSize+j;
+                matrixLight(c,r) = 1;
+            }
+            // 下
+            if(i<lightSize-1){
+                int r = (i+1)*lightSize+j;
+                matrixLight(c,r) = 1;
+            }
+            // 中
+            {
+                int r = i*lightSize+j;
+                matrixLight(c,r) = 1;
+            }
+            // 左
+            if(j>0){
+                int r = i*lightSize+j-1;
+                matrixLight(c,r) = 1;
+            }
+            // 右
+            if(j<lightSize-1){
+                int r = i*lightSize+j+1;
+                matrixLight(c,r) = 1;
+            }
+        }
+    }
+    
+    std::vector<int> status=std::vector<int>(lightSize*lightSize,1);
+
+    auto result = matrixLight.solveLightsOutPuzzle(status,2);
+    
+    std::stringstream ssc;
+    int idx = 0;
+    for(auto& e:result){
+        ssc<<(e==-1?1:e);
+        idx = idx+1;
+        if(idx==lightSize){
+            ssc<<"\n";
+            idx = 0;
+        }else{
+            ssc<<" ";
+        }
+    }
+    LOG_I("solveLightsOutPuzzle %dx%d : \n%s",lightSize,lightSize,ssc.str().c_str());
+    //expect output:
+    /**
+         solveLightsOutPuzzle 10x10 :
+         1 0 1 0 0 0 0 1 0 1
+         0 1 0 0 1 1 0 0 1 0
+         1 0 1 0 1 1 0 1 0 1
+         0 0 0 1 0 0 1 0 0 0
+         0 1 1 0 1 1 0 1 1 0
+         0 1 1 0 1 1 0 1 1 0
+         0 0 0 1 0 0 1 0 0 0
+         1 0 1 0 1 1 0 1 0 1
+         0 1 0 0 1 1 0 0 1 0
+         1 0 1 0 0 0 0 1 0 1
+     */
 
 ```
 
