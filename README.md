@@ -15,15 +15,15 @@ You can easily use it in your program.**
 ## Usage
 ---
 
-###  [log](#log)
+###  [log print](#log)
 ###  [yaml parser](#yaml)
 ###  [sgf parser](#sgf)
 ###  [json parser](#json)
-###  [Serializer](#Serializer)
-###  [thread](#thread)
-###  [math](#math)
-###  [matrix](#matrix)
-### [LightsOutPuzzle](#LightsOutPuzzle)
+###  [Serializer Object](#Serializer)
+###  [thread use](#thread)
+###  [math method](#math)
+###  [matrix about](#matrix)
+### [LightsOutPuzzle slover](#LightsOutPuzzle)
 
 <h4 id='log'>log </h4>
 
