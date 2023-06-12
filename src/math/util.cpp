@@ -2,91 +2,80 @@
 //  util.cpp
 //  com.xm.xlib
 //
-//  Created by apple on 2023/6/4.
+//  Created by xiaominghe2014@gmail.com on 2023/6/4.
 //
 
 #include "math/math.h"
 
 namespace xlib {
-    void dfs_permutation(const std::vector<int>& arr,int m, int n,int low,int hight,std::vector<int>& buf,std::vector<int>& used,std::vector<std::vector<int>>& result){
-        if(low==hight){
-            std::vector<int> r;
-            for(int i = 0 ; i< m ; i++){
-                r.push_back(buf.at(i));
-            }
-            result.push_back(r);
-        }else{
-            for(int i = 0 ; i< n ; i++){
-                if(!used.at(i)){
-                    used.at(i) = 1;
-                    buf.at(low) = arr.at(i);
-                    dfs_permutation(arr,m,n,low+1,hight,buf,used,result);
-                    used.at(i) = false;
-                }
-            }
+
+    void dfs_permutation(std::vector<int>& arr, int m, int low, std::vector<std::vector<int>>& result) {
+        // 如果已经选择了 m 个元素，则将排列添加到结果中
+        if (low == m) {
+            result.push_back(std::vector<int>(arr.begin(), arr.begin() + m));
+            return;
+        }
+
+        // 遍历剩余的元素并与当前元素交换
+        for (int i = low; i < arr.size(); i++) {
+            std::swap(arr[low], arr[i]);
+            dfs_permutation(arr, m, low + 1, result);
+            std::swap(arr[low], arr[i]);
         }
     }
 
     std::vector<std::vector<int>> permutation(const std::vector<int>& arr,const int m){
         int n = arr.size();
-        int len = n-m;
+        int len = n - m;
         std::vector<std::vector<int>> result;
-        if(len>=0){
-            auto buf = std::vector<int>(m);
-            auto used = std::vector<int>(n);
-            dfs_permutation(arr, m, n, 0, m, buf, used, result);
+        if (len >= 0) {
+            auto buf = std::vector<int>(arr);
+            dfs_permutation(buf, m, 0, result);
         }
         return result;
     }
 
-    void dfs_combination(const std::vector<int>& arr,int m, int n,int low,int hight,std::vector<int>& buf,std::vector<int>& used,std::vector<std::vector<int>>& result,std::vector<std::vector<int>>& first){
-        if(low==hight){
-            std::vector<int> r;
-            for(int i = 0 ; i< m ; i++){
-                r.push_back(buf.at(i));
-            }
-            result.push_back(r);
-        }else{
-            for(int i = 0 ; i< n ; i++){
-                bool next = true;
-                for(int l = 0 ; l<m && next; l++){
-                    if (l < low) {
-                        for (auto& e : first[l]) {
-                            if (e == arr[i]) {
-                                next = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (!used[i] && next) {
-                    used[i] = true;
-                    buf[low] = arr[i];
-                    first[low].push_back(arr[i]);
-                    for (int j = low + 1; j < m; j++) {
-                        first[j].resize(0);
-                    }
-                    dfs_combination(arr,m,n,low + 1, hight,buf,used,result,first);
-                    used[i] = false;
-                }
+    void dfs_combination(const std::vector<int>& arr, int m, int n, int low, std::vector<int>& buf, std::vector<bool>& used, std::vector<std::vector<int>>& result) {
+        // 当 low 等于 m 时，表示已经找到一个组合，将其添加到结果集中
+        if (low == m) {
+            result.push_back(buf);
+            return;
+        }
+
+        // 从上一个元素的下一个位置开始遍历，避免重复
+        for (int i = (low == 0 ? 0 : buf[low - 1] + 1); i < n; i++) {
+            // 如果当前元素没有被使用过
+            if (!used[i]) {
+                // 标记为已使用
+                used[i] = true;
+                // 将当前元素添加到 buf 中
+                buf[low] = arr[i];
+                // 递归调用，继续寻找下一个元素
+                dfs_combination(arr, m, n, low + 1, buf, used, result);
+                // 回溯，将当前元素标记为未使用
+                used[i] = false;
             }
         }
     }
 
     std::vector<std::vector<int>> combination(const std::vector<int>& arr,const int m){
         int n = arr.size();
-        int len = n-m;
+        int len = n - m;
         std::vector<std::vector<int>> result;
-        if(len==0){
+        // 当 len 等于 0 时，表示只有一个组合，直接将 arr 添加到结果集中
+        if (len == 0) {
             result.push_back(arr);
             return result;
         }
-        if(len>0){
+        // 当 len 大于 0 时，进行组合计算
+        if (len > 0) {
+            // 初始化 buf 和 used 变量
             auto buf = std::vector<int>(m);
-            auto used = std::vector<int>(n);
-            auto first = std::vector<std::vector<int>>(m);
-            dfs_combination(arr, m, n, 0, m, buf, used, result,first);
+            auto used = std::vector<bool>(n);
+            // 调用优化后的 dfs_combination 函数
+            dfs_combination(arr, m, n, 0, buf, used, result);
         }
+        // 返回结果集
         return result;
     }
 

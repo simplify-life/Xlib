@@ -16,14 +16,14 @@ namespace xlib {
     class Matrix {
         public:
             int m, n; // 矩阵行数和列数
-            std::vector<std::vector<int>> a; // 二维数组表示的矩阵
+            std::vector<std::vector<double>> a; // 二维数组表示的矩阵
         public:
             
             Matrix() noexcept;
             
             Matrix(int rows, int cols) noexcept;
             
-            Matrix(std::vector<std::vector<int>>& matrix);
+            Matrix(std::vector<std::vector<double>>& matrix);
 
             // 构造函数，用于初始化矩阵
             Matrix(const Matrix& mat) noexcept;
@@ -34,14 +34,16 @@ namespace xlib {
             // 重载运算符*,用于矩阵乘法运算
             Matrix operator*(const Matrix& mat) const;
             
-            Matrix operator=(std::vector<std::vector<int>>& matrix);
+            Matrix operator=(std::vector<std::vector<double>>& matrix);
+        
+            Matrix operator=(const Matrix& mat);
             
-            int& operator()(int i,int j);
+            double& operator()(int i,int j);
             
             std::string toString() const;
                 
             //行列式的值
-            int det();
+            double det();
             
             //k阶子式
             std::vector<Matrix> submatrix(int k);
@@ -57,8 +59,8 @@ namespace xlib {
             
             //高斯消元解方程组---唯一解
             std::vector<double> gaussianElimination(std::vector<double>& B);
-            
-            //所有运算在指定模内操作
+                
+            static Matrix solveLightsOutPuzzle(int lightSize);
             std::vector<int> solveLightsOutPuzzle(std::vector<int>& B,int mod);
         
             //增广矩阵
@@ -69,7 +71,34 @@ namespace xlib {
         
             //逆矩阵 inverse Matrix
             Matrix inverse();
+            
+            // 计算特征多项式矩阵
+            Matrix charPoly(double lambda);
+            
+            //TODO there are some bugs, please don't use this
+            std::vector<double> eigenvalues();
+            
+            // 使用牛顿迭代法求解特征值--单特征值
+            std::vector<double> eigenvaluesNewton(double epsilon, int max_iterations);
+            
+            // 使用二分法求解特征值
+            std::vector<double> eigenvaluesBinarySearch(double left, double right, double epsilon);
+        
+            // 计算矩阵的迹
+            double trace() const;
+            
+           
     };
+
+    std::vector<double> normalGaussianElimination(std::vector<std::vector<double>>& A, std::vector<double>& b);
+
+    double eigenvaluePowerMethod(std::vector<std::vector<double>>& A, int n, double init);
+    
+    Matrix operator*(double scalar, const Matrix& matrix);
+
+    std::ostream& operator<<(std::ostream& os, const Matrix& matrix);
+    
+    std::string toString(const std::vector<std::vector<double>>& matrix);
 }
 
 #endif /* matrix_h */

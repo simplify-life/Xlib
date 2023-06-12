@@ -228,7 +228,7 @@ std::string sgfStr ="(;SZ[19]AP[MultiGo:3.6.0]AB[pb][pc][oc][od][ne][nf][og][pg]
 
 ```C++
 
-   Matrix  A(5,5);
+    Matrix  A(5,5);
     Matrix  B(5,5);
     A(2,2) = 3;
     B(2,2) = 2;
@@ -236,16 +236,16 @@ std::string sgfStr ="(;SZ[19]AP[MultiGo:3.6.0]AB[pb][pc][oc][od][ne][nf][og][pg]
     LOG_I("B:\n%s",B.toString().c_str());
     auto C = A+B;
     LOG_I("A+B:\n%s",C.toString().c_str());
-    std::vector<std::vector<int>> matrixD = {{5,2,4},{3,8,2},{6,0,4},{0,1,6}};
+    std::vector<std::vector<double>> matrixD = {{5,2,4},{3,8,2},{6,0,4},{0,1,6}};
     Matrix D(matrixD);
-    std::vector<std::vector<int>> matrixE = {{2,4},{1,3},{3,2}};
+    std::vector<std::vector<double>> matrixE = {{2,4},{1,3},{3,2}};
     Matrix E = matrixE;
     LOG_I("D:\n%s",D.toString().c_str());
     LOG_I("E:\n%s",E.toString().c_str());
     Matrix F = D*E;
     LOG_I("D*E:\n%s",F.toString().c_str());
     
-    std::vector<std::vector<int>> matrixG = {
+    std::vector<std::vector<double>> matrixG = {
         {1,2,3,4},
         {5,-1,7,8},
         {8,10,11,12},
@@ -256,7 +256,7 @@ std::string sgfStr ="(;SZ[19]AP[MultiGo:3.6.0]AB[pb][pc][oc][od][ne][nf][og][pg]
     
     LOG_I("G.det():\n%d",G.det());
     
-    std::vector<std::vector<int>> matrixH = {
+    std::vector<std::vector<double>> matrixH = {
         {1,2,3},
         {4,5,6},
         {7,8,9}
@@ -274,7 +274,7 @@ std::string sgfStr ="(;SZ[19]AP[MultiGo:3.6.0]AB[pb][pc][oc][od][ne][nf][og][pg]
     
     LOG_I("H rank: %d",H.rank());
     
-    std::vector<std::vector<int>> matrixI = {
+    std::vector<std::vector<double>> matrixI = {
         {-16,4,3},
         {-2,1,0},
         {7,-2,-1},
@@ -282,6 +282,43 @@ std::string sgfStr ="(;SZ[19]AP[MultiGo:3.6.0]AB[pb][pc][oc][od][ne][nf][og][pg]
     Matrix I = matrixI;
     Matrix IV = I.inverse();
     LOG_I("I inverse:\n %s",IV.toString().c_str());
+    
+    
+    // 创建矩阵 J
+ 
+    std::vector<std::vector<double>> matrixJ = {
+        {1,-3,3},
+        {3,-5,3},
+        {6,-6,4}
+    };
+    Matrix J = matrixJ;
+    // 输出矩阵 J
+    std::cout << "J = " << std::endl << J << std::endl;
+
+    // 计算矩阵 J 的特征多项式
+    double lambda = 2;
+    auto f = J.charPoly(lambda);
+    std::cout << "charPoly(" << lambda << ") = " << std::endl<< f << std::endl;
+        
+    // 使用牛顿迭代法求解矩阵 A 的特征值
+    double epsilon = 1e-6;
+    int max_iterations = 100;
+    std::vector<double> eigenvalues_newton = J.eigenvaluesNewton(epsilon, max_iterations);
+    std::cout << "eigenvalues (Newton): ";
+    for (double eigenvalue : eigenvalues_newton) {
+        std::cout << eigenvalue << " ";
+    }
+    std::cout << std::endl;
+
+    // 使用二分法求解矩阵 A 的特征值
+    double left = -10;
+    double right = 10;
+    std::vector<double> eigenvalues_binary_search = J.eigenvaluesBinarySearch(left, right, epsilon);
+    std::cout << "eigenvalues (binary search): ";
+    for (double eigenvalue : eigenvalues_binary_search) {
+        std::cout << eigenvalue << " ";
+    }
+    std::cout << std::endl;
 
 ```
 
@@ -292,58 +329,8 @@ std::string sgfStr ="(;SZ[19]AP[MultiGo:3.6.0]AB[pb][pc][oc][od][ne][nf][og][pg]
 
 ```C++
 
- int lightSize = 10;
-    int r = lightSize*lightSize;
-    Matrix matrixLight(r,r);
-    for(int i = 0 ; i< lightSize ; i++){
-        for(int j = 0 ; j< lightSize; j++){
-            //点亮 i 行j 列的灯
-            int c = i*lightSize + j;
-            // 上
-            if(i>0){
-                int r = (i-1)*lightSize+j;
-                matrixLight(c,r) = 1;
-            }
-            // 下
-            if(i<lightSize-1){
-                int r = (i+1)*lightSize+j;
-                matrixLight(c,r) = 1;
-            }
-            // 中
-            {
-                int r = i*lightSize+j;
-                matrixLight(c,r) = 1;
-            }
-            // 左
-            if(j>0){
-                int r = i*lightSize+j-1;
-                matrixLight(c,r) = 1;
-            }
-            // 右
-            if(j<lightSize-1){
-                int r = i*lightSize+j+1;
-                matrixLight(c,r) = 1;
-            }
-        }
-    }
-    
-    std::vector<int> status=std::vector<int>(lightSize*lightSize,1);
-
-    auto result = matrixLight.solveLightsOutPuzzle(status,2);
-    
-    std::stringstream ssc;
-    int idx = 0;
-    for(auto& e:result){
-        ssc<<(e==-1?1:e);
-        idx = idx+1;
-        if(idx==lightSize){
-            ssc<<"\n";
-            idx = 0;
-        }else{
-            ssc<<" ";
-        }
-    }
-    LOG_I("solveLightsOutPuzzle %dx%d : \n%s",lightSize,lightSize,ssc.str().c_str());
+    int lightSize = 10;
+    LOG_I("solveLightsOutPuzzle %dx%d : \n%s",lightSize,lightSize,Matrix::solveLightsOutPuzzle(lightSize).toString().c_str());
     //expect output:
     /**
          solveLightsOutPuzzle 10x10 :

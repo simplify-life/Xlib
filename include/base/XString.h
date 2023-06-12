@@ -65,7 +65,27 @@ namespace XString
         stream.clear();
         return out;
     }
+
+    template<typename T>
+    std::string toString(const std::vector<std::vector<T>>& matrix){
+        std::stringstream ss;
+        for (const auto& row : matrix) {
+            for (const auto& elem : row) {
+                ss << elem << " ";
+            }
+            ss << "\n";
+        }
+        return ss.str();
+    }
     
+    template<typename T>
+    std::string toString(const std::vector<T>& v){
+        std::stringstream ss;
+        for (const auto& elem : v) {
+            ss << elem << " ";
+        }
+        return ss.str();
+    }
 };
 XLIB_END
 #endif /* XString_h */

@@ -9,25 +9,130 @@
 #include "math/util.h"
 #include <cstring>
 #include <stdexcept>
+#include <numeric>
+#include <iostream>
+#include <sstream>
 
 namespace xlib {
-    
+
+    std::vector<double> matrixVectorMultiply(std::vector<std::vector<double>>& A, std::vector<double>& x) {
+        int m = A.size();
+        int n = A[0].size();
+        std::vector<double> y(m);
+        for (int i = 0; i < m; i++) {
+            y[i] = 0;
+            for (int j = 0; j < n; j++) {
+                y[i] += A[i][j] * x[j];
+            }
+        }
+        return y;
+    }
+
+    std::vector<double> normalGaussianElimination(std::vector<std::vector<double>>& A, std::vector<double>& b) {
+        int n = A.size();
+        // 构造增广矩阵
+        std::vector<std::vector<double>> Ab(n, std::vector<double>(n + 1));
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                Ab[i][j] = A[i][j];
+            }
+            Ab[i][n] = b[i];
+        }
+        // 进行高斯消元
+        for (int i = 0; i < n; i++) {
+            // 选取主元
+            int pivot = i;
+            for (int j = i + 1; j < n; j++) {
+                if (abs(Ab[j][i]) > abs(Ab[pivot][i])) {
+                    pivot = j;
+                }
+            }
+            // 交换行
+            if (pivot != i) {
+                std::swap(Ab[i], Ab[pivot]);
+            }
+            // 消元
+            for (int j = i + 1; j <= n; j++) {
+                Ab[i][j] /= Ab[i][i];
+            }
+            for (int j = 0; j < n; j++) {
+                if (j != i) {
+                    for (int k = i + 1; k <= n; k++) {
+                        Ab[j][k] -= Ab[j][i] * Ab[i][k];
+                    }
+                }
+            }
+        }
+        // 提取解向量
+        std::vector<double> x(n);
+        for (int i = 0; i < n; i++) {
+            x[i] = Ab[i][n];
+        }
+        return x;
+    }
+
+    double vectorNorm(std::vector<double>& x) {
+        double norm = 0;
+        for (int i = 0; i < x.size(); i++) {
+            norm += x[i] * x[i];
+        }
+        return sqrt(norm);
+    }
+
+    double eigenvaluePowerMethod(std::vector<std::vector<double>>& A, int n, double init) {
+        // 初始化迭代向量
+        std::vector<double> x(n, 1);
+        x[0] = init;
+        // 进行迭代
+        for (int i = 0; i < 1000; i++) {
+            // 计算新的迭代向量
+            std::vector<double> Ax = matrixVectorMultiply(A, x);
+            double norm = vectorNorm(Ax);
+            for (int j = 0; j < n; j++) {
+                x[j] = Ax[j] / norm;
+            }
+            // 判断是否收敛
+            auto newAx = matrixVectorMultiply(A, x);
+            if (vectorNorm(newAx) / norm < 1e-6) {
+                break;
+            }
+        }
+        // 计算特征值
+        std::vector<double> Ax = matrixVectorMultiply(A, x);
+        double lambda = 0;
+        for (int i = 0; i < n; i++) {
+            lambda += Ax[i] * x[i];
+        }
+        return lambda;
+    }
+
+    // 将矩阵的每个元素乘以一个标量
+    Matrix operator*(double scalar, const Matrix& matrix) {
+        Matrix result(matrix.m, matrix.n);
+        for (int i = 0; i < matrix.m; i++) {
+            for (int j = 0; j < matrix.n; j++) {
+                result.a[i][j] = scalar * matrix.a[i][j];
+            }
+        }
+        return result;
+    }
+
     Matrix::Matrix() noexcept{
         m = 1;
         n = 1;
-        a = std::vector<std::vector<int>>(m, std::vector<int>(n));
+        a = std::vector<std::vector<double>>(m, std::vector<double>(n));
     }
 
     Matrix::Matrix(int rows, int cols) noexcept{
         m = rows;
         n = cols;
-        a = std::vector<std::vector<int>>(m, std::vector<int>(n));
+        a = std::vector<std::vector<double>>(m, std::vector<double>(n));
     }
 
-    Matrix::Matrix(std::vector<std::vector<int>>& matrix) {
+    Matrix::Matrix(std::vector<std::vector<double>>& matrix) {
         m = matrix.size();
         n = matrix[0].size();
-        a = std::vector<std::vector<int>>(m, std::vector<int>(n));
+        a = std::vector<std::vector<double>>(m, std::vector<double>(n));
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 a[i][j] = matrix[i][j];
@@ -38,7 +143,7 @@ namespace xlib {
     Matrix::Matrix(const Matrix& mat) noexcept{
         m = mat.m;
         n = mat.n;
-        a = std::vector<std::vector<int>>(m, std::vector<int>(n));
+        a = std::vector<std::vector<double>>(m, std::vector<double>(n));
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 a[i][j] = mat.a[i][j];
@@ -89,7 +194,7 @@ namespace xlib {
         return result;
     }
 
-    Matrix Matrix::operator=(std::vector<std::vector<int>>& matrix){
+    Matrix Matrix::operator=(std::vector<std::vector<double>>& matrix){
         if(a!=matrix){
             a.swap(matrix);
             m = a.size();
@@ -98,26 +203,30 @@ namespace xlib {
         return *this;
     }
 
-    int& Matrix::operator()(int i,int j) {
+    Matrix Matrix::operator=(const Matrix& mat){
+        return Matrix(mat);
+    }
+
+    double& Matrix::operator()(int i,int j) {
         return a[i][j];
     }
 
     std::string Matrix::toString() const{
-        std::string str = "";
+        std::stringstream ss;
         for(int r = 0 ; r< m; r++){
             for(int c=0 ; c< n; c++){
-                str += std::to_string(a[r][c]) + " ";
+                ss << a[r][c] << " ";
             }
-            str += "\n";
+            ss << "\n";
         }
-        return str;
+        return ss.str();
     }
 
-    int Matrix::det(){
+    double Matrix::det(){
         if(m!=n){
             throw std::runtime_error("det must be row equal col");
         }
-        int result = 0;
+        double result = 0;
         std::vector<int> arr;
         for(int i = 0 ; i < n ; i++){
             arr.push_back(i);
@@ -125,7 +234,7 @@ namespace xlib {
         auto perm = permutation(arr, n);
         for(auto& pm:perm){
             int cnt =  reverse_count(pm);
-            int mul = 1;
+            double mul = 1;
             for(int i = 0 ; i< n ; i++){
                 mul = mul*a[i][pm[i]];
             }
@@ -137,56 +246,68 @@ namespace xlib {
         return result;
     }
 
-    // TODO 修改为迭代器，性能可以更好
+    // FIXME 修改为迭代器，性能可以更好
     std::vector<Matrix> Matrix::submatrix(int k){
         int max = m>n?n:m;
         if(k>max){
             throw std::runtime_error("The N-th submatrix of a matrix must be smaller than both the row and column dimensions.");
         }
         std::vector<Matrix> result;
-        std::vector<int> arrM;
-        for(int i = 0 ; i < m ; i++){
-            arrM.push_back(i);
-        }
+        std::vector<int> arrM(m);
+        std::iota(arrM.begin(), arrM.end(), 0);
+        std::vector<int> arrN(n);
+        std::iota(arrN.begin(), arrN.end(), 0);
+
         //m行任取k行
         auto combM = combination(arrM, k);
-        std::vector<int> arrN;
-        for(int i = 0 ; i < n ; i++){
-            arrN.push_back(i);
-        }
         //n列任取k列
         auto combN = combination(arrN, k);
         
-        for(int i = 0; i< combM.size() ; i++){
-            for(int j = 0 ; j < combN.size() ; j++){
-                auto cm = combM[i];
-                auto cn = combN[j];
-                // 行、列
-                auto vm = std::vector<std::vector<int>>(k, std::vector<int>(k));
-                for(int r = 0 ; r< k ; r++){
-                    for(int c = 0 ; c< k; c++){
-                        vm[r][c] = a[cm[r]][cn[c]];
+        for (const auto& cm : combM) {
+                for (const auto& cn : combN) {
+                    Matrix ma(k, k);
+                    for (int r = 0; r < k; r++) {
+                        for (int c = 0; c < k; c++) {
+                            ma.a[r][c] = a[cm[r]][cn[c]];
+                        }
                     }
+                    result.push_back(ma);
                 }
-                Matrix ma = vm;
-                result.push_back(ma);
-            }
         }
         return result;
     }
-    // FIXME 计算k阶子式的方法，性能低下---可以线性变换 消元，计算线性独立行的数量
-    int Matrix::rank(){
-        int r = m<n? m:n;
-        while(r>0){
-            auto sub = submatrix(r);
-            for(auto& matrix:sub){
-                if(matrix.det()!=0){
-                    return r;
+   
+    int Matrix::rank() {
+        int rank = 0; // 初始化秩为0
+        Matrix temp = *this; // 创建一个临时矩阵，用于进行高斯消元操作
+        // 遍历矩阵的行和列
+        for (int row = 0, col = 0; row < temp.m && col < temp.n; ++col) {
+            int pivotRow = row; // 初始化主元所在行为当前行
+            // 寻找当前列中绝对值最大的元素所在行
+            for (int i = row + 1; i < temp.m; ++i) {
+                if (abs(temp.a[i][col]) > abs(temp.a[pivotRow][col])) {
+                    pivotRow = i;
                 }
             }
-            r--;
+            // 如果找到的主元不为0
+            if (temp.a[pivotRow][col] != 0) {
+                // 如果主元所在行不等于当前行，交换两行
+                if (pivotRow != row) {
+                    std::swap(temp.a[pivotRow], temp.a[row]);
+                }
+                // 使用主元所在行消去其他行的当前列元素
+                for (int i = row + 1; i < temp.m; ++i) {
+                    double factor = temp.a[i][col] / temp.a[row][col]; // 计算消元因子
+                    // 更新其他行的元素
+                    for (int j = col; j < temp.n; ++j) {
+                        temp.a[i][j] -= factor * temp.a[row][j];
+                    }
+                }
+                ++rank; // 矩阵秩加1
+                ++row; // 移动到下一行
+            }
         }
-        return r;
+        return rank; // 返回矩阵的秩
     }
 
     Matrix Matrix::transpose(){
@@ -217,36 +338,37 @@ namespace xlib {
         
         std::vector<double> result = std::vector<double>(m);
         std::vector<int> canceled = std::vector<int>(m);
+        auto tmp = *this;
         for(int j = 0 ; j< m ; j++){
             bool pivot = false;
             for(int i = 0 ; i< m ; i++){
                 //找到第i 行 第j 列不为0的元素作为主元
-                if(!canceled[i] && !pivot && a[i][j]!=0){
+                if(!canceled[i] && !pivot && tmp.a[i][j]!=0){
                     pivot = true;
                     canceled[i] = 1;
                     //查找最小公倍数
                     std::vector<int> v;
                     for(int k = 0 ; k< m ; k++){
-                        if(a[k][j]!=0){
-                            v.push_back(a[k][j]);
+                        if(tmp.a[k][j]!=0){
+                            v.push_back(tmp.a[k][j]);
                         }
                     }
                     int lc = lcm(v);
                     for(int k = 0 ; k< m ; k++){
-                        if(a[k][j]!=0){
-                            int mul = lc/a[k][j];
+                        if(tmp.a[k][j]!=0){
+                            int mul = lc/tmp.a[k][j];
                             for(int l = 0 ; l< m; l++){
-                                a[k][l] = a[k][l]*mul;
+                                tmp.a[k][l] = tmp.a[k][l]*mul;
                             }
                             B[k] = B[k]*mul;
                         }
                     }
                     //消元
                     for(int k = 0 ; k< m ; k++){
-                        if(k!=i && a[k][j]!=0){
+                        if(k!=i && tmp.a[k][j]!=0){
                             //k行减去i行
                             for(int l = 0 ; l< m; l++){
-                                a[k][l] -= a[i][l];
+                                tmp.a[k][l] -= tmp.a[i][l];
                             }
                             B[k] -= B[i];
                         }
@@ -261,9 +383,9 @@ namespace xlib {
         for(int i = 0 ; i< m ; i++){
             for(int j = 0 ; j< m ; j++){
                 //i 行 j 列
-                if(a[i][j]!=0){
+                if(tmp.a[i][j]!=0){
                     //第j个解
-                    result[j] = B[i]/a[i][j];
+                    result[j] = B[i]/tmp.a[i][j];
                 }
             }
         }
@@ -286,36 +408,37 @@ namespace xlib {
         std::vector<int> result = std::vector<int>(m);
         std::vector<int> canceled = std::vector<int>(m);
         std::vector<int> freeArg;
+        auto tmp = *this;
         for(int j = 0 ; j< m ; j++){
             bool pivot = false;
             for(int i = 0 ; i< m ; i++){
                 //找到第i 行 第j 列不为0的元素作为主元
-                if(!canceled[i] && !pivot && a[i][j]!=0){
+                if(!canceled[i] && !pivot && tmp.a[i][j]!=0){
                     pivot = true;
                     canceled[i] = 1;
                     //查找最小公倍数
                     std::vector<int> v;
                     for(int k = 0 ; k< m ; k++){
-                        if(a[k][j]!=0){
-                            v.push_back(a[k][j]);
+                        if(tmp.a[k][j]!=0){
+                            v.push_back(tmp.a[k][j]);
                         }
                     }
                     int lc = lcm(v);
                     for(int k = 0 ; k< m ; k++){
-                        if(a[k][j]!=0){
-                            int mul = lc/a[k][j];
+                        if(tmp.a[k][j]!=0){
+                            int mul = lc/tmp.a[k][j];
                             for(int l = 0 ; l< m; l++){
-                                a[k][l] = (a[k][l]*mul)%mod;
+                                tmp.a[k][l] = ((int)tmp.a[k][l]*mul)%mod;
                             }
                             B[k] = (B[k]*mul)%mod;
                         }
                     }
                     //消元
                     for(int k = 0 ; k< m ; k++){
-                        if(k!=i && a[k][j]!=0){
+                        if(k!=i && tmp.a[k][j]!=0){
                             //k行减去i行
                             for(int l = 0 ; l< m; l++){
-                                a[k][l] = (a[k][l]-a[i][l])%mod;
+                                tmp.a[k][l] = int(tmp.a[k][l]-tmp.a[i][l])%mod;
                             }
                             B[k] = (B[k]-B[i])%mod;
                         }
@@ -332,9 +455,9 @@ namespace xlib {
         for(int i = 0 ; i< m ; i++){
             for(int j = 0 ; j< m ; j++){
                 //i 行 j 列
-                if(a[i][j]!=0){
+                if(tmp.a[i][j]!=0){
                     //第j个解
-                    result[j] = (B[i]/a[i][j])%mod;
+                    result[j] = abs(int(B[i]/tmp.a[i][j])%mod);
                 }
             }
         }
@@ -342,6 +465,54 @@ namespace xlib {
             result[idx] = 0;
         }
         return result;
+    }
+
+    Matrix Matrix::solveLightsOutPuzzle(int lightSize){
+        int r = lightSize*lightSize;
+        Matrix matrixLight(r,r);
+        for(int i = 0 ; i< lightSize ; i++){
+            for(int j = 0 ; j< lightSize; j++){
+                //点亮 i 行j 列的灯
+                int c = i*lightSize + j;
+                // 上
+                if(i>0){
+                    int r = (i-1)*lightSize+j;
+                    matrixLight(c,r) = 1;
+                }
+                // 下
+                if(i<lightSize-1){
+                    int r = (i+1)*lightSize+j;
+                    matrixLight(c,r) = 1;
+                }
+                // 中
+                {
+                    int r = i*lightSize+j;
+                    matrixLight(c,r) = 1;
+                }
+                // 左
+                if(j>0){
+                    int r = i*lightSize+j-1;
+                    matrixLight(c,r) = 1;
+                }
+                // 右
+                if(j<lightSize-1){
+                    int r = i*lightSize+j+1;
+                    matrixLight(c,r) = 1;
+                }
+            }
+        }
+        
+        std::vector<int> status=std::vector<int>(lightSize*lightSize,1);
+
+        auto result = matrixLight.solveLightsOutPuzzle(status,2);
+        
+        Matrix newMatrix(lightSize, lightSize);
+        for (int i = 0; i < lightSize; i++) {
+            for (int j = 0; j < lightSize; j++) {
+                newMatrix(i, j) = result[i * lightSize + j];
+            }
+        }
+        return newMatrix;
     }
 
     Matrix Matrix::augmented(const Matrix& mat){
@@ -366,32 +537,33 @@ namespace xlib {
         if(m!=n){
             throw std::runtime_error("matrix must be row equal col");
         }
+        auto tmp = *this;
         Matrix E = Matrix::identity(n);
         for(int i = 0 ; i< n ; i++){
-            if(a[i][i]!=0){
+            if(tmp.a[i][i]!=0){
                 //查找最小公倍数
                 std::vector<int> v;
                 for(int k = 0 ; k< n ; k++){
-                    if(a[k][i]!=0){
-                        v.push_back(a[k][i]);
+                    if(tmp.a[k][i]!=0){
+                        v.push_back(tmp.a[k][i]);
                     }
                 }
                 int lc = lcm(v);
                 for(int k = 0 ; k< n ; k++){
-                    if(a[k][i]!=0){
-                        int mul = lc/a[k][i];
+                    if(tmp.a[k][i]!=0){
+                        int mul = lc/tmp.a[k][i];
                         for(int l = 0 ; l< n; l++){
-                            a[k][l] = a[k][l]*mul;
+                            tmp.a[k][l] = tmp.a[k][l]*mul;
                             E.a[k][l] = E.a[k][l]*mul;
                         }
                     }
                 }
                 //消元
                 for(int k = 0 ; k< n ; k++){
-                    if(k!=i && a[k][i]!=0){
+                    if(k!=i && tmp.a[k][i]!=0){
                         //k行减去i行
                         for(int l = 0 ; l< n; l++){
-                            a[k][l] -= a[i][l];
+                            tmp.a[k][l] -= tmp.a[i][l];
                             E.a[k][l] -= E.a[i][l];
                         }
                     }
@@ -404,11 +576,11 @@ namespace xlib {
                         break;
                     }
                     if(p!=i){
-                        if(a[p][i]!=0){
+                        if(tmp.a[p][i]!=0){
                             set = false;
                             //加上p行
                             for(int k = 0 ; k< n ; k++){
-                                a[i][k] += a[p][k];
+                                tmp.a[i][k] += tmp.a[p][k];
                                 E.a[i][k] += E.a[p][k];
                             }
                         }
@@ -421,14 +593,124 @@ namespace xlib {
             }
         }
         for(int i = 0 ; i< n ; i++){
-            if(a[i][i]!=1){
-                int factor = a[i][i];
+            if(tmp.a[i][i]!=1){
+                int factor = tmp.a[i][i];
                 for(int j = 0 ; j< n; j++){
-                    a[i][j] /= factor;
+                    tmp.a[i][j] /= factor;
                     E.a[i][j] /= factor;
                 }
             }
         }
         return E;
     }
+
+    // 计算特征多项式
+    Matrix Matrix::charPoly(double lambda) {
+        // 初始化单位矩阵
+        Matrix I = Matrix::identity(n);
+        // 计算 A-λI
+        Matrix A_minus_lambda_I = (*this) - lambda * I;
+        // 返回行列式
+        return A_minus_lambda_I;
+    }
+
+    std::vector<double> Matrix::eigenvalues() {
+        // 求解特征值
+        std::vector<double> eigenvalues;
+        for (int i = 0; i < n; i++) {
+            double lambda = eigenvaluePowerMethod(a, n, a[i][i]);
+            eigenvalues.push_back(lambda);
+        }
+        // 求解特征向量
+        std::vector<std::vector<double>> eigenvectors;
+        for (int i = 0; i < n; i++) {
+            std::vector<std::vector<double>> A_minus_lambdaI(n, std::vector<double>(n));
+            for (int j = 0; j < n; j++) {
+                for (int k = 0; k < n; k++) {
+                    A_minus_lambdaI[j][k] = a[j][k] - eigenvalues[i] * (j == k ? 1 : 0);
+                }
+            }
+            std::vector<double> b(n, 0);
+            b[i] = 1;
+            std::vector<double> eigenvector = normalGaussianElimination(A_minus_lambdaI, b);
+            eigenvectors.push_back(eigenvector);
+        }
+        // 将特征向量组合成矩阵
+        Matrix V(eigenvectors);
+        // 返回特征值和特征向量的乘积
+        
+        Matrix result = V.inverse() * (*this) * V;
+        std::vector<double> r;
+        for (int i = 0; i < result.m; i++) {
+            r.push_back(result.a[i][i]);
+        }
+        return r;
+    }
+
+    // 使用牛顿迭代法求解特征值
+    std::vector<double> Matrix::eigenvaluesNewton(double epsilon, int max_iterations) {
+        // 初始化结果向量
+        std::vector<double> result;
+        // 遍历每个元素
+        for (int i = 0; i < n; i++) {
+            // 初始化迭代起点
+            double x = a[i][i];
+            // 进行牛顿迭代
+            for (int j = 0; j < max_iterations; j++) {
+                double f = charPoly(x).det();
+                double f_prime = ((*this) - x * Matrix::identity(n)).trace();
+                double x_new = x - f / f_prime;
+                if (abs(x_new - x) < epsilon) {
+                    // 收敛，将特征值加入结果向量
+                    result.push_back(x_new);
+                    break;
+                }
+                x = x_new;
+            }
+        }
+        return result;
+    }
+
+    // 使用二分法求解特征值
+    std::vector<double> Matrix::eigenvaluesBinarySearch(double left, double right, double epsilon) {
+        // 初始化结果向量
+        std::vector<double> result;
+        // 遍历每个元素
+        for (int i = 0; i < n; i++) {
+            double l = left;
+            double r = right;
+            // 进行二分法
+            while (r - l > epsilon) {
+                double mid = (l + r) / 2;
+                if (charPoly(mid).det() > 0) {
+                    r = mid;
+                } else {
+                    l = mid;
+                }
+            }
+            // 将特征值加入结果向量
+            result.push_back((l + r) / 2);
+        }
+        return result;
+    }
+
+    double Matrix::trace() const {
+        double result = 0;
+        for (int i = 0; i < n; i++) {
+            result += a[i][i];
+        }
+        return result;
+    }
+
+    // 重载输出运算符，使其能够输出 Matrix 类型的对象
+    std::ostream& operator<<(std::ostream& os, const Matrix& matrix) {
+        for (int i = 0; i < matrix.m; i++) {
+            for (int j = 0; j < matrix.n; j++) {
+                os << matrix.a[i][j] << " ";
+            }
+            os << std::endl;
+        }
+        return os;
+    }
+
 }
