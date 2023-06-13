@@ -300,7 +300,7 @@ std::string sgfStr ="(;SZ[19]AP[MultiGo:3.6.0]AB[pb][pc][oc][od][ne][nf][og][pg]
     auto f = J.charPoly(lambda);
     std::cout << "charPoly(" << lambda << ") = " << std::endl<< f << std::endl;
         
-    // 使用牛顿迭代法求解矩阵 A 的特征值
+    // 使用牛顿迭代法求解矩阵 J 的特征值
     double epsilon = 1e-6;
     int max_iterations = 100;
     std::vector<double> eigenvalues_newton = J.eigenvaluesNewton(epsilon, max_iterations);
@@ -310,7 +310,7 @@ std::string sgfStr ="(;SZ[19]AP[MultiGo:3.6.0]AB[pb][pc][oc][od][ne][nf][og][pg]
     }
     std::cout << std::endl;
 
-    // 使用二分法求解矩阵 A 的特征值
+    // 使用二分法求解矩阵 J 的特征值
     double left = -10;
     double right = 10;
     std::vector<double> eigenvalues_binary_search = J.eigenvaluesBinarySearch(left, right, epsilon);
@@ -325,7 +325,7 @@ std::string sgfStr ="(;SZ[19]AP[MultiGo:3.6.0]AB[pb][pc][oc][od][ne][nf][og][pg]
 <h4 id='LightsOutPuzzle'>LightsOutPuzzle solover</h4>
 
 点灯游戏的解决方案,
-点灯游戏网页例子可以参考:https://github.com/xiaominghe2014/FlipGame
+点灯游戏网页例子可以参考:https://xiaominghe2014.github.io/game/flipGame.html
 
 ```C++
 

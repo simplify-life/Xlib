@@ -33,5 +33,6 @@
 #include "parser/json.h"
 #include "parser/YamlParser.h"
 #include "parser/SgfParser.h"
+#include "parser/xml.h"
 #include "math/math.h"
 #endif /* xlib_h */

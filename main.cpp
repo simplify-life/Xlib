@@ -429,7 +429,7 @@ void testMatrix(){
     auto f = J.charPoly(lambda);
     std::cout << "charPoly(" << lambda << ") = " << std::endl<< f << std::endl;
 
-    // 使用牛顿迭代法求解矩阵 A 的特征值
+    // 使用牛顿迭代法求解矩阵 J 的特征值
     double epsilon = 1e-6;
     int max_iterations = 100;
     std::vector<double> eigenvalues_newton = J.eigenvaluesNewton(epsilon, max_iterations);
@@ -439,7 +439,7 @@ void testMatrix(){
     }
     std::cout << std::endl;
 
-    // 使用二分法求解矩阵 A 的特征值
+    // 使用二分法求解矩阵 J 的特征值
     double left = -10;
     double right = 10;
     std::vector<double> eigenvalues_binary_search = J.eigenvaluesBinarySearch(left, right, epsilon);
@@ -499,6 +499,39 @@ void testSolveLightsOutPuzzle(){
      */
 }
 
+void testXML(){
+    std::string xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                         "<bookstore>\n"
+                         "  <book category=\"COOKING\">\n"
+                         "    <title lang=\"en\">Everyday Italian</title>\n"
+                         "    <author>Giada De Laurentiis</author>\n"
+                         "    <year>2005</year>\n"
+                         "    <price>30.00</price>\n"
+                         "  </book>\n"
+                         "  <book category=\"CHILDREN\">\n"
+                         "    <title lang=\"en\">Harry Potter</title>\n"
+                         "    <author>J.K. Rowling</author>\n"
+                         "    <year>2005</year>\n"
+                         "    <price>29.99</price>\n"
+                         "  </book>\n"
+                         "  <book category=\"WEB\">\n"
+                         "    <title lang=\"en\">Learning XML</title>\n"
+                         "    <author>Erik T. Ray</author>\n"
+                         "    <year>2003</year>\n"
+                         "    <price>39.95</price>\n"
+                         "  </book>\n"
+                         "</bookstore>";
+    xlib::XMLParser parser;
+    xlib::XMLNode* rootNode = parser.parse(xmlStr);
+    if (rootNode != nullptr) {
+        std::cout << "XML parsing successful!" << std::endl;
+        std::string nodeStr = nodeToString(rootNode);
+        std::cout << nodeStr << std::endl;
+    } else {
+        std::cout << "XML parsing failed!" << std::endl;
+    }
+}
+
 int main(int argc, char* argv[])
 {
     setLog();
@@ -512,6 +545,7 @@ int main(int argc, char* argv[])
     testSgf();
     // testSerializer();
     testJson();
+    testXML();
     testThreadPool();
     testSHA();
     testUtf8();
