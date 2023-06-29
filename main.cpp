@@ -532,25 +532,50 @@ void testXML(){
     }
 }
 
+void testAStar(){
+    std::vector<int> mapArr = {
+        0, 0, 0, 0, 0,
+        0, 1, 1, 0, 0,
+        0, 0, 0, 1, 0,
+        0, 1, 0, 0, 1,
+        0, 0, 0, 0, 0
+    };
+    
+    int w = 5; // Map width
+    int start = 0; // Start position
+    int end = 24; // End position
+    
+    // Find the shortest path using A* Search Algorithm
+    std::vector<int> shortestPath = xlib::AStarSearch(mapArr, w, start, end);
+    
+    // Print the shortest path
+    if (shortestPath.empty()) {
+        LOG_I("Shortest path");
+    } else {
+        LOG_I("Shortest path:%s",XString::toString(shortestPath).c_str());
+    }
+}
+
 int main(int argc, char* argv[])
 {
     setLog();
     
-    testMath();
-    testMatrix();
-    testGaussianElimination();
-    testSolveLightsOutPuzzle();
-    testRegex();
-    testYml();
-    testSgf();
-    // testSerializer();
-    testJson();
-    testXML();
-    testThreadPool();
-    testSHA();
-    testUtf8();
-    testFile();
-    testUrl();
-    testSort();
+    testAStar();
+    // testMath();
+    // testMatrix();
+    // testGaussianElimination();
+    // testSolveLightsOutPuzzle();
+    // testRegex();
+    // testYml();
+    // testSgf();
+    // // testSerializer();
+    // testJson();
+    // testXML();
+    // testThreadPool();
+    // testSHA();
+    // testUtf8();
+    // testFile();
+    // testUrl();
+    // testSort();
     return 0;
 }
