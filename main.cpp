@@ -561,21 +561,21 @@ int main(int argc, char* argv[])
     setLog();
     
     testAStar();
-    // testMath();
-    // testMatrix();
-    // testGaussianElimination();
-    // testSolveLightsOutPuzzle();
-    // testRegex();
-    // testYml();
-    // testSgf();
-    // // testSerializer();
-    // testJson();
-    // testXML();
-    // testThreadPool();
-    // testSHA();
-    // testUtf8();
-    // testFile();
-    // testUrl();
-    // testSort();
+    testMath();
+    testMatrix();
+    testGaussianElimination();
+    testSolveLightsOutPuzzle();
+    testRegex();
+    testYml();
+    testSgf();
+    // testSerializer();
+    testJson();
+    testXML();
+    testThreadPool();
+    testSHA();
+    testUtf8();
+    testFile();
+    testUrl();
+    testSort();
     return 0;
 }
