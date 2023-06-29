@@ -6,9 +6,9 @@
 //
 
 #include "algorithm/AStar.h"
-#include <vector>
 #include <cmath>
 #include <algorithm>
+#include <climits>
 
 namespace xlib {
 
