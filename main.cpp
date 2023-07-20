@@ -640,7 +640,7 @@ void testSolveStandardSudoku()
 
 void testDecodeAndEncode()
 {
-    const std::string originStr = "S1l";
+    const std::string originStr = "Stay up-to-date on emerging technologies.(so.~!@#$%^&*)_+-=,';:\"<>?\\`";
     std::string encodeStr = crypto::encode85(originStr);
     LOG_I("encode85 is %s", encodeStr.c_str());
     std::string decodeStr = crypto::decode85(encodeStr);
