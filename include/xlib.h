@@ -25,6 +25,7 @@
 #include "base/XRandom.h"
 #include "base/Serializer.h"
 #include "crypto/base64.h"
+#include "crypto/base85.h"
 #include "crypto/md5.h"
 #include "crypto/sha1.h"
 #include "crypto/url.h"
