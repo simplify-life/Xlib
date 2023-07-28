@@ -15,4 +15,4 @@ buildconfig = "//gn/build/config/BUILDCONFIG.gn"
 # sources = get_target_outputs(":${sources}") - get_target_outputs(":${exclude_sources}")
 
 # 引用 sources.gn 文件
-import("//sources.gn")
+# import("//sources.gn")
