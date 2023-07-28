@@ -1,0 +1,5 @@
+# Set build arguments here. See `gn help buildargs`.
+host_os = "mac"
+target_os = "mac"
+current_os = "mac"
+target_cpu = "x64"

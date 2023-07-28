@@ -1,6 +1,9 @@
 
 .*
+*.gn
+out/*
 xlib
+cmake_build/*
 build/*
 obj/*
 demo-encode
