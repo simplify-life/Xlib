@@ -1,0 +1,18 @@
+
+# GN 文件
+buildconfig = "//gn/build/config/BUILDCONFIG.gn"
+
+# 导入源文件
+# sources = exec_script("generate_sources.py", [], "list")
+# lib_sources = ["src/crypto/md5.cpp", "src/crypto/base64.cpp", "src/crypto/url.cpp", "src/crypto/sha1.cpp", "src/crypto/base85.cpp", "src/net/XEpoll.cpp", "src/net/XSocket.cpp", "src/algorithm/sort.cpp", "src/algorithm/search.cpp", "src/algorithm/dlx.cpp", "src/algorithm/AStar.cpp", "src/parser/SgfParser.cpp", "src/parser/YamlParser.cpp", "src/parser/xml.cpp", "src/parser/json.cpp", "src/math/util.cpp", "src/math/matrix.cpp", "src/base/XRegex.cpp", "src/base/XLog.cpp", "src/base/XThread.cpp", "src/base/XString.cpp", "src/base/XFileUtil.cpp", "src/base/XUtf8.cpp", "src/base/XRandom.cpp", "src/base/XTime.cpp"]
+
+# 排除的文件
+# exclude_sources = [
+#   "main.cpp",
+# ]
+
+# 过滤掉排除的文件
+# sources = get_target_outputs(":${sources}") - get_target_outputs(":${exclude_sources}")
+
+# 引用 sources.gn 文件
+import("//sources.gn")
