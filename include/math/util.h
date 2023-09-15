@@ -22,6 +22,9 @@ namespace xlib {
     //最小公倍数
     int lcm(int a,int b);
     int lcm(const std::vector<int>&);
+
+    //多线程并行计算和
+    int parallelSum(const std::vector<int>& nums);
 }
 
 #endif /* util_h */

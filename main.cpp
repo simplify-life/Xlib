@@ -22,6 +22,10 @@ void setLog()
     LOG_SET(LOG_LEVEL::L_ALL);
     LOG_I("log dir:%s", xlib_log_dir.c_str());
     XLog::setWrite(true, xlib_log_dir.append("xlib.log"));
+    
+    int numThreads = std::thread::hardware_concurrency();
+    
+    LOG_I("numThreads = %d",numThreads);
 }
 
 void testHttp()
@@ -498,6 +502,26 @@ void testMath()
     auto com = combination(arr, 2);
 
     LOG_I("combination:\n%s", XString::toString(com).c_str());
+
+     std::vector<int> nums = {};
+     for(int i = 0 ; i< 1000000; i++){
+        nums.push_back(i);
+     }
+    auto start_time = std::chrono::high_resolution_clock::now();
+    int t = 0;
+    for(auto e: nums){
+        t+=e;
+    }
+    auto end_time = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> elapsed_time = end_time - start_time;
+
+    LOG_I("Single compute:time:%f 毫秒,result:%d",elapsed_time.count(),t);
+
+    auto parallel_start_time = std::chrono::high_resolution_clock::now();
+    int parallel_total = parallelSum(nums);
+    auto parallel_end_time = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> parallel_elapsed_time = parallel_end_time - parallel_start_time;
+    LOG_I("Parallel compute sum :time:%f 毫秒,result:%d",parallel_elapsed_time.count(),parallel_total);
 }
 
 void testGaussianElimination()
@@ -676,6 +700,6 @@ int main(int argc, char *argv[])
     testUrl();
     testSort();
     testSolveStandardSudoku();
-     testDecodeAndEncode();
+    testDecodeAndEncode();
     return 0;
 }

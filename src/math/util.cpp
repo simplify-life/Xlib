@@ -6,6 +6,8 @@
 //
 
 #include "math/math.h"
+#include <thread>
+#include <future>
 
 namespace xlib {
 
@@ -114,7 +116,7 @@ namespace xlib {
         if(0==a || b==0) return 0;
         a = a<0? -a:a;
         b = b<0? -b:b;
-        return a*b / gcd(a, b);
+        return a / gcd(a, b)*b;
     }
 
     int lcm(const std::vector<int>& nums){
@@ -127,5 +129,39 @@ namespace xlib {
             result = lcm(result, nums[i]);
         }
         return result;
+    }
+
+    int parallelSum(const std::vector<int>& nums) {
+        int sum = 0;
+
+        std::vector<std::future<int>> futures;
+
+        int numThreads = std::thread::hardware_concurrency();
+        if(numThreads<2){
+            for(int n:nums){
+                sum+=n;
+            }
+            return sum;
+        }
+        int chunkSize = nums.size() / numThreads;
+
+        for (int i = 0; i < numThreads; i++) {
+            int start = i * chunkSize;
+            int end = (i == numThreads - 1) ? nums.size() : (i + 1) * chunkSize;
+
+            futures.push_back(std::async(std::launch::async, [start, end, &nums]() {
+                int localSum = 0;
+                for (int j = start; j < end; j++) {
+                    localSum += nums[j];
+                }
+                return localSum;
+            }));
+        }
+
+        for (auto& future : futures) {
+            sum += future.get();
+        }
+
+        return sum;
     }
 }
