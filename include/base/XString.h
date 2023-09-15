@@ -55,6 +55,8 @@ namespace XString
     
     bool isCharInString(const char&,const std::string&);
     
+    std::vector<std::string> lettersShape(const std::string &letters);
+
     template<class T_out,class T_in>
     T_out convert(const T_in& in)
     {
@@ -83,6 +85,15 @@ namespace XString
         std::stringstream ss;
         for (const auto& elem : v) {
             ss << elem << " ";
+        }
+        return ss.str();
+    }
+
+    template<typename T>
+    std::string toStringAddEnter(const std::vector<T>& v){
+        std::stringstream ss;
+        for (const auto& elem : v) {
+            ss << elem << "\n";
         }
         return ss.str();
     }

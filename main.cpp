@@ -26,6 +26,7 @@ void setLog()
     int numThreads = std::thread::hardware_concurrency();
     
     LOG_I("numThreads = %d",numThreads);
+    
 }
 
 void testHttp()
@@ -681,6 +682,7 @@ void testDecodeAndEncode()
 
 int main(int argc, char *argv[])
 {
+    std::cout <<XString::toStringAddEnter(XString::lettersShape("xlib-test"))<< std::endl;
     setLog();
     testAStar();
     testMath();
