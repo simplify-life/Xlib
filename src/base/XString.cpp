@@ -54,12 +54,12 @@ string XString::toLower(const string &str)
     return ret;
 }
 
-string XString::trim(const string &key, const string &str)
+string XString::trim(const string &str,const string &key)
 {
     return replace(str, key, "");
 }
 
-vector<string> XString::split(const string &key, const string &str)
+vector<string> XString::split(const string &str,const string &key)
 {
     vector<string> ret;
     string::size_type start = 0, end = 0, increment = key.size();

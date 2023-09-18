@@ -35,11 +35,11 @@ namespace XString
     std::string toUpper(const std::string&);
     std::string toLower(const std::string&);
     /**
-     @eg.   trim(",,","Hello,,my name,,is")="Hellomy nameis"
+     @eg.   trim("Hello,,my name,,is",",,")="Hellomy nameis"
      */
     std::string trim(const std::string&,const std::string&);
     /**
-     @eg.   split(",,","this,,is,,my,,name")=vector<std::string>{"this","is","my","name"}
+     @eg.   split("this,,is,,my,,name",",,")=vector<std::string>{"this","is","my","name"}
      */
     std::vector<std::string> split(const std::string&,const std::string&);
     /**

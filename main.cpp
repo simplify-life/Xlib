@@ -63,7 +63,7 @@ void testUtf8()
     std::string chutf8 = "这是一个字符串";
     auto s = XUtf8::utf8ToUnicode(chutf8);
     LOG_I(s.c_str());
-    std::string utf8 = XUtf8::unicodeToUtf8("0x8fd9");
+    std::string utf8 = XUtf8::unicodeToUtf8(s);
     LOG_I(utf8.c_str());
     byte buffer[] = {0350, 0377, 0231};
     bool isValid = XUtf8::isValidUtf8Buffer(buffer, 3);

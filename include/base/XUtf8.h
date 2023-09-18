@@ -30,7 +30,7 @@ namespace XUtf8
     /**
      *  eg. unicodeToUtf8("0x8fd9") = "这";
      **/
-    std::string unicodeToUtf8(const char*);
+    std::string unicodeToUtf8(const std::string&);
     
     unsigned int getlen(const char*);
     /**
