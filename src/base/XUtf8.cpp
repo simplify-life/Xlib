@@ -91,7 +91,7 @@ string XUtf8::utf8ToUnicode(const string& src)
 
 string singleUnicodeToUtf8(const std::string& src){
     std::string str = "0x";
-    str = str.append(src);
+    str.append(src);
     char *tmp;
 //    int place = 0;
     auto utf8code = std::strtol(str.c_str(), &tmp , 16);

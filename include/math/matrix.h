@@ -87,7 +87,7 @@ namespace xlib {
             // 计算矩阵的迹
             double trace() const;
             
-           
+            bool operator==(const Matrix& mat) const;
     };
 
     std::vector<double> normalGaussianElimination(std::vector<std::vector<double>>& A, std::vector<double>& b);
@@ -99,6 +99,9 @@ namespace xlib {
     std::ostream& operator<<(std::ostream& os, const Matrix& matrix);
     
     std::string toString(const std::vector<std::vector<double>>& matrix);
+
+    //矩阵的LU 分解
+    void luDecomposition(const std::vector<std::vector<double>>& A, std::vector<std::vector<double>>& L, std::vector<std::vector<double>>& U);
 }
 
 #endif /* matrix_h */

@@ -487,6 +487,23 @@ void testMatrix()
         std::cout << eigenvalue << " ";
     }
     std::cout << std::endl;
+    
+    std::vector<std::vector<double>> LU_A = {{2, -1, 3},
+                                          {4, 2, -2},
+                                          {-2, 3, 1}};
+    std::vector<std::vector<double>> LU_L, LU_U;
+
+    luDecomposition(LU_A, LU_L, LU_U);
+    
+    Matrix mL = LU_L;
+    Matrix mU = LU_U;
+    
+    Matrix mA = LU_A;
+    LOG_I("LU_A:\n%s",mA.toString().c_str());
+    LOG_I("L:\n%s,\nU:\n%s",mL.toString().c_str(),mU.toString().c_str());
+    auto LU_A_NEW = mL*mU;
+    LOG_I("LU_A_NEW:\n%s",LU_A_NEW.toString().c_str());
+    LOG_I("LU_A_NEW %s LU_A",mA==LU_A_NEW?"equals":"not equals");
 }
 
 void testMath()

@@ -695,6 +695,20 @@ namespace xlib {
         return result;
     }
 
+    bool Matrix::operator==(const Matrix& mat) const{
+        if (m != mat.m || n != mat.n) {
+            return false;
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (a[i][j] != mat.a[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     double Matrix::trace() const {
         double result = 0;
         for (int i = 0; i < n; i++) {
@@ -712,6 +726,40 @@ namespace xlib {
             os << std::endl;
         }
         return os;
+    }
+
+    // LU分解函数
+    void luDecomposition(const std::vector<std::vector<double>>& A, std::vector<std::vector<double>>& L, std::vector<std::vector<double>>& U) {
+        int n = A.size();
+        L.resize(n, std::vector<double>(n, 0.0));
+        U.resize(n, std::vector<double>(n, 0.0));
+        for (int i = 0; i < n; i++) {
+            U[0][i] = A[0][i];
+            L[i][0] = A[i][0] / U[0][0];
+        }
+       //计算U的第r行，L的第r列元素
+        for (int r = 1; r < n; r++) {
+            for (int i = r; i < n; i++) {
+                double sLU = 0.0;
+                for (int k = 0; k < r; k++) {
+                    sLU += L[r][k] * U[k][i];
+                }
+                U[r][i] = A[r][i] - sLU;
+                if(i==r){
+                    L[r][r]=1;
+                }
+                else if(r==n){
+                    L[n][n]=1;  
+                } 
+                else{
+                    double sLU = 0.0;
+                    for (int k = 0; k < r; k++) {
+                        sLU += L[i][k] * U[k][r];
+                    }
+                    L[i][r] = (A[i][r] - sLU) / U[r][r];
+                } 
+            }
+        }
     }
 
 }
