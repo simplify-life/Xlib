@@ -431,9 +431,9 @@ void testMatrix()
 
     LOG_I("H:\n%s", H.toString().c_str());
 
-    auto subArr = H.submatrix(2);
-
-    for (auto &m : subArr)
+//    auto subArr = H.submatrix(2);
+    auto subArr = SubmatrixGenerator(H,2);
+    for (auto m : subArr)
     {
         LOG_I("H.submatrix 2:\n%s", m.toString().c_str());
     }
@@ -503,7 +503,7 @@ void testMatrix()
     LOG_I("L:\n%s,\nU:\n%s",mL.toString().c_str(),mU.toString().c_str());
     auto LU_A_NEW = mL*mU;
     LOG_I("LU_A_NEW:\n%s",LU_A_NEW.toString().c_str());
-    LOG_I("LU_A_NEW %s LU_A",mA==LU_A_NEW?"equals":"not equals");
+    LOG_I("L*U %s LU_A",mA==LU_A_NEW?"equals":"not equals");
 }
 
 void testMath()

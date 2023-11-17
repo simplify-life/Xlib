@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <string>
+//#include "math/SubmatrixGenerator.h"
 
 namespace xlib {
     // 定义矩阵类
@@ -46,7 +47,7 @@ namespace xlib {
             double det();
             
             //k阶子式
-            std::vector<Matrix> submatrix(int k);
+            //SubmatrixGenerator submatrix(int k);
         
             //矩阵的秩
             int rank();

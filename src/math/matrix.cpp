@@ -248,35 +248,13 @@ namespace xlib {
     }
 
     // FIXME 修改为迭代器，性能可以更好
-    std::vector<Matrix> Matrix::submatrix(int k){
-        int max = m>n?n:m;
-        if(k>max){
-            throw std::runtime_error("The N-th submatrix of a matrix must be smaller than both the row and column dimensions.");
-        }
-        std::vector<Matrix> result;
-        std::vector<int> arrM(m);
-        std::iota(arrM.begin(), arrM.end(), 0);
-        std::vector<int> arrN(n);
-        std::iota(arrN.begin(), arrN.end(), 0);
-
-        //m行任取k行
-        auto combM = combination(arrM, k);
-        //n列任取k列
-        auto combN = combination(arrN, k);
-        
-        for (const auto& cm : combM) {
-                for (const auto& cn : combN) {
-                    Matrix ma(k, k);
-                    for (int r = 0; r < k; r++) {
-                        for (int c = 0; c < k; c++) {
-                            ma.a[r][c] = a[cm[r]][cn[c]];
-                        }
-                    }
-                    result.push_back(ma);
-                }
-        }
-        return result;
-    }
+//    SubmatrixGenerator Matrix::submatrix(int k){
+//        int max = m>n?n:m;
+//        if(k>max){
+//            throw std::runtime_error("The N-th submatrix of a matrix must be smaller than both the row and column dimensions.");
+//        }
+//        return SubmatrixGenerator(*this,k);
+//    }
    
     int Matrix::rank() {
         int rank = 0; // 初始化秩为0

@@ -10,5 +10,6 @@
 
 #include "math/matrix.h"
 #include "math/util.h"
+#include "math/SubmatrixGenerator.h"
 
 #endif /* math_h */
