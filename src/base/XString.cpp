@@ -451,4 +451,19 @@ std::vector<std::string> XString::lettersShape(const std::string &letters)
     return result;
 }
 
+    std::size_t XString::findFirstCharNotEscapedBefore(const std::string &str, char ch){
+        bool isEscaped = false;
+        for (size_t i = 0; i < str.length(); ++i) {
+            if (str[i] == '\\' && !isEscaped) {
+                isEscaped = true;
+            } else {
+                if (str[i] == ch && !isEscaped) {
+                    return i;
+                }
+                isEscaped = false;
+            }
+        }
+        return std::string::npos; 
+    }
+
 XLIB_END

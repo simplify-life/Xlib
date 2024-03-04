@@ -57,6 +57,8 @@ namespace XString
     
     std::vector<std::string> lettersShape(const std::string &letters);
 
+    std::size_t findFirstCharNotEscapedBefore(const std::string& str, char ch);
+
     template<class T_out,class T_in>
     T_out convert(const T_in& in)
     {

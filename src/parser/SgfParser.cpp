@@ -49,7 +49,7 @@ namespace xlib {
                 return;
             }
             std::cout<<"start parse: "<<_parseStr<<std::endl;
-            std::size_t pos = _parseStr.find('[');
+            std::size_t pos = XString::findFirstCharNotEscapedBefore(_parseStr, '[');
             std::string currentKey;
             while (pos!=std::string::npos) {
                 if(currentKey.empty()){
@@ -66,15 +66,15 @@ namespace xlib {
                 }
                 std::string line = std::string(_parseStr);
                 _parseStr = _parseStr.substr(pos+1);
-                std::size_t end = _parseStr.find(']');
-                std::size_t next = _parseStr.find('[');
+                std::size_t end = XString::findFirstCharNotEscapedBefore(_parseStr, ']');
+                std::size_t next = XString::findFirstCharNotEscapedBefore(_parseStr, '[');
                 if(end!=std::string::npos){
                     std::string value = _parseStr.substr(0,end);
                     _parseStr = _parseStr.substr(end+1);
-                    pos = _parseStr.find('[');
+                    pos = XString::findFirstCharNotEscapedBefore(_parseStr, '[');
                     std::size_t start_branch = _parseStr.find_first_of("(;");
-                    std::size_t end_branch = _parseStr.find_first_of(')');
-                    std::size_t next_node = _parseStr.find_first_of(';');
+                    std::size_t end_branch = XString::findFirstCharNotEscapedBefore(_parseStr, ')');
+                    std::size_t next_node = XString::findFirstCharNotEscapedBefore(_parseStr, ';');
                     //判断一下是否解析结束
                     bool parseEnd = pos> start_branch || pos > end_branch || pos> next_node;
                     if(parseEnd) pos = std::string::npos;
@@ -123,7 +123,7 @@ namespace xlib {
                 if(std::string::npos==start) return;
                 first = false;
                 line = line.substr(start+2);
-                std::size_t pos = line.find('['); //pos 必须在一行
+                std::size_t pos = XString::findFirstCharNotEscapedBefore(line, '['); //pos 必须在一行
                 _parseStr.append(line);
                 if(std::string::npos==pos){
                     return;
@@ -139,8 +139,8 @@ namespace xlib {
                 return;
             }
             std::size_t start_branch = line.find_first_of("(;");
-            std::size_t end_branch = line.find_first_of(')');
-            std::size_t next_node = line.find_first_of(';');
+            std::size_t end_branch = XString::findFirstCharNotEscapedBefore(line, ')');
+            std::size_t next_node = XString::findFirstCharNotEscapedBefore(line, ';');
             if(end_branch<start_branch && end_branch<next_node){
                 //end_branch
                 line = line.substr(end_branch+1);
@@ -182,7 +182,7 @@ namespace xlib {
                 _currentNode->next = next;
                 _currentNode = next;
                 line = line.substr(start_branch+1);
-                std::size_t pos = line.find('['); //pos 必须在一行
+                std::size_t pos = XString::findFirstCharNotEscapedBefore(line, '['); //pos 必须在一行
                 _parseStr.append(line);
                 if(std::string::npos==pos){
                     return;
