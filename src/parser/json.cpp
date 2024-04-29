@@ -136,12 +136,9 @@ namespace xlib{
             return nullJSON;
         }
         const std::map<std::string, JSON>& obj = asObject();
-        for (auto it = obj.begin(); it != obj.end(); ++it) {
-            const std::string& k = it->first;
-            // 在这里使用key和value进行操作
-            if(k==key){
-                return it->second;
-            }
+        auto v = obj.find(key);
+        if(v!=obj.end()){
+            return v->second;
         }
         return nullJSON;
     }

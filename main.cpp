@@ -334,7 +334,7 @@ void testYml()
 
 void testSgf()
 {
-    std::string sgfStr = "(;SZ[19]AP[MultiGo:3.6.0 \\[escaped\\] tail ]AB[pb][pc][oc][od][ne][nf][og][pg][qg][rg][rf]AW[qf][pf][of][oe][re][qd][qc][pd]\n"
+    std::string sgfStr = "(;SZ[19]AP[MultiGo:3.6.0 \\[escaped\\] tail ]AB[pb:pc][oc][od][ne][nf][og][pg][qg][rg][rf]AW[qf][pf][of][oe][re][qd][qc][pd]\n"
                          "(;B[sd](;W[rb]    ;B[qe](;W[pe]    ;B[rd]    ;W[se]    ;B[sf]    ;W[qe]    ;B[qb]    ;W[rc]    ;B[ra])\n"
                          "(;W[rd]    ;B[sc]    ;W[se]    ;B[pe]    ;W[qb]    ;B[qa]    ;W[ra]    ;B[sb])\n"
                          ")\n"
