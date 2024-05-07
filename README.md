@@ -24,6 +24,7 @@ You can easily use it in your program.**
 ###  [math method](#math)
 ###  [matrix about](#matrix)
 ### [LightsOutPuzzle slover](#LightsOutPuzzle)
+### [Sudoku slover](#Sudoku)
 
 <h4 id='log'>log </h4>
 
@@ -347,6 +348,55 @@ std::string sgfStr ="(;SZ[19]AP[MultiGo:3.6.0]AB[pb][pc][oc][od][ne][nf][og][pg]
      */
 
 ```
+
+
+<h4 id='Sudoku'>Sudoku solover</h4>
+
+数独游戏的解决方案,
+数独游戏网页例子可以参考:https://xiaominghe2014.github.io/game/sudoku.html
+
+```C++
+
+    std::string sudokuGrid(const std::string &subject)
+    {
+        int size = std::sqrt(subject.size());
+        std::string result;
+        // 构建字符串表示的数独网格
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                int index = i * size + j;
+                int digit = subject[index] - '0';
+                result += std::to_string(digit) + " ";
+            }
+            result += "\n";
+        }
+        return result;
+    }
+
+    void testSolveStandardSudoku()
+    {
+        std::string subject = "500002000400708001083000900000000390040070010065000000001000720800605009000900008";
+        LOG_I("subject is \n%s", sudokuGrid(subject).c_str());
+        std::string answer = solveStandardSudoku(subject);
+        /**
+         expect output:
+        5 1 6 4 9 2 8 7 3
+        4 9 2 7 3 8 5 6 1
+        7 8 3 5 6 1 9 4 2
+        1 7 8 2 5 6 3 9 4
+        2 4 9 8 7 3 6 1 5
+        3 6 5 1 4 9 2 8 7
+        9 5 1 3 8 4 7 2 6
+        8 2 7 6 1 5 4 3 9
+        6 3 4 9 2 7 1 5 8
+        */
+        LOG_I("answer is \n%s", sudokuGrid(answer).c_str());
+    }
+
+```
+
 
 ## Test
 ---
