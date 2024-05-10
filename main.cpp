@@ -126,6 +126,16 @@ void testFile()
     LOG_I("decodeFile md5=%s", md5DecodeFile.c_str());
 }
 
+void testPatch(){
+    const std::string newFile = std::string(originPath).append("newFile");
+    const std::string oldFile = std::string(originPath).append("oldFile");
+    const std::string patchFile = std::string(originPath).append("patch.bin");
+    const std::string outPutFile = std::string(originPath).append("patch_out_put");
+    auto diff = patch::binary_difference(oldFile, newFile);
+    patch::create_patch(patchFile, diff);
+    patch::apply_patch(oldFile, patchFile, outPutFile);
+}
+
 void testSHA()
 {
     crypto::SHA1 sha1;
@@ -701,6 +711,7 @@ int main(int argc, char *argv[])
 {
     std::cout <<XString::toStringAddEnter(XString::lettersShape("xlib-test"))<< std::endl;
     setLog();
+//    testPatch();
     testAStar();
     testMath();
     testMatrix();

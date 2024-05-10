@@ -43,6 +43,7 @@ executable("test_main") {
       "include/base/XFileUtil.h",
       "include/base/XString.h",
       "include/base/XRandom.h",
+      "include/diff/patch.h",
       "src/crypto/md5.cpp",
       "src/crypto/base64.cpp",
       "src/crypto/url.cpp",
@@ -69,6 +70,7 @@ executable("test_main") {
       "src/base/XUtf8.cpp",
       "src/base/XRandom.cpp",
       "src/base/XTime.cpp",
+      "src/diff/patch.cpp",
     ]
 }
 
