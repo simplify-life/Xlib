@@ -707,10 +707,18 @@ void testDecodeAndEncode()
     }
 }
 
+void testString(){
+    std::string word1 = "word hehe";
+    std::string word2 = "word hhh";
+    int distance = XString::levenshteinDistance(word1, word2);
+    LOG_I("%s => %s = %d", word1.c_str(),word2.c_str(),distance);
+}
+
 int main(int argc, char *argv[])
 {
     std::cout <<XString::toStringAddEnter(XString::lettersShape("xlib-test"))<< std::endl;
     setLog();
+    testString();
 //    testPatch();
     testAStar();
     testMath();

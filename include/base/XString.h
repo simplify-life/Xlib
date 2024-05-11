@@ -58,6 +58,9 @@ namespace XString
     std::vector<std::string> lettersShape(const std::string &letters);
 
     std::size_t findFirstCharNotEscapedBefore(const std::string& str, char ch);
+    
+    //“最小编辑距离”（Minimum Edit Distance）算法 eg. Levenshtein Distance算法
+    int levenshteinDistance(std::string word1, std::string word2);
 
     template<class T_out,class T_in>
     T_out convert(const T_in& in)
