@@ -19,14 +19,14 @@ namespace xlib
     namespace sgf
     {
 
-        enum class ParserState
+        enum class ParserState : int
         {
             SGF_START,
             NORMAL,
             IN_NODE
         };
 
-        enum class TokenType
+        enum class TokenType : int
         {
             VARIATION_START,
             VARIATION_END,
