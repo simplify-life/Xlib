@@ -143,15 +143,19 @@ namespace xlib {
             }
             return sum;
         }
-        int chunkSize = nums.size() / numThreads;
-
-        for (int i = 0; i < numThreads; i++) {
-            int start = i * chunkSize;
-            int end = (i == numThreads - 1) ? nums.size() : (i + 1) * chunkSize;
+        size_t chunkSize = nums.size() / numThreads;
+        size_t remaining = nums.size() % numThreads;  // 处理不能整除的情况
+        size_t currentStart = 0;  // 使用currentStart来追踪当前起始位置
+        for (size_t i = 0; i < numThreads; i++) {
+            size_t start = currentStart;
+            size_t extra = (i < remaining) ? 1 : 0;
+            // 计算end时考虑剩余元素
+            size_t end = start + chunkSize + extra;
+            currentStart = end;  // 更新下一个线程的起始位置
 
             futures.push_back(std::async(std::launch::async, [start, end, &nums]() {
                 int localSum = 0;
-                for (int j = start; j < end; j++) {
+                for (size_t j = start; j < end; j++) {
                     localSum += nums[j];
                 }
                 return localSum;

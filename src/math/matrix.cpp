@@ -447,6 +447,9 @@ namespace xlib {
     }
 
     Matrix Matrix::solveLightsOutPuzzle(int lightSize){
+        if(lightSize<1 || lightSize > 65535){
+            throw std::overflow_error("lightSize too large");
+        }
         int r = lightSize*lightSize;
         Matrix matrixLight(r,r);
         for(int i = 0 ; i< lightSize ; i++){

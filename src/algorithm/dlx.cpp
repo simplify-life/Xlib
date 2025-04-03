@@ -187,18 +187,26 @@ namespace xlib
 
     std::string solveStandardSudoku(std::string subject)
     {
-        auto getArr = [&](int gongW, int gongH, int i, int v, int gong)
+        if (subject.empty()) {
+            return "";
+        }
+        auto getArr = [&](size_t gongW, size_t gongH, size_t i, size_t v, size_t gong)
         {
-            int x = i % gong;
-            int y = i / gong;
+            size_t x = i % gong;
+            size_t y = i / gong;
             std::vector<int> arr(gong * gong * 4, 0);
-            int c1 = i;
-            int c2 = gong * gong + x * gong + v - 1;
-            int c3 = gong * gong * 2 + y * gong + v - 1;
-            int gongX = x / gongW;
-            int gongY = y / gongH;
-            int gongP = gongX + gongY * (gong / gongW);
-            int c4 = gong * gong * 3 + gongP * gong + v - 1;
+            size_t c1 = i;
+            size_t c2 = gong * gong + x * gong + v - 1;
+            size_t c3 = gong * gong * 2 + y * gong + v - 1;
+            size_t gongX = x / gongW;
+            size_t gongY = y / gongH;
+            size_t gongP = gongX + gongY * (gong / gongW);
+            size_t c4 = gong * gong * 3 + gongP * gong + v - 1;
+            // 检查索引是否在范围内
+            if (c1 >= arr.size() || c2 >= arr.size() || 
+                c3 >= arr.size() || c4 >= arr.size()) {
+                throw std::out_of_range("Array index out of bounds");
+            }
             arr[c1] = 1;
             arr[c2] = 1;
             arr[c3] = 1;
@@ -206,12 +214,12 @@ namespace xlib
             return arr;
         };
 
-        auto getWH = [&](int g)
+        auto getWH = [&](size_t g)
         {
-            std::vector<int> wh = {g, 1};
-            for (int i = 2; i <= g; i++)
+            std::vector<size_t> wh = {g, 1};
+            for (size_t i = 2; i <= g; i++)
             {
-                int j = g / i;
+                size_t j = g / i;
                 if (i > j)
                     return wh;
                 if (g % i == 0)
@@ -227,17 +235,37 @@ namespace xlib
         };
         // 将subject字符串转换为二维数组
         std::vector<std::vector<int>> sudoArr;
-        std::vector<std::vector<int>> rowArr;
-        int gong = sqrt(subject.size());
+        std::vector<std::vector<size_t>> rowArr;
+        // 2. 使用size_t进行大小计算
+        size_t subjectSize = subject.size();
+        double gongDouble = sqrt(static_cast<double>(subjectSize));
+        size_t gong = static_cast<size_t>(gongDouble);
+        // 检查乘法溢出
+        if (gong != 0 && (gong * gong) / gong != gong) {
+            throw std::overflow_error("Size calculation would overflow");
+        }
+    
+        // 检查乘4是否溢出
+        if (gong * gong > std::numeric_limits<size_t>::max() / 4) {
+            throw std::overflow_error("Array size would overflow");
+        }
+        // 验证gong是否为整数
+        if (gong * gong != subjectSize) {
+            throw std::invalid_argument("Invalid sudoku size");
+        }
+        // 检查大小限制，防止后续计算溢出
+        if (gong > 65535) {  // 根据实际需求设置合理的上限
+            throw std::overflow_error("Sudoku size too large");
+        }
         auto wh = getWH(gong);
-        int gongW = wh[0];
-        int gongH = wh[1];
-        for (int i = 0; i < gong * gong; i++)
+        size_t gongW = wh[0];
+        size_t gongH = wh[1];
+        for (size_t i = 0; i < gong * gong; i++)
         {
-            int digit = subject[i] - '0';
+            unsigned char digit = subject[i] - '0';
             if (digit == 0)
             {
-                for (int j = 1; j <= gong; j++)
+                for (size_t j = 1; j <= gong; j++)
                 {
                     sudoArr.push_back(getArr(gongW, gongH, i, j, gong));
                     rowArr.push_back({i, j});
@@ -258,7 +286,7 @@ namespace xlib
             // 将解决方案转换为字符串形式
             std::vector<int> ansA = std::vector<int>(gong * gong, 0);
             std::string solution = "";
-            for (int i = 0; i < dlx.answer.size(); i++)
+            for (size_t i = 0; i < dlx.answer.size(); i++)
             {
                 if (dlx.answer[i] > 0)
                 {
@@ -266,7 +294,7 @@ namespace xlib
                     ansA[a[0]] = a[1];
                 }
             }
-            for (int i = 0; i < ansA.size(); i++)
+            for (size_t i = 0; i < ansA.size(); i++)
             {
                 solution += std::to_string(ansA[i]);
             }
