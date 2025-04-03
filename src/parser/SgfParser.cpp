@@ -7,10 +7,8 @@
 
 #include "parser/SgfParser.h"
 #include "base/XString.h"
-#include <iostream>
-#include <fstream>
 #include <sstream>
-#include <memory>
+
 
 
 namespace xlib {
