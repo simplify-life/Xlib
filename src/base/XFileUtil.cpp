@@ -261,7 +261,7 @@ uint64 XFileUtil::getFileBytesLength(const std::string &file){
 
 bool XFileUtil::encryptoFile(const std::string &from, const std::string &to, const std::string &key){
     uint64 lenFrom = getFileBytesLength(from);
-    const byte* keys = crypto::md5Digest(key);
+    const xbyte* keys = crypto::md5Digest(key);
     std::ifstream in(from.c_str(), std::ios::binary);
     std::ofstream out(to.c_str(), std::ios::binary);
     if (in.is_open())
@@ -269,7 +269,7 @@ bool XFileUtil::encryptoFile(const std::string &from, const std::string &to, con
         uint64 start = 0;
         char read_ch = 0;
         char write_ch = 0;
-        byte idx = 0;
+        xbyte idx = 0;
         while (true) {
             if(lenFrom==start)
                 break;

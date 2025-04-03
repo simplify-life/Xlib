@@ -59,17 +59,17 @@ namespace XUtf8
     /**
      get Utf8 length by first byte from Utf8 code
      */
-    uint getUtf8ByteLen(byte b);
+    uint getUtf8ByteLen(xbyte b);
     
     /**
      charge byte like 10xx xxxx
      */
-    bool isValidUtf8ByteExcept1st(byte b);
+    bool isValidUtf8ByteExcept1st(xbyte b);
     
     /**
      check byteArray utf8 code illegal or not
      */
-    bool isValidUtf8Buffer(byte* buffer, uint size);
+    bool isValidUtf8Buffer(xbyte* buffer, uint size);
     /**
     find First valid utf8 string
      */

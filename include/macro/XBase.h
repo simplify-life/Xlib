@@ -26,7 +26,7 @@
     
 //define cross-platform base data
 using uint=unsigned int;
-using byte=std::uint8_t;
+using xbyte = std::uint8_t;
 #ifdef byte_max
 #undef byte_max
 #endif

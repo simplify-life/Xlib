@@ -87,36 +87,36 @@ namespace xlib {
         /* number of bits, low-order word first. */
         uint32 count[2]={0};
         
-        byte buffer[64]={0};
+        xbyte buffer[64]={0};
         
         /* message digest. */
-        byte digest[16]={0};
+        xbyte digest[16]={0};
         /* Define the static member of MD5. */
-        const byte PADDING[64] = { 0x80 };
+        const xbyte PADDING[64] = { 0x80 };
         const char HEX_NUMBERS[16] = {
             '0', '1', '2', '3',
             '4', '5', '6', '7',
             '8', '9', 'a', 'b',
             'c', 'd', 'e', 'f'
         };
-        void encode(const uint32* input, byte* output, size_t length) {
+        void encode(const uint32* input, xbyte* output, size_t length) {
             
             for (size_t i = 0, j = 0; j < length; ++i, j += 4) {
-                output[j]= (byte)(input[i] & 0xff);
-                output[j + 1] = (byte)((input[i] >> 8) & 0xff);
-                output[j + 2] = (byte)((input[i] >> 16) & 0xff);
-                output[j + 3] = (byte)((input[i] >> 24) & 0xff);
+                output[j]= (xbyte)(input[i] & 0xff);
+                output[j + 1] = (xbyte)((input[i] >> 8) & 0xff);
+                output[j + 2] = (xbyte)((input[i] >> 16) & 0xff);
+                output[j + 3] = (xbyte)((input[i] >> 24) & 0xff);
             }
         }
         
-        void decode(const byte* input, uint32* output, size_t length) {
+        void decode(const xbyte* input, uint32* output, size_t length) {
             for (size_t i = 0, j = 0; j < length; ++i, j += 4) {
                 output[i] = ((uint32)input[j]) | (((uint32)input[j + 1]) << 8) |
                 (((uint32)input[j + 2]) << 16) | (((uint32)input[j + 3]) << 24);
             }
         }
         
-        void transform(const byte block[64]) {
+        void transform(const xbyte block[64]) {
             
             uint32 a = state[0], b = state[1], c = state[2], d = state[3], x[16];
             
@@ -199,7 +199,7 @@ namespace xlib {
             state[2] += c;
             state[3] += d;
         }
-        void init(const byte* input, size_t len) {
+        void init(const xbyte* input, size_t len) {
             
             uint32 i, index, partLen;
             
@@ -236,7 +236,7 @@ namespace xlib {
         }
         
         const std::string MD5(const std::string& message) {
-            const byte* digest_ = md5Digest(message);
+            const xbyte* digest_ = md5Digest(message);
             std::string str;
             str.reserve(16 << 1);
             for (size_t i = 0; i < 16; ++i) {
@@ -255,7 +255,7 @@ namespace xlib {
          * @return the message-digest.
          *
          */
-        const byte* md5Digest(const std::string& message) {
+        const xbyte* md5Digest(const std::string& message) {
             finished = false;
             /* Reset number of bits. */
             count[0] = count[1] = 0;
@@ -266,11 +266,11 @@ namespace xlib {
             state[3] = 0x10325476;
             
             /* Initialization the object according to message. */
-            init((const byte*)message.c_str(), message.length());
+            init((const xbyte*)message.c_str(), message.length());
             if (!finished) {
                 finished = true;
                 
-                byte bits[8];
+                xbyte bits[8];
                 uint32 oldState[4];
                 uint32 oldCount[2];
                 uint32 index, padLen;

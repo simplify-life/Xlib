@@ -78,12 +78,9 @@ std::string sgfStr ="(;SZ[19]AP[MultiGo:3.6.0]AB[pb][pc][oc][od][ne][nf][og][pg]
     ")\n"
     "(;B[rb]    ;W[rc]    ;B[sd]    ;W[sc]    ;B[se]    ;W[qb]    ;B[qa]    ;W[ra]    ;B[sa]    ;W[sb])\n"
     ")";
-    auto parser = std::unique_ptr<sgf::Parser>(new sgf::Parser());
-    parser->parseSgf(sgfStr);
-    auto v = parser->getSingleSgf();
-    for(auto &s:v){
-        LOG_I("%s",s.c_str());
-    }
+    sgf::SgfParser parser;
+    auto game = parser.parse(sgfStr);
+    game.print();
     sgfStr ="(;GM[1]FF[4]SZ[19]HA[0]KM[0]GN[Cho L&D (abc)]\
         AB[bb][cb][db][fb]\
         AW[ea][eb][bc][cc][dc]C[Advanced]\
@@ -109,11 +106,8 @@ std::string sgfStr ="(;SZ[19]AP[MultiGo:3.6.0]AB[pb][pc][oc][od][ne][nf][og][pg]
             )\
             (;B[da]WV[];W[fc];B[ab];W[ba]C[Wrong.])\
     )";
-    parser->parseSgf(sgfStr);
-    v = parser->getSingleSgf();
-    for(auto &s:v){
-        LOG_I("%s",s.c_str());
-    }
+    game = parser.parse(sgfStr);
+    game.print();
 
 ```
 

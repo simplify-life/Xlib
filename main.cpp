@@ -65,10 +65,10 @@ void testUtf8()
     LOG_I(s.c_str());
     std::string utf8 = XUtf8::unicodeToUtf8(s);
     LOG_I(utf8.c_str());
-    byte buffer[] = {0350, 0377, 0231};
+    xbyte buffer[] = {0350, 0377, 0231};
     bool isValid = XUtf8::isValidUtf8Buffer(buffer, 3);
     LOG_I(u8"🌸%d", isValid);
-    for (byte b = 0; b < byte_max; b++)
+    for (xbyte b = 0; b < byte_max; b++)
     {
         LOG_I(" %d len %d", b, XUtf8::getUtf8ByteLen(b));
     }

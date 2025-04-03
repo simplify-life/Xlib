@@ -169,7 +169,7 @@ string XUtf8::substr(const string &src, unsigned int startPos, unsigned int len)
     return ""; //out of range
 }
 
-uint XUtf8::getUtf8ByteLen(byte b)
+uint XUtf8::getUtf8ByteLen(xbyte b)
 {
     if(b<0x80){
         return 1;
@@ -186,11 +186,11 @@ uint XUtf8::getUtf8ByteLen(byte b)
     return 0;
 }
 
-bool XUtf8::isValidUtf8ByteExcept1st(byte b){
+bool XUtf8::isValidUtf8ByteExcept1st(xbyte b){
     return (b&0x80)==0x80 && (b|0x80)==b;
 }
 
-bool XUtf8::isValidUtf8Buffer(byte* buffer, uint size){
+bool XUtf8::isValidUtf8Buffer(xbyte* buffer, uint size){
     for(uint i = 0 ; i < size ;){
         auto len = getUtf8ByteLen(buffer[i]);
         if(0 == len) return false;
@@ -205,74 +205,5 @@ bool XUtf8::isValidUtf8Buffer(byte* buffer, uint size){
     }
     return true;
 }
-
-//string XUtf8::findPrefixUtf8(const std::string& src){
-//    string res="";
-//    const char* src_ = src.c_str();
-//    uint32 c=0;
-//    while ('\0'!=src[c])
-//    {
-//        unsigned int bb;
-//        std::stringstream ss;
-//        ss << src_[c];
-//        ss >> std::hex >> bb;
-//        byte b = (byte)src_[c] ;
-//        uint bl = getUtf8ByteLen(b);
-//        switch (bl) {
-//            case 0:
-//                return res;
-//            break;
-//            case 1:
-//                res += src_[c];
-//            c++;
-//                break;
-//            case 2:
-//            if('\0'!=src_[c+1]){
-//                byte d = (byte)src_[c+1] ;
-//                if(d<=191){
-//                    res += src_[c]+src_[c+1];
-//                    c+=2;
-//                }
-//            }else{
-//                return res;
-//            }
-//            break;
-//            case 3:
-//            if('\0'!=src_[c+1]&&'\0'!=src_[c+2]){
-//                byte d = (byte)src_[c+1] ;
-//                if(d<=191){
-//                    byte dd = (byte)src_[c+2] ;
-//                    if(dd<=191){
-//                        res += src_[c]+src_[c+1]+src_[c+2];
-//                        c+=3;
-//                    }
-//                }
-//            }else{
-//                return res;
-//            }
-//            break;
-//            case 4:
-//            if('\0'!=src_[c+1]&&'\0'!=src_[c+2]){
-//                byte d = (byte)src_[c+1] ;
-//                if(d<=191){
-//                    byte dd = (byte)src_[c+2] ;
-//                    if(dd<=191){
-//                        byte ddd = (byte)src_[c+3] ;
-//                        if(ddd<=191){
-//                            res += src_[c]+src_[c+1]+src_[c+2]+src_[3];
-//                            c+=4;
-//                        }
-//                    }
-//                }
-//            }else{
-//                return res;
-//            }
-//            break;
-//            default:
-//            return res;
-//        }
-//    }
-//    return res;
-//}
 
 XLIB_END

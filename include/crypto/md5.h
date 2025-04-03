@@ -14,7 +14,7 @@ namespace xlib {
     namespace crypto{
         const std::string MD5(const std::string& message);
         /* Generate md5 digest. */
-        const byte* md5Digest(const std::string& message);
+        const xbyte* md5Digest(const std::string& message);
     }//! end crypto
     
 }//!end xlib
