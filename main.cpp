@@ -81,7 +81,7 @@ void testUtf8()
 
 void testThreadPool()
 {
-        auto fun = [](uint32 count, float wTime)
+    auto fun = [](uint32 count, float wTime)
     {
         std::thread::id tid = std::this_thread::get_id();
         XTime::startTimer(count, wTime, [=]
@@ -90,28 +90,17 @@ void testThreadPool()
             LOG_I("this is a %f seconds timer ,thread_id=%s",wTime,XString::convert<std::string>(tid).c_str()); });
         return wTime;
     };
-    
     auto pool = std::unique_ptr<XThreadPool>(new XThreadPool(4));
-    
-    // 提交任务
-    auto future1 = pool->async([=] { fun(3, 1); });
-    auto future2 = pool->async([=] { fun(2, 0.001); });
-    auto future3 = pool->async([=](int x, int y) {
+    pool->async([=]
+                { fun(3, 1); });
+    pool->async([=]
+                { fun(2, 0.001); });
+    //    pool->async([=]{fun(10,0.00001,XTime::TIMER_LEVEL::L_MICRO);});
+    pool->async([=](int x, int y)
+                {
         LOG_I("%d + %d = %d",x,y,x+y);
-        return x+y; 
-    }, 10, 11);
-    
-    // 等待所有任务完成
-    try {
-        future1.wait();
-        future2.wait();
-        future3.wait();
-    } catch (const std::exception& e) {
-        LOG_E("Task execution failed: %s", e.what());
-    }
-    
-    // 等待一段时间确保所有任务都完成
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+        return x+y; },
+                10, 11);
 }
 
 void testFile()

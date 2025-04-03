@@ -16,6 +16,7 @@ using namespace std;
 
 XLIB_BEGAIN
 
+XThreadPool::XThreadPool() : XThreadPool(thread::hardware_concurrency()) {}
 XThreadPool::XThreadPool(uint threadCount)
 : activeThreads(0), exitFlag(false) {
     mThreads.reserve(threadCount);
@@ -52,9 +53,6 @@ void XThreadPool::wait() {
                              [&] { return !activeThreads && mTaskQueue.empty(); });
 }
 shared_future<void> XThreadPool::asyncImpl(Task task) {
-    if (shuttingDown) {
-        throw std::runtime_error("Thread pool is shutting down");
-    }
     PackagedTask PackagedTask(move(task));
     auto Future = PackagedTask.get_future();
     {
@@ -69,73 +67,16 @@ shared_future<void> XThreadPool::asyncImpl(Task task) {
 }
 
 XThreadPool::~XThreadPool() {
-    shutdown();
-}
-void XThreadPool::shutdown() {
     {
-        std::unique_lock<std::mutex> lock(queueLock);
-        if (shuttingDown) return;
-        shuttingDown = true;
+        unique_lock<mutex> LockGuard(queueLock);
         exitFlag = true;
     }
-    
-    // 等待所有任务完成
-    wait();
-    
-    // 通知所有线程退出
+    if(mTaskQueue.size()){
+        LOG_W("%lu tasks not processed when thread pool exited\n",mTaskQueue.size());
+    }
     queueCondition.notify_all();
-    
-    // 等待所有线程结束
-    for (auto& thread : mThreads) {
-        if (thread.joinable()) {
-            thread.join();
-        }
-    }
-    
-    // 记录未处理的任务
-    if (!mTaskQueue.empty()) {
-        LOG_W("%lu tasks not processed when thread pool exited\n", mTaskQueue.size());
+    for (auto &e : mThreads){
+        if(e.joinable()) e.join();
     }
 }
-
-void XThreadPool::workerThread() {
-    while (!exitFlag) {
-        PackagedTask task;
-        {
-            std::unique_lock<std::mutex> lock(queueLock);
-            queueCondition.wait(lock, [this] {
-                return exitFlag || !mTaskQueue.empty();
-            });
-            
-            if (exitFlag && mTaskQueue.empty()) {
-                break;
-            }
-            
-            if (!mTaskQueue.empty()) {
-                task = std::move(mTaskQueue.front());
-                mTaskQueue.pop();
-            }
-        }
-        
-        if (task.valid()) {
-            {
-                std::unique_lock<std::mutex> lock(readyLock);
-                ++activeThreads;
-            }
-            
-            try {
-                task();
-            } catch (const std::exception& e) {
-                LOG_E("Task execution failed: %s", e.what());
-            }
-            
-            {
-                std::unique_lock<std::mutex> lock(readyLock);
-                --activeThreads;
-            }
-            readyCondition.notify_all();
-        }
-    }
-}
-
 XLIB_END

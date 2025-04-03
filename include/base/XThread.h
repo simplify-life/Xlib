@@ -27,6 +27,8 @@ class XThreadPool{
 public:
     using Task = std::function<void()>;
     using PackagedTask = std::packaged_task<void()>;
+    XThreadPool();
+    XThreadPool(uint threadCount);
      ~XThreadPool();
     template <typename Function, typename... Args>
     inline std::shared_future<void> async(Function &&F, Args &&... ArgList) {
@@ -39,13 +41,7 @@ public:
         return asyncImpl(std::forward<Function>(F));
     }
     void wait();
-    void shutdown();
-    bool isShuttingDown() const { return shuttingDown.load(); }
-    size_t getQueueSize() const;
-    size_t getActiveThreads() const { return activeThreads.load(); }
-    explicit XThreadPool(uint threadCount = std::thread::hardware_concurrency());
 private:
-    void workerThread();
     std::shared_future<void> asyncImpl(Task F);
     std::vector<std::thread> mThreads; ///<所有线程
     std::queue<PackagedTask> mTaskQueue; ///<任务队列
@@ -54,8 +50,7 @@ private:
     std::mutex readyLock;  ///<准备条件锁
     std::condition_variable readyCondition;
     std::atomic<unsigned> activeThreads; ///<工作中的线程
-    std::atomic<bool>  exitFlag; ///<是否退出
-    std::atomic<bool> shuttingDown; 
+    bool exitFlag; ///<是否退出
 };
 
 XLIB_END
