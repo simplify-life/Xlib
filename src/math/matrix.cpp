@@ -7,6 +7,7 @@
 
 #include "math/matrix.h"
 #include "math/util.h"
+#include "math/Fraction.h"
 #include <cstring>
 #include <stdexcept>
 #include <numeric>

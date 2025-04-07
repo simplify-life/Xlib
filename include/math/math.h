@@ -11,5 +11,6 @@
 #include "math/matrix.h"
 #include "math/util.h"
 #include "math/SubmatrixGenerator.h"
+#include "math/Fraction.h"
 
 #endif /* math_h */

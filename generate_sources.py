@@ -8,7 +8,8 @@ sources = []
 for root, dirs, files in os.walk('.'):
     for file in files:
         if any(file.endswith(ext) for ext in ['.h','.cpp']):
-            sources.append(os.path.join(root, file))
+            # 去掉 ./ 前缀
+            sources.append(os.path.join(root, file)[2:])
 
 # 输出源文件列表
 # sys.stdout.write(str(sources))
@@ -18,7 +19,7 @@ for root, dirs, files in os.walk('.'):
 
 # 生成 GN 文件
 with open('sources.gn', 'w') as f:
-    f.write('sources = [\n')
+    f.write('xlib_source = [\n')
     for source in sources:
         f.write('  "{}",\n'.format(source))
     f.write(']\n')

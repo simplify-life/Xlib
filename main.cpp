@@ -706,10 +706,132 @@ void testString(){
     LOG_I("%s => %s = %d", word1.c_str(),word2.c_str(),distance);
 }
 
+void testFraction() {
+    LOG_I("=== Start Testing Fraction Class ===");
+    
+    // 1. 测试构造函数和基本表示
+    {
+        LOG_I("Testing constructors and basic representation:");
+        Fraction f1(1, 2);
+        Fraction f2(-1, 2);
+        Fraction f3(2, -4);  // 应该被规范化为 -1/2
+        Fraction f4(0, 5);   // 应该被简化为 0/1
+        
+        LOG_I("f1(1,2) = %s", f1.toString().c_str());
+        LOG_I("f2(-1,2) = %s", f2.toString().c_str());
+        LOG_I("f3(2,-4) = %s", f3.toString().c_str());
+        LOG_I("f4(0,5) = %s", f4.toString().c_str());
+        
+        // 测试分母为0的情况
+        try {
+            Fraction f5(1, 0);
+            LOG_E("Failed: Should throw exception for denominator = 0");
+        } catch (const std::runtime_error& e) {
+            LOG_I("Successfully caught exception: %s", e.what());
+        }
+    }
+    
+    // 2. 测试四则运算
+    {
+        LOG_I("\nTesting arithmetic operations:");
+        Fraction f1(1, 2);
+        Fraction f2(1, 3);
+        
+        Fraction sum = f1 + f2;
+        Fraction diff = f1 - f2;
+        Fraction prod = f1 * f2;
+        Fraction quot = f1 / f2;
+        
+        LOG_I("%s + %s = %s", f1.toString().c_str(), f2.toString().c_str(), sum.toString().c_str());
+        LOG_I("%s - %s = %s", f1.toString().c_str(), f2.toString().c_str(), diff.toString().c_str());
+        LOG_I("%s * %s = %s", f1.toString().c_str(), f2.toString().c_str(), prod.toString().c_str());
+        LOG_I("%s / %s = %s", f1.toString().c_str(), f2.toString().c_str(), quot.toString().c_str());
+        
+        // 测试除以0的情况
+        try {
+            Fraction zero(0, 1);
+            Fraction result = f1 / zero;
+            LOG_E("Failed: Should throw exception for division by zero");
+        } catch (const std::runtime_error& e) {
+            LOG_I("Successfully caught exception: %s", e.what());
+        }
+    }
+    
+    // 3. 测试约分功能
+    {
+        LOG_I("\nTesting fraction reduction:");
+        Fraction f1(2, 4);    // 应该被约分为 1/2
+        Fraction f2(15, 25);  // 应该被约分为 3/5
+        Fraction f3(-6, 8);   // 应该被约分为 -3/4
+        
+        LOG_I("2/4 reduces to %s", f1.toString().c_str());
+        LOG_I("15/25 reduces to %s", f2.toString().c_str());
+        LOG_I("-6/8 reduces to %s", f3.toString().c_str());
+    }
+    
+    // 4. 测试相等性比较
+    {
+        LOG_I("\nTesting equality:");
+        Fraction f1(1, 2);
+        Fraction f2(2, 4);
+        Fraction f3(3, 6);
+        Fraction f4(2, 3);
+        
+        LOG_I("%s == %s : %d", f1.toString().c_str(), f2.toString().c_str(), f1 == f2);
+        LOG_I("%s == %s : %d", f1.toString().c_str(), f3.toString().c_str(), f1 == f3);
+        LOG_I("%s == %s : %d", f1.toString().c_str(), f4.toString().c_str(), f1 == f4);
+    }
+    
+    // 5. 测试转换功能
+    {
+        LOG_I("\nTesting conversions:");
+        Fraction f1(1, 2);
+        Fraction f2(3, 4);
+        Fraction f3(-5, 6);
+        
+        LOG_I("%s as double = %f", f1.toString().c_str(), f1.toDouble());
+        LOG_I("%s as double = %f", f2.toString().c_str(), f2.toDouble());
+        LOG_I("%s as double = %f", f3.toString().c_str(), f3.toDouble());
+    }
+    
+    // 6. 测试大数运算
+    {
+        LOG_I("\nTesting large numbers:");
+        Fraction::IntType large1 = 1000000000; // 10亿
+        Fraction::IntType large2 = 2000000000; // 20亿
+        
+        try {
+            Fraction f1(large1, large2);
+            Fraction f2(large2, large1);
+            Fraction result = f1 * f2;
+            LOG_I("Large number multiplication: %s * %s = %s",
+                f1.toString().c_str(), f2.toString().c_str(), result.toString().c_str());
+        } catch (const std::exception& e) {
+            LOG_E("Error with large numbers: %s", e.what());
+        }
+    }
+    
+    // 7. 测试连续运算
+    {
+        LOG_I("\nTesting chained operations:");
+        Fraction f1(1, 2);
+        Fraction f2(1, 3);
+        Fraction f3(1, 4);
+        
+        Fraction result = (f1 + f2) * f3;
+        LOG_I("(%s + %s) * %s = %s",
+            f1.toString().c_str(), f2.toString().c_str(),
+            f3.toString().c_str(), result.toString().c_str());
+    }
+    
+    LOG_I("=== Fraction Testing Complete ===\n");
+}
+
 int main(int argc, char *argv[])
 {
     std::cout <<XString::toStringAddEnter(XString::lettersShape("xlib-test"))<< std::endl;
     setLog();
+    testFraction();
     testString();
 //    testPatch();
     testAStar();
