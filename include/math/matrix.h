@@ -10,7 +10,7 @@
 
 #include <vector>
 #include <string>
-//#include "math/SubmatrixGenerator.h"
+#include "math/Fraction.h"
 
 namespace xlib {
     // 定义矩阵类
@@ -59,7 +59,7 @@ namespace xlib {
             inline bool isSquare(){ return m==n;};
             
             //高斯消元解方程组---唯一解
-            std::vector<double> gaussianElimination(std::vector<double>& B);
+            std::vector<Fraction> gaussianElimination(std::vector<double>& B);
                 
             static Matrix solveLightsOutPuzzle(int lightSize);
             std::vector<int> solveLightsOutPuzzle(std::vector<int>& B,int mod);

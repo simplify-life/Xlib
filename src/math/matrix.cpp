@@ -7,7 +7,6 @@
 
 #include "math/matrix.h"
 #include "math/util.h"
-#include "math/Fraction.h"
 #include <cstring>
 #include <stdexcept>
 #include <numeric>
@@ -300,7 +299,7 @@ namespace xlib {
         return T;
     }
 
-    std::vector<double> Matrix::gaussianElimination(std::vector<double>& B){
+    std::vector<Fraction> Matrix::gaussianElimination(std::vector<double>& B){
         
         if(m!=n){
             throw std::runtime_error("matrix must be row equal col");
@@ -316,59 +315,61 @@ namespace xlib {
             //@TODO 找到一种可行解是否可以？
         }
         
-        std::vector<double> result = std::vector<double>(m);
-        std::vector<int> canceled = std::vector<int>(m);
-        auto tmp = *this;
-        for(int j = 0 ; j< m ; j++){
+        // 创建临时矩阵和向量，使用 Fraction 类型
+        std::vector<std::vector<Fraction>> tmpMatrix(m, std::vector<Fraction>(n));
+        std::vector<Fraction> tmpB(m);
+        
+        // 将 double 类型转换为 Fraction 类型
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                tmpMatrix[i][j] = Fraction(a[i][j]);
+            }
+            tmpB[i] = Fraction(B[i]);
+        }
+        
+        std::vector<Fraction> result(m);
+        std::vector<int> canceled(m, 0);
+        
+        for(int j = 0; j < m; j++) {
             bool pivot = false;
-            for(int i = 0 ; i< m ; i++){
-                //找到第i 行 第j 列不为0的元素作为主元
-                if(!canceled[i] && !pivot && tmp.a[i][j]!=0){
+            for(int i = 0; i < m; i++) {
+                // 找到第i行第j列不为0的元素作为主元
+                if(!canceled[i] && !pivot && tmpMatrix[i][j] != Fraction(0, 1)) {
                     pivot = true;
                     canceled[i] = 1;
-                    //查找最小公倍数
-                    std::vector<int> v;
-                    for(int k = 0 ; k< m ; k++){
-                        if(tmp.a[k][j]!=0){
-                            v.push_back(tmp.a[k][j]);
-                        }
-                    }
-                    int lc = lcm(v);
-                    for(int k = 0 ; k< m ; k++){
-                        if(tmp.a[k][j]!=0){
-                            int mul = lc/tmp.a[k][j];
-                            for(int l = 0 ; l< m; l++){
-                                tmp.a[k][l] = tmp.a[k][l]*mul;
+                    
+                    // 消元
+                    for(int k = 0; k < m; k++) {
+                        if(k != i && tmpMatrix[k][j] != Fraction(0, 1)) {
+                            // 计算消元系数
+                            Fraction factor = tmpMatrix[k][j] / tmpMatrix[i][j];
+                            
+                            // k行减去i行乘以系数
+                            for(int l = 0; l < m; l++) {
+                                tmpMatrix[k][l] = tmpMatrix[k][l] - factor * tmpMatrix[i][l];
                             }
-                            B[k] = B[k]*mul;
-                        }
-                    }
-                    //消元
-                    for(int k = 0 ; k< m ; k++){
-                        if(k!=i && tmp.a[k][j]!=0){
-                            //k行减去i行
-                            for(int l = 0 ; l< m; l++){
-                                tmp.a[k][l] -= tmp.a[i][l];
-                            }
-                            B[k] -= B[i];
+                            tmpB[k] = tmpB[k] - factor * tmpB[i];
                         }
                     }
                 }
             }
-            if(!pivot){
-                //没有找到主元
+            if(!pivot) {
+                // 没有找到主元
                 throw std::runtime_error("not pivot in matrix on " + std::to_string(j));
             }
         }
-        for(int i = 0 ; i< m ; i++){
-            for(int j = 0 ; j< m ; j++){
-                //i 行 j 列
-                if(tmp.a[i][j]!=0){
-                    //第j个解
-                    result[j] = B[i]/tmp.a[i][j];
+        
+        // 回代求解
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < m; j++) {
+                // i行j列
+                if(tmpMatrix[i][j] != Fraction(0, 1)) {
+                    // 第j个解
+                    result[j] = tmpB[i] / tmpMatrix[i][j];
                 }
             }
         }
+        
         return result;
     }
 

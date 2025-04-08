@@ -35,6 +35,29 @@ public:
     IntType getNumerator() const { return numerator; }
     IntType getDenominator() const { return denominator; }
     
+    // 添加double构造函数
+    explicit Fraction(double value);
+      
+    // 添加与double相关的运算符
+    Fraction& operator=(double value);
+    operator double() const; // 转换运算符
+    
+    Fraction abs() const;
+    static Fraction abs(const Fraction& f); // 静态方法
+    
+    // 添加比较运算符
+    bool operator<(const Fraction& other) const;
+    bool operator>(const Fraction& other) const;
+    bool operator<=(const Fraction& other) const;
+    bool operator>=(const Fraction& other) const;
+    
+    // 添加与double的比较
+    bool operator<(double value) const;
+    bool operator>(double value) const;
+    bool operator<=(double value) const;
+    bool operator>=(double value) const;
+    
+    
 private:
     IntType numerator;   // 分子
     IntType denominator; // 分母

@@ -548,13 +548,11 @@ void testGaussianElimination()
 {
     // 高斯消元解方程组
     std::vector<std::vector<double>> matrix = {
-        {1, 1, 1, 1},
-        {2, 3, 1, 1},
-        {3, -1, 2, -1},
-        {4, 1, -3, 2},
+        {1, 1},
+        {3, -3},
     };
     std::vector<double> B = {
-        10, 15, 3, 5};
+        1,1};
     Matrix A = matrix;
     auto result = A.gaussianElimination(B);
     LOG_I("GaussianElimination result:%s", XString::toString(result).c_str());
