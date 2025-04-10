@@ -9,7 +9,7 @@ SRC_EXT = cpp
 
 CXX ?= g++
 CXX_LIBS = -pthread
-CXX_TAGS = -std=c++14 -Wall -Wextra -g
+CXX_TAGS = -std=c++17 -Wall -Wextra -g
 R_TAGS = -D NDEBUG
 D_TAGS = -D DEBUG
 
