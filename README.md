@@ -401,9 +401,12 @@ std::string sgfStr ="(;SZ[19]AP[MultiGo:3.6.0]AB[pb][pc][oc][od][ne][nf][og][pg]
     ```
 2. make:
     ```shell
-        make clean && make && ./xlib
+        make clean && make OUT_DIR=YOUR_MAKE_DIR && YOUR_MAKE_DIR/xlib
     ```
-
+3. gn:
+    ```shell
+       python3 generate_sources.py && sh gn.sh
+    ```
 ## Notes
 ---
 1. *Compile environment*: need GCC 8.0 or above.     

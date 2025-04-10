@@ -1,8 +1,10 @@
 #make 文件
 
+OUT_DIR ?= make_build
+
 -include vars.mk
 
-TARGET = xlib
+TARGET = $(OUT_DIR)/xlib
 
 # compile msg
 SRC_EXT = cpp
@@ -25,8 +27,9 @@ print-%:
 #定义路径
 DIR_EXT = /
 DIR = .
+
 SRC_PATH = $(DIR)/
-OBJ_PATH = $(DIR)/obj
+OBJ_PATH = $(OUT_DIR)/obj
 DIRS = $(OBJ_PATH)
 INCLUDES_CXX = -I $(SRC_PATH) \
                -I $(SRC_PATH)/src
