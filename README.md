@@ -1,6 +1,7 @@
 
 [![CMake](https://github.com/simplify-life/Xlib/actions/workflows/cmake.yml/badge.svg)](https://github.com/simplify-life/Xlib/actions/workflows/cmake.yml)
 [![CodeQL](https://github.com/simplify-life/Xlib/actions/workflows/codeql.yml/badge.svg)](https://github.com/simplify-life/Xlib/actions/workflows/codeql.yml)
+[![GN](https://github.com/simplify-life/Xlib/actions/workflows/gn.yml/badge.svg)](https://github.com/simplify-life/Xlib/actions/workflows/gn.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) 
 ## What is XLIB?
 
