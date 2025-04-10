@@ -2,6 +2,7 @@
 #include <cmath>
 #include <algorithm>
 #include <numeric>
+#include <stdexcept>
 
 namespace xlib {
     namespace algorithm {
