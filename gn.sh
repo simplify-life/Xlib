@@ -1,4 +1,6 @@
-# when add or delete source file, first hand cmd `python3 generate_sources.py`
+#!/bin/sh
+set -e  # 任何命令失败时立即退出
+cd "$(dirname "$0")" || exit 1
 rm -rf out && \
 mkdir out && \
 gn gen ./out -v && \

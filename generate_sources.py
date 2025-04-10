@@ -3,6 +3,8 @@
 import os
 import sys
 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 # 获取所有源文件
 sources = []
 for root, dirs, files in os.walk('.'):

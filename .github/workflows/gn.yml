@@ -1,0 +1,39 @@
+name: GN Build with Python
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 设置 Python 环境
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # 安装 Python 依赖（可选）
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      # 安装 GN 和 Ninja
+      - name: Install GN
+        run: |
+          wget https://chrome-infra-packages.appspot.com/dl/gn/gn/linux-amd64/+/latest -O gn.zip
+          unzip gn.zip -d $HOME/.local/bin
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install Ninja
+        run: sudo apt-get install -y ninja-build
+
+      # 运行前置 Python 脚本
+      - name: Generate sources.gn
+        run: python3 ${{github.workspace}}/generate_sources.py
+
+      # 构建
+      - name: Test with test shell
+        run: |
+          chmod +x ${{github.workspace}}/gn.sh
+          ${{github.workspace}}/gn.sh
