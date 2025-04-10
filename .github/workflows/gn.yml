@@ -6,7 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      # 先创建目录
+      - name: Create target directory  
+        run: mkdir -p $HOME/.local/bin
       # 设置 Python 环境
       - name: Set up Python
         uses: actions/setup-python@v5
