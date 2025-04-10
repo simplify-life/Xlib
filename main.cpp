@@ -825,12 +825,49 @@ void testFraction() {
     LOG_I("=== Fraction Testing Complete ===\n");
 }
 
+void testRankScore() {
+    LOG_I("=== 开始测试 ELO 和 Glicko2 评分算法 ===");
+    
+    // 测试 ELO 评分系统
+    {
+        LOG_I("\n测试 ELO 评分系统:");
+        
+        // 测试预期胜率计算
+        double playerRating = 1500.0;
+        double opponentRating = 1600.0;
+        double expectedScore = xlib::algorithm::EloRating::expectedScore(playerRating, opponentRating);
+        LOG_I("玩家评分: %.2f, 对手评分: %.2f, 预期胜率: %.4f", 
+              playerRating, opponentRating, expectedScore);
+        
+        // 测试评分变化计算
+        double result = 1.0; // 胜利
+        double kFactor = 10.0;
+        double ratingChange = xlib::algorithm::EloRating::calculateRatingChange(
+            playerRating, opponentRating, result, kFactor);
+        LOG_I("比赛结果: 胜利, 评分变化: %.2f", ratingChange);
+        
+        // 测试使用分数的评分变化计算
+        Fraction fractionRatingChange = xlib::algorithm::EloRating::calculateRatingChangeFraction(
+            playerRating, opponentRating, result, kFactor);
+        LOG_I("使用分数的评分变化: %s", fractionRatingChange.toString().c_str());
+        
+        // 测试批量评分变化计算
+        std::vector<double> opponentRatings = {1600.0, 1550.0, 1450.0};
+        std::vector<double> results = {1.0, 0.5, 0.0}; // 胜、平、负
+        double batchRatingChange = xlib::algorithm::EloRating::calculateRatingChangeBatch(
+            playerRating, opponentRatings, results, kFactor);
+        LOG_I("批量比赛后的评分变化: %.2f", batchRatingChange);
+    }    
+    LOG_I("=== ELO 评分算法测试完成 ===\n");
+}
+
 int main(int argc, char *argv[])
 {
     std::cout <<XString::toStringAddEnter(XString::lettersShape("xlib-test"))<< std::endl;
     setLog();
     testFraction();
     testString();
+    testRankScore();
 //    testPatch();
     testAStar();
     testMath();

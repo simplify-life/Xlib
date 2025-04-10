@@ -33,6 +33,7 @@
 #include "algorithm/search.h"
 #include "algorithm/AStar.h"
 #include "algorithm/dlx.h"
+#include "algorithm/RankScore.h"
 #include "parser/json.h"
 #include "parser/YamlParser.h"
 #include "parser/SgfParser.h"
