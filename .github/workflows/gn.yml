@@ -1,4 +1,4 @@
-name: GN Build with Python
+name: GN
 on: [push, pull_request]
 
 jobs:
@@ -14,9 +14,9 @@ jobs:
           python-version: '3.10'
 
       # 安装 Python 依赖（可选）
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+      # - name: Install dependencies
+      #   run: |
+      #     pip install -r requirements.txt
 
       # 安装 GN 和 Ninja
       - name: Install GN
