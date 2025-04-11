@@ -859,7 +859,31 @@ void testRankScore() {
         LOG_I("批量比赛后的评分变化: %.2f", batchRatingChange);
     }    
     LOG_I("=== ELO 评分算法测试完成 ===\n");
+
+    {
+        LOG_I("\n测试 Glicko2 评分系统:");
+        algorithm::Glicko2Player player(1500.0, 200.0, 0.06);
+        
+        std::vector<algorithm::Glicko2Player> opponents = {
+            algorithm::Glicko2Player(1400.0, 30.0),
+            algorithm::Glicko2Player(1550.0, 100.0),
+            algorithm::Glicko2Player(1700.0, 300.0)
+        };
+        
+        std::vector<double> scores = {1.0, 0.0, 0.0}; // Win, Loss, Loss
+        
+        algorithm::Glicko2System system(0.5);
+        system.updatePlayer(player, opponents, scores);
+        
+        // std::cout << std::fixed << std::setprecision(2);
+        LOG_I("Updated Rating: %f", player.rating);
+        LOG_I("Updated RD: %f",player.rd );
+        LOG_I("Updated Volatility: %.5f",player.volatility);
+        LOG_I("=== Glicko2 评分算法测试完成 ===\n");
+    }
+
 }
+
 
 int main(int argc, char *argv[])
 {
