@@ -1,8 +1,11 @@
+RELEASE_DIR ?= make_release
+LIB_DIR ?= lib
 #make 文件
 
 -include vars.mk
 
-TARGET = xlib.a
+TARGET = $(RELEASE_DIR)/xlib.a
+LIB_TARGET = $(LIB_DIR)/$(notdir $(TARGET))
 AR = ar
 # compile msg
 SRC_EXT = cpp
@@ -26,7 +29,7 @@ print-%:
 DIR_EXT = /
 DIR = .
 SRC_PATH = $(DIR)/
-OBJ_PATH = $(DIR)/obj
+OBJ_PATH = $(RELEASE_DIR)/obj
 DIRS = $(OBJ_PATH)
 INCLUDES_CXX = -I $(SRC_PATH)/src
 INCLUDES_H = -I $(SRC_PATH)/include
@@ -71,7 +74,7 @@ $(TARGET):$(OBJS)
 	@$(START_TIME)
 	@$(AR) -rcus $@ $^
 	@$(RM) $(OBJS) && $(RM_RF) $(DIRS)
-	@$(MKDIR) lib && $(MV) $(TARGET) lib/$(TARGET)
+	@$(MKDIR) $(LIB_DIR) && $(MV) $(TARGET) $(LIB_TARGET)
 	@echo -en 'Link time:'
 	@$(END_TIME)
 -include $(DEPS)
